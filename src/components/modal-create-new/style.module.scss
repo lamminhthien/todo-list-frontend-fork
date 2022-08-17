@@ -1,0 +1,39 @@
+.create-new-section :global {
+  @apply relative z-10;
+
+  .backdrop {
+    @apply fixed inset-0 bg-black bg-opacity-25;
+  }
+
+  .panel {
+    @apply w-[49rem] max-w-[100%];
+
+    .panel-wrapper {
+      @apply bg-todo-blue-10 p-[2.5rem];
+    }
+
+    .heading {
+      @apply text-h3_medium font-medium;
+    }
+
+    .input-your-task {
+      @apply mt-6 h-[3.75rem] w-[100%] border-black/20;
+    }
+
+    .button-wrapper {
+      @apply mt-4 flex justify-center gap-[1.25rem];
+
+      .btn {
+        @apply h-[3.75rem] w-[21.375rem];
+      }
+
+      .btn-save-add-new {
+        @apply bg-white text-todo-blue-20;
+      }
+
+      .btn-close {
+        @apply bg-todo-blue-20 text-white;
+      }
+    }
+  }
+}
