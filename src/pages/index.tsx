@@ -15,4 +15,4 @@ export default function PageHome({}: InferGetStaticPropsType<typeof getStaticPro
   );
 }
 
-// PageHome.Layout = LayoutDefault;
+PageHome.Layout = LayoutDefault;

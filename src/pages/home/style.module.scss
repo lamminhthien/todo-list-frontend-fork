@@ -1,17 +1,16 @@
 .section-todo-list :global {
-  @apply mx-auto max-w-2xl bg-todo-blue-10;
+  @apply mx-auto max-w-7xl bg-abc-light;
   .container {
-    @apply mx-auto max-w-[360px] p-0 pt-20 pb-20 md:max-w-[544px];
+    @apply mx-auto max-w-xs p-0 pt-20 pb-20 md:max-w-xl;
   }
   .inner {
     @apply text-center;
   }
   .logo-wrapper {
-    @apply flex scale-75 justify-center;
+    @apply flex justify-center;
   }
 
   .copyright {
-    // #FIXME: 151px
-    @apply mt-40 text-base md:text-h5_regular;
+    @apply mt-40 text-base md:text-h5;
   }
 }
