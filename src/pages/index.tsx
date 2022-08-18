@@ -5,6 +5,8 @@ import {getStaticProps} from '@/data/ssr/home.ssr';
 // import LayoutDefault from '@/layouts/default';
 import ModalCreateNew from '@/components/modal-create-new';
 import {useAppContext, useAppDispatchContext} from '@/contexts/app.context';
+import LayoutDefault from '@/layouts/default';
+import HomePage from './home';
 
 export {getStaticProps};
 
@@ -19,6 +21,7 @@ export default function PageHome({}: InferGetStaticPropsType<typeof getStaticPro
   return (
     <>
       <ModalCreateNew />
+      <HomePage />
     </>
   );
 }
