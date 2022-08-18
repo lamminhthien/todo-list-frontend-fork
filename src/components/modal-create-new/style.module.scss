@@ -6,25 +6,25 @@
   }
 
   .panel {
-    @apply max-w-[784px];
+    @apply w-full max-w-[784px];
 
     .panel-wrapper {
-      @apply bg-abc-light p-[2.5rem];
+      @apply bg-abc-light p-4 md:p-10;
     }
 
     .heading {
-      @apply text-h3;
+      @apply text-h4 md:text-h3;
     }
 
     .input-your-task {
-      @apply mt-6 h-[3.75rem] w-[100%] border-black/20 text-h4 font-normal;
+      @apply mt-4 w-full border-black/20 p-5 md:mt-6 md:p-5 md:text-h4;
     }
 
     .button-wrapper {
-      @apply mt-4 flex justify-center gap-[1.25rem];
+      @apply mt-2 flex justify-between gap-3 sm:gap-5 md:mt-4;
 
       .btn {
-        @apply h-[3.75rem] w-[21.375rem] text-h4 font-medium font-medium;
+        @apply w-full py-5 font-medium md:text-h4;
       }
 
       .btn-cancel {
