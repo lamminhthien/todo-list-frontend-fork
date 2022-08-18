@@ -3,6 +3,14 @@ export interface IPropsBase {
   theme?: 'dark' | 'light';
 }
 
+export interface IAppContext {
+  menuVisible: boolean;
+  modalCreateNewVisible: boolean;
+  setting: {
+    name: string;
+  };
+}
+
 export interface IAnyObj {
   [k: string]: any;
 }

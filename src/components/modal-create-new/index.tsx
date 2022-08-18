@@ -1,11 +1,17 @@
 import {Dialog, Transition} from '@headlessui/react';
-import {Fragment, useState} from 'react';
+import {Fragment, useContext, useState} from 'react';
 import cn from 'classnames';
 
 import styles from './style.module.scss';
+import {useAppContext, useAppDispatchContext} from '@/contexts/app.context';
+
+interface IProps {
+  visible: boolean;
+  toggle: (value: boolean) => void;
+}
 
 const ModalCreateNew: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  let [isOpen, setIsOpen] = useState(true);
 
   function closeModal() {
     setIsOpen(false);
@@ -15,12 +21,12 @@ const ModalCreateNew: React.FC = () => {
     setIsOpen(true);
   }
 
-  console.log(isOpen);
   return (
     <>
       <div className="fixed inset-0 flex items-center justify-center">
         <button
           type="button"
+          // onClick={() => toggleModal(true)}
           onClick={openModal}
           className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
         >
@@ -28,8 +34,10 @@ const ModalCreateNew: React.FC = () => {
         </button>
       </div>
 
+      {/* <Transition appear show={visible} as={Fragment}> */}
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className={cn(styles['create-new-section'])} onClose={closeModal}>
+        {/* <Dialog as="div" className={cn(styles['create-new-section'])} onClose={() => toggle(false)}> */}
+        <Dialog as="div" className={cn(styles['section-modal-create'])} onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -56,17 +64,18 @@ const ModalCreateNew: React.FC = () => {
                 <Dialog.Panel className="panel">
                   {/* <Dialog.Title as="" className=""> */}
                   <div className="panel-wrapper">
-                    <Dialog.Title className="heading">Add New To-Do</Dialog.Title>
+                    <Dialog.Title className="heading">Create New List</Dialog.Title>
                     <div className="">
-                      <input className="input-your-task" type="text" placeholder="Enter your task" />
+                      <input className="input-your-task" type="text" placeholder="Enter your list" />
                     </div>
 
                     <div className="button-wrapper">
-                      <button type="button" className="btn btn-save-add-new" onClick={closeModal}>
-                        Close
+                      {/* <button type="button" className="btn btn-save-add-new" onClick={() => toggle(false)}> */}
+                      <button type="button" className="btn btn-cancel" onClick={closeModal}>
+                        Cancel
                       </button>
-                      <button type="button" className="btn btn-close">
-                        Add New
+                      <button type="button" className="btn btn-create">
+                        Create
                       </button>
                     </div>
                   </div>

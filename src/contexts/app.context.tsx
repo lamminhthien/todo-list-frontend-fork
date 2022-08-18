@@ -1,13 +1,15 @@
 /* eslint-disable react/jsx-filename-extension */
 import {createContext, useContext, useReducer} from 'react';
-
+import {IAppContext} from '@/types';
 import useInitialState from '../hooks/useInitialState';
 
-const AppContext = createContext();
-const AppDispatchContext = createContext();
+const AppContext = createContext<IAppContext | null>(null);
+const AppDispatchContext = createContext<IAppContext | null>(null);
+
 export const AppContextProvider = ({children}) => {
   const {reducer, initialState} = useInitialState();
   const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
     <AppDispatchContext.Provider value={dispatch}>
       <AppContext.Provider value={state}>{children}</AppContext.Provider>
