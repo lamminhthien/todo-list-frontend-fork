@@ -1,43 +1,23 @@
 import {Dialog, Transition} from '@headlessui/react';
-import {Fragment, useContext, useState} from 'react';
+import {Fragment, useContext} from 'react';
 import cn from 'classnames';
-
 import styles from './style.module.scss';
-import {useAppContext, useAppDispatchContext} from '@/contexts/app.context';
+import ModalCtx from '@/contexts/modal.context';
 
 interface IProps {
-  visible: boolean;
-  toggle: (value: boolean) => void;
+  heading: string;
+  placeholder: string;
+  cancel: string;
+  create: string;
 }
 
-const ModalCreateNew: React.FC = () => {
-  let [isOpen, setIsOpen] = useState(true);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
+const ModalCreateNew: React.FC<IProps> = props => {
+  const modalContext = useContext(ModalCtx);
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center">
-        <button
-          type="button"
-          // onClick={() => toggleModal(true)}
-          onClick={openModal}
-          className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-        >
-          Open dialog
-        </button>
-      </div>
-
-      {/* <Transition appear show={visible} as={Fragment}> */}
-      <Transition appear show={isOpen} as={Fragment}>
-        {/* <Dialog as="div" className={cn(styles['create-new-section'])} onClose={() => toggle(false)}> */}
-        <Dialog as="div" className={cn(styles['section-modal-create'])} onClose={closeModal}>
+      <Transition appear show={modalContext?.isOpen} as={Fragment}>
+        <Dialog as="div" className={cn(styles['section-modal-create'])} onClose={modalContext?.hide}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -64,18 +44,16 @@ const ModalCreateNew: React.FC = () => {
                 <Dialog.Panel className="panel">
                   {/* <Dialog.Title as="" className=""> */}
                   <div className="panel-wrapper">
-                    <Dialog.Title className="heading">Create New List</Dialog.Title>
-                    <div className="">
-                      <input className="input-your-task" type="text" placeholder="Enter your list" />
-                    </div>
+                    <Dialog.Title className="heading">{props.heading}</Dialog.Title>
+
+                    <input className="input-your-task" type="text" placeholder={props.placeholder} />
 
                     <div className="button-wrapper">
-                      {/* <button type="button" className="btn btn-save-add-new" onClick={() => toggle(false)}> */}
-                      <button type="button" className="btn btn-cancel" onClick={closeModal}>
-                        Cancel
+                      <button type="button" className="btn btn-cancel" onClick={modalContext?.hide}>
+                        {props.cancel}
                       </button>
                       <button type="button" className="btn btn-create">
-                        Create
+                        {props.create}
                       </button>
                     </div>
                   </div>

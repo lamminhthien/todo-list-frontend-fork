@@ -6,10 +6,10 @@
   }
 
   .panel {
-    @apply max-w-[784px];
+    @apply w-full max-w-[784px];
 
     .panel-wrapper {
-      @apply bg-abc-light p-[2.5rem];
+      @apply bg-abc-light p-10;
     }
 
     .heading {
@@ -17,14 +17,14 @@
     }
 
     .input-your-task {
-      @apply mt-6 h-[3.75rem] w-[100%] border-black/20 text-h4 font-normal;
+      @apply mt-6 w-full border-black/20 p-5 text-h4;
     }
 
     .button-wrapper {
-      @apply mt-4 flex justify-center gap-[1.25rem];
+      @apply mt-4 flex justify-between;
 
       .btn {
-        @apply h-[3.75rem] w-[21.375rem] text-h4 font-medium font-medium;
+        @apply px-32 py-5 text-h4 font-medium;
       }
 
       .btn-cancel {
