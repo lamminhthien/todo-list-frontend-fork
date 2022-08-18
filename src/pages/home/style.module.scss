@@ -1,0 +1,17 @@
+.section-todo-list :global {
+  @apply mx-auto max-w-[1440px] bg-todo-blue-10;
+  .container {
+    @apply mx-auto max-w-[360px] p-0 pt-20 pb-20 md:max-w-[544px];
+  }
+  .inner {
+    @apply text-center;
+  }
+  .logo-wrapper {
+    @apply flex scale-75 justify-center;
+  }
+
+  .copyright {
+    // #FIXME: 151px
+    @apply mt-40 text-base md:text-h5_regular;
+  }
+}
