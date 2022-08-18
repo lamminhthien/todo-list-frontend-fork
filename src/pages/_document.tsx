@@ -19,6 +19,7 @@ export default class CustomDocument extends Document {
             rel="stylesheet"
           />
         </Head>
+        {/* #FIXME: abc-light */}
         {/* <body className="scrollbar bg-black"> */}
         <body className="scrollbar">
           <Main />

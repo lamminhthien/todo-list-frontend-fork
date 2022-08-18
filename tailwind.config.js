@@ -9,7 +9,7 @@ module.exports = {
         DEFAULT: '0.938rem'
       }
     },
-    screens: Object.fromEntries(Object.entries(defaultTheme.screens).filter(([key, value]) => key !== '2xl')),
+    screens: Object.fromEntries(Object.entries(defaultTheme.screens).filter(([key, value]) => key !== '3xl')),
     fontFamily: {
       sans: ['Montserrat', 'san-serif'],
       serif: ['Merriweather'],

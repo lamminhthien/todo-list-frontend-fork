@@ -2,6 +2,7 @@
   @apply mt-10 border border-black/20 bg-white p-10 md:p-16;
 
   .heading {
+    // #FIXME: ĐỢI CONFIG
     @apply text-2xl font-normal md:text-h2_regular;
   }
   .input {
