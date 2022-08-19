@@ -1,0 +1,27 @@
+.com-modal :global {
+  @apply fixed left-0 top-0 hidden h-full w-full bg-black/[.2];
+
+  .modal-dialog {
+    @apply mx-auto max-w-[600px];
+  }
+
+  .modal-content {
+    @apply pointer-events-auto relative flex w-full flex-col rounded border bg-white;
+  }
+
+  .modal-header {
+    @apply flex shrink-0 items-center justify-between border-b;
+  }
+
+  .modal-footer {
+    @apply flex shrink-0 flex-wrap items-center justify-end gap-x-2 border-t p-3;
+  }
+
+  .modal-body {
+    @apply relative p-3;
+  }
+}
+
+.com-modal.show :global {
+  @apply block;
+}
