@@ -1,68 +1,33 @@
-import {Dialog, Transition} from '@headlessui/react';
-import {Fragment, useContext} from 'react';
-import cn from 'classnames';
-import styles from './style.module.scss';
-import ModalCtx from '@/contexts/modal.context';
+import {IPropsBase} from '@/types';
+import Button from '../button';
 
-interface IProps {
-  heading: string;
-  placeholder: string;
-  cancel: string;
-  create: string;
+interface IProps extends IPropsBase {
+  open: boolean;
+  onClose?: () => void;
 }
 
-const ModalCreateNew: React.FC<IProps> = props => {
-  const modalContext = useContext(ModalCtx);
-
+const ModalCreateNew: React.FC<IProps> = ({className, open, onClose, theme = 'light'}) => {
   return (
     <>
-      <Transition appear show={modalContext?.isOpen} as={Fragment}>
-        <Dialog as="div" className={cn(styles['section-modal-create'])} onClose={modalContext?.hide}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="backdrop" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="panel">
-                  {/* <Dialog.Title as="" className=""> */}
-                  <div className="panel-wrapper">
-                    <Dialog.Title className="heading">{props.heading}</Dialog.Title>
-
-                    <input className="input-your-task" type="text" placeholder={props.placeholder} />
-
-                    <div className="button-wrapper">
-                      <button type="button" className="btn btn-cancel" onClick={modalContext?.hide}>
-                        {props.cancel}
-                      </button>
-                      <button type="button" className="btn btn-create">
-                        {props.create}
-                      </button>
-                    </div>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
+      <div className={`modal fade ${open ? 'show block' : ''}`} tabIndex={-1}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Modal title</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <p>Modal body text goes here.</p>
+            </div>
+            <div className="modal-footer">
+              <Button text="Close" onClick={onClose} />
+              <button type="button" className="btn btn-primary">
+                Save changes
+              </button>
             </div>
           </div>
-        </Dialog>
-      </Transition>
+        </div>
+      </div>
     </>
   );
 };

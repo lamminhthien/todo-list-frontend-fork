@@ -3,11 +3,7 @@ import {IAppContext} from '@/types';
 
 export const useAppValue = () => {
   const initialState: IAppContext = {menuVisible: false, modalCreateNewVisible: false, setting: {name: 'ABC'}};
-  const getSetting = async () => {
-    const setting = await http.settings.all({});
-    initialState.setting = setting.data.attributes;
-  };
-  getSetting();
+
   const reducer = (state: any, action: any) => {
     switch (action.type) {
       case 'TOGGLE_MAINMENU': {

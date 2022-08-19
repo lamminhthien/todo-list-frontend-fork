@@ -1,24 +1,19 @@
-import React from 'react';
-import {InferGetStaticPropsType} from 'next';
-
-import {getStaticProps} from '@/data/ssr/home.ssr';
-import ModalCreateNew from '@/components/modal-create-new';
+import React, {useState} from 'react';
 import LayoutDefault from '@/layouts/default';
-import ModalContext from '@/contexts/modal.context';
-import ButtonModal from '@/components/button-modal';
-import UseModalInitialState from '@/hooks/useModalInitialState';
-export {getStaticProps};
+import {useRouter} from 'next/router';
+import Button from '@/components/button';
+import ModalCreateNew from '@/components/modal-create-new';
 
-export default function PageHome({}: InferGetStaticPropsType<typeof getStaticProps>) {
-  const modalAppContext = UseModalInitialState();
+export default function PageHome() {
+  const router = useRouter();
+  const [createNewVisible, setCreateNewVisible] = useState<boolean>(false);
 
   return (
     <>
-      <ModalContext.Provider value={modalAppContext}>
-        <ButtonModal />
-        <ModalCreateNew heading="Create New List" placeholder="Enter your list" cancel="Cancel" create="Create" />
-        {/* <ModalCreateNew heading="Add New To-Do" placeholder="Enter your task" cancel="Close" create="Add New" /> */}
-      </ModalContext.Provider>
+      <Button onClick={() => router.push('/quick-play')}>Quick play</Button>
+      <Button className="new-class" text="AHAHAHAHA" theme="white" onClick={() => setCreateNewVisible(true)} />
+
+      <ModalCreateNew open={createNewVisible} onClose={() => setCreateNewVisible(false)} />
     </>
   );
 }

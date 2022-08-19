@@ -2,6 +2,10 @@ export interface IPropsBase {
   className?: string;
   theme?: 'dark' | 'light';
 }
+export interface IPropsButtonBase {
+  className?: string;
+  theme?: 'blue' | 'white';
+}
 
 export interface IAppContext {
   menuVisible: boolean;
