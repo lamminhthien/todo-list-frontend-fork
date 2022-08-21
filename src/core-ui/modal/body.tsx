@@ -1,10 +1,10 @@
-import {ReactNode} from 'react';
+import React, { ReactNode } from "react";
 
 interface IProps {
-  children?: ReactNode;
+  children: ReactNode;
 }
 
-const Body: React.FC<IProps> = ({children}) => {
+const Body: React.FC<IProps> = ({ children }) => {
   return <div className="modal-body">{children}</div>;
 };
 

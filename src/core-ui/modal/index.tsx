@@ -1,19 +1,21 @@
-import cn from 'classnames';
-import {ReactNode} from 'react';
-import Body from './body';
-import Footer from './footer';
-import Header from './header';
+import React, { ReactNode } from "react";
+import cn from "classnames";
 
-import styles from './style.module.scss';
+import styles from "./style.module.scss";
+import Button from "../button";
+import Header from "./header";
+import Body from "./body";
+import Footer from "./footer";
 
 interface IProps {
-  open: boolean;
   children?: ReactNode;
+  open: boolean;
+  onClose?: () => void;
 }
 
-const Modal: React.FC<IProps> = ({open, children}) => {
+const Modal: React.FC<IProps> = ({ children, open, onClose }) => {
   return (
-    <div className={cn(styles['com-modal'], open ? styles['show'] : '')} tabIndex={-1}>
+    <div className={cn(styles["com-modal"], open ? cn(styles["show"]) : "")}>
       <div className="modal-dialog">
         <div className="modal-content">{children}</div>
       </div>

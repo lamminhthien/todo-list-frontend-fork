@@ -15,11 +15,7 @@ const Button: React.FC<IProps> = ({text, onClick, className, children, type = 'b
   let content = children ? children : text;
   return (
     <>
-      <button
-        type={type}
-        onClick={onClick}
-        className={cn(styles['com-button'], styles[className + ''], styles[theme + ''])}
-      >
+      <button type={type} onClick={onClick} className={cn(styles['com-button'], className, styles[theme + ''])}>
         {content}
       </button>
     </>

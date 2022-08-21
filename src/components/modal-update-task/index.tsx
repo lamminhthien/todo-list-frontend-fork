@@ -9,23 +9,23 @@ interface IProps {
   onClose?: () => void;
 }
 
-const ModalCreateList: React.FC<IProps> = ({ open, onClose }) => {
+const ModalUpdateList: React.FC<IProps> = ({ open, onClose }) => {
   return (
-    <div className={styles["com-modal-create-list"]}>
+    <div className={styles["com-modal-update-task"]}>
       <Modal open={open} onClose={onClose}>
         <Modal.Header>
-          <h3 className="heading">Create New list</h3>
+          <h3 className="heading">Update task</h3>
         </Modal.Header>
         <Modal.Body>
-          <input className="input" type="text" placeholder="Enter your list" />
+          <input className="input" type="text" placeholder="Buy milk at 7pm " />
         </Modal.Body>
         <Modal.Footer>
-          <Button className="btn" text="Cancel" onClick={onClose} theme="white" />
-          <Button className="btn" text="Create" />
+          <Button className="btn" text="Close" onClick={onClose} theme="white" />
+          <Button className="btn" text="Save" />
         </Modal.Footer>
       </Modal>
     </div>
   );
 };
 
-export default ModalCreateList;
+export default ModalUpdateList;

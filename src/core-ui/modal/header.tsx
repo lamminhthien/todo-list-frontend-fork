@@ -1,17 +1,14 @@
-import {ReactNode} from 'react';
-import Button from '../button';
+import React, { ReactNode } from "react";
 
 interface IProps {
-  onClose?: () => void;
-  children?: ReactNode;
+  children: ReactNode;
 }
 
-const Header: React.FC<IProps> = ({children, onClose}) => {
+const Header: React.FC<IProps> = ({ children }) => {
   return (
-    <div className="modal-header">
-      {children}
-      <Button text="x" onClick={onClose} />
-    </div>
+    <>
+      <div className="modal-header">{children}</div>
+    </>
   );
 };
 

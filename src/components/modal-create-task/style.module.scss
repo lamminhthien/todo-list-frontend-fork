@@ -1,2 +1,14 @@
 .com-modal-create-task :global {
+  @apply bg-rose-600;
+  .heading {
+    @apply text-h3 font-medium;
+  }
+
+  .input {
+    @apply w-full border-black/20 p-4 placeholder:text-h6 sm:p-5 md:placeholder:text-h4 md:placeholder:font-normal;
+  }
+
+  .btn {
+    @apply w-full;
+  }
 }

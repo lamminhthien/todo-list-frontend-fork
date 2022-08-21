@@ -1,24 +1,20 @@
 .com-modal :global {
-  @apply fixed left-0 top-0 hidden h-full w-full bg-black/[.2];
+  @apply hidden fixed top-0 left-0 w-full h-full bg-black/40;
 
   .modal-dialog {
-    @apply mx-auto max-w-[600px];
+    @apply max-w-[343px] sm:max-w-[500px] md:max-w-[784px] m-auto relative top-1/2 -translate-y-1/2;
   }
-
   .modal-content {
-    @apply pointer-events-auto relative flex w-full flex-col rounded border bg-white;
+    @apply relative w-full bg-abc-light p-4 sm:p-10;
   }
-
   .modal-header {
-    @apply flex shrink-0 items-center justify-between border-b;
+    @apply flex flex-shrink-0 justify-center;
   }
-
-  .modal-footer {
-    @apply flex shrink-0 flex-wrap items-center justify-end gap-x-2 border-t p-3;
-  }
-
   .modal-body {
-    @apply relative p-3;
+    @apply mt-4 sm:mt-6;
+  }
+  .modal-footer {
+    @apply flex gap-3 sm:gap-5 sm:mt-4 mt-2;
   }
 }
 
