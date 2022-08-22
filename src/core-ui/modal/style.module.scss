@@ -1,0 +1,23 @@
+.com-modal :global {
+  @apply hidden fixed top-0 left-0 w-full h-full bg-black/40;
+
+  .modal-dialog {
+    @apply max-w-[343px] sm:max-w-[500px] md:max-w-[784px] m-auto relative top-1/2 -translate-y-1/2;
+  }
+  .modal-content {
+    @apply relative w-full bg-abc-light p-4 sm:p-10;
+  }
+  .modal-header {
+    @apply flex flex-shrink-0 justify-center;
+  }
+  .modal-body {
+    @apply mt-4 sm:mt-6;
+  }
+  .modal-footer {
+    @apply flex gap-3 sm:gap-5 sm:mt-4 mt-2;
+  }
+}
+
+.com-modal.show :global {
+  @apply block;
+}
