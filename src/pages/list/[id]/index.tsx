@@ -1,23 +1,23 @@
 import Image from 'next/image';
 import {useRouter} from 'next/router';
 import React, {useEffect, useState} from 'react';
+
+import TaskAPI, {ITask} from '@/api/network/task';
+import ListAPI, {IList} from '@/api/network/todo-list';
+import {IUser} from '@/api/network/user';
 import IconAdd from '@/assets/images/icon-add.svg';
 import IconArrowLeft from '@/assets/images/icon-arrow-left.svg';
 import IconDelete from '@/assets/images/icon-delete.svg';
 import IconEdit from '@/assets/images/icon-edit.svg';
 import IconShare from '@/assets/images/icon-share.svg';
+import ModalCreateTask from '@/components/modal-create-task';
+import ModalDeleteList from '@/components/modal-delete-list';
 import ModalDeleteTask from '@/components/modal-delete-task';
 import ModalShare from '@/components/modal-share';
 import ModalUpdateTask from '@/components/modal-update-task';
 import Button from '@/core-ui/button';
-import TaskAPI from '@/api/network/task';
-import ListAPI from '@/api/network/todo-list';
-import {ITask} from '@/api/network/task';
-import {IList} from '@/api/network/todo-list';
+
 import styles from './style.module.scss';
-import ModalCreateTask from '@/components/modal-create-task';
-import {IUser} from '@/api/network/user';
-import ModalDeleteList from '@/components/modal-delete-list';
 
 const Detail: React.FC = () => {
   const router = useRouter();
@@ -155,7 +155,7 @@ const Detail: React.FC = () => {
                 </div>
                 <ModalDeleteTask taskId={taskId} taskName={taskName} open={deleteDetail} onClose={handleDelete} />
                 <ModalUpdateTask taskId={taskId} taskName={taskName} open={editDetail} onClose={handleEdit} />
-                <ModalShare open={shareOpen} onClose={handleShare} />
+                <ModalShare open={shareOpen} onClose={handleShare} id={id} />
               </>
             ))}
           </div>

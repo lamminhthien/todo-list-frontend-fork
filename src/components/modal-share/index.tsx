@@ -12,11 +12,10 @@ import styles from './style.module.scss';
 interface IProps {
   open: boolean;
   onClose?: () => void;
+  id?: string;
 }
-const ModalShare: React.FC<IProps> = ({open, onClose}) => {
-  const linkToDoList = window.location.href;
-  const array = linkToDoList.split('/');
-  const id = array[array.length - 1];
+const ModalShare: React.FC<IProps> = ({open, onClose, id}) => {
+  const linkToDoList = window.location.href.split('/').slice(0, -1).join('/');
 
   return (
     <div className={cn(styles['com-modal-share'])}>

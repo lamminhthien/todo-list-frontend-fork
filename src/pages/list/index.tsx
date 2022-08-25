@@ -18,6 +18,9 @@ const List: React.FC = () => {
 
   const [shareOpen, setShareOpen] = useState<boolean>(false);
 
+  // Get id of list which clicked share button
+  const [currentListID, setCurrentListID] = useState<string>('');
+
   const handleShare = () => {
     setShareOpen(false);
   };
@@ -71,7 +74,13 @@ const List: React.FC = () => {
               <div className="text-group" key={item.id}>
                 <p className="title-group">{item.listName}</p>
                 <div className="icon-group">
-                  <Button className="btn-hover-hand" onClick={() => setShareOpen(true)}>
+                  <Button
+                    className="btn-hover-hand"
+                    onClick={() => {
+                      setShareOpen(true);
+                      setCurrentListID(item.id);
+                    }}
+                  >
                     <Icon size={22} className="abc-share" />
                   </Button>
                   <Button
@@ -89,7 +98,7 @@ const List: React.FC = () => {
         </div>
       </div>
       <ModalCreateList open={createListOpen} onClose={handleCloseCreateListOpen} />
-      <ModalShare open={shareOpen} onClose={handleShare} />
+      <ModalShare open={shareOpen} onClose={handleShare} id={currentListID} />
     </>
   );
 };
