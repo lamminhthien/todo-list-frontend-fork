@@ -10,6 +10,7 @@ import ModalDeleteTask from '@/components/modal-delete-task';
 import ModalShare from '@/components/modal-share';
 import ModalUpdateTask from '@/components/modal-update-task';
 import Button from '@/core-ui/button';
+import Checkbox from '@/core-ui/checkbox';
 import IconButton from '@/core-ui/ico-button';
 import Icon from '@/core-ui/icon';
 
@@ -143,7 +144,10 @@ const Detail: React.FC = () => {
             {task.map(item => (
               <>
                 <div className="detail-list">
-                  <p className="title-group">{item.taskName}</p>
+                  <div className="list-group">
+                    <Checkbox />
+                    <p className="title-group">{item.taskName}</p>
+                  </div>
                   <div className="actions">
                     <IconButton
                       className="btn-hover-hand"

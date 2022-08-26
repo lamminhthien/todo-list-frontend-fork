@@ -2,10 +2,19 @@ import React, {FC, forwardRef, InputHTMLAttributes, Ref} from 'react';
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
+  onClick?: () => void;
 }
 
 const Checkbox: FC<IProps> = forwardRef(({className, ...rest}, ref: Ref<HTMLInputElement>) => {
-  return <input className={['form-checkbox', className?.toString()].join(' ')} type="checkbox" ref={ref} {...rest} />;
+  return (
+    <input
+      className={['form-checkbox', className?.toString()].join(' ')}
+      type="checkbox"
+      ref={ref}
+      {...rest}
+      onClick={e => console.log(e.target)}
+    />
+  );
 });
 Checkbox.displayName = 'Checkbox';
 

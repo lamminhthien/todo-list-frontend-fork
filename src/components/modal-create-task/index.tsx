@@ -1,10 +1,13 @@
-import React from 'react';
-import Button from '@/core-ui/button';
-import Modal from '@/core-ui/modal';
-import API from '@/api/network/task';
-import {SubmitHandler, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
+import React from 'react';
+import {SubmitHandler, useForm} from 'react-hook-form';
 import * as yup from 'yup';
+
+import API from '@/api/network/task';
+import Button from '@/core-ui/button';
+import Input from '@/core-ui/input';
+import Modal from '@/core-ui/modal';
+
 import styles from './style.module.scss';
 
 const Schema = yup.object().shape({
@@ -70,13 +73,12 @@ const ModalCreateTask: React.FC<IProps> = ({userId, todolistId, open, onClose}) 
         </Modal.Header>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Body>
-            <input
-              className="input"
-              type="text"
+            <Input
+              className={errors.taskName && 'error'}
               placeholder="Enter your Task"
               {...register('taskName', {required: true})}
             />
-            {errors.taskName && <p>{errors.taskName.message}</p>}
+            {errors.taskName && <p className="invalid">{errors.taskName.message}</p>}
           </Modal.Body>
           <Modal.Footer>
             <Button className="btn" text="Cancel" theme="white" onClick={onClose} />
