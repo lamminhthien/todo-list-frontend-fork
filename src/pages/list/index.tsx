@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import useCheckUserLocalStorage from '@/hooks/useCheckUserLocalStorage';
 import ModalCreateList from '@/components/modal-create-list';
 import ModalShare from '@/components/modal-share';
@@ -13,7 +13,6 @@ import useList from '@/hooks/useList';
 const List: React.FC = () => {
   const router = useRouter();
   const {list} = useList();
-
   useCheckUserLocalStorage();
 
   const [createListOpen, setCreateListOpen] = useState<boolean>(true);
@@ -27,6 +26,13 @@ const List: React.FC = () => {
   const handleShare = () => {
     setShareOpen(false);
   };
+
+  useEffect(() => {
+    const open = localStorage.getItem('modalCreateList');
+    if (open === 'open') {
+      setCreateListOpen(false);
+    }
+  }, []);
 
   if (!list) return null;
 

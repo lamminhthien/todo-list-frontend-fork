@@ -37,6 +37,7 @@ const QuickPlay: React.FC = () => {
       .then(res => {
         if (res.status === 201) {
           localStorage.setItem('user', JSON.stringify(res.data, null, 2));
+          localStorage.setItem('modalCreateList', 'close');
           router.push(ROUTES.ACTION);
         }
       })
@@ -55,7 +56,7 @@ const QuickPlay: React.FC = () => {
             <TodoListLogo width={matches ? 249 : 175} />
           </div>
           <div className="enter-your-name">
-            <h2>Let&apos;s start !</h2>
+            <h2>Let&apos;s start!</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Input className={errors.userName && 'error'} placeholder="Enter your name" {...register('userName')} />
               {errors.userName && <p className="invalid">{errors.userName.message}</p>}
