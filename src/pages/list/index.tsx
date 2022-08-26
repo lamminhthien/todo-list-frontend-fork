@@ -4,11 +4,12 @@ import React, {useEffect, useState} from 'react';
 import API, {ITodoList} from '@/api/network/todo-list';
 import ModalCreateList from '@/components/modal-create-list';
 import ModalShare from '@/components/modal-share';
+import {ROUTES} from '@/configs/routes.config';
 import Button from '@/core-ui/button';
+import IconButton from '@/core-ui/ico-button';
 import Icon from '@/core-ui/icon';
 
 import styles from './style.module.scss';
-import {ROUTES} from '@/configs/routes.config';
 
 const List: React.FC = () => {
   const router = useRouter();
@@ -35,7 +36,6 @@ const List: React.FC = () => {
 
   // Fetch data
   const [list, setList] = useState<ITodoList[] | null>(null);
-
   useEffect(() => {
     const fetchData = async () => {
       await API.getTodoLists().then(res => {
@@ -63,16 +63,15 @@ const List: React.FC = () => {
                     router.push('/action');
                   }}
                 >
-                  <Icon size={29} className="abc-arrow-left-circle" />
+                  <Icon size={28} name="abc-arrow-left-circle" />
                 </div>
-
                 <div className="title-left">
                   <h3 className="title-todo">TO DO</h3>
                   <h3 className="title-todo">YOUR LIST</h3>
                 </div>
               </div>
-              <Button className="list-right" onClick={() => setCreateListOpen(true)}>
-                <Icon size={22} className="abc-plus-circle" />
+              <Button variant="contained" className="list-right" onClick={() => setCreateListOpen(true)}>
+                <Icon name="abc-plus-circle" />
                 <div className="title-right">New List</div>
               </Button>
             </div>
@@ -81,24 +80,9 @@ const List: React.FC = () => {
             {list.map(item => (
               <div className="text-group" key={item.id}>
                 <p className="title-group">{item.listName}</p>
-                <div className="icon-group">
-                  <Button
-                    className="btn-hover-hand"
-                    onClick={() => {
-                      setShareOpen(true);
-                      setCurrentListID(item.id);
-                    }}
-                  >
-                    <Icon size={22} className="abc-share" />
-                  </Button>
-                  <Button
-                    className="btn-hover-hand"
-                    onClick={() => {
-                      router.push(`/list/${item.id}`);
-                    }}
-                  >
-                    <Icon size={22} className="abc-arrow-right" />
-                  </Button>
+                <div className="actions">
+                  <IconButton icon="abc-share" onClick={() => setShareOpen(true)} />
+                  <IconButton icon="abc-arrow-right" onClick={() => router.push(`/list/${item.id}`)} />
                 </div>
               </div>
             ))}
