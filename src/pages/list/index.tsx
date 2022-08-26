@@ -70,7 +70,13 @@ const List: React.FC = () => {
                   <h3 className="title-todo">YOUR LIST</h3>
                 </div>
               </div>
-              <Button variant="contained" className="list-right" onClick={() => setCreateListOpen(true)}>
+              <Button
+                variant="contained"
+                className="list-right"
+                onClick={() => {
+                  setCreateListOpen(true);
+                }}
+              >
                 <Icon name="abc-plus-circle" />
                 <div className="title-right">New List</div>
               </Button>
@@ -81,8 +87,19 @@ const List: React.FC = () => {
               <div className="text-group" key={item.id}>
                 <p className="title-group">{item.listName}</p>
                 <div className="actions">
-                  <IconButton icon="abc-share" onClick={() => setShareOpen(true)} />
-                  <IconButton icon="abc-arrow-right" onClick={() => router.push(`/list/${item.id}`)} />
+                  <IconButton
+                    icon="abc-share"
+                    onClick={() => {
+                      setShareOpen(true);
+                      setCurrentListID(item.id);
+                    }}
+                  />
+                  <IconButton
+                    icon="abc-arrow-right"
+                    onClick={() => {
+                      router.push(`/list/${item.id}`);
+                    }}
+                  />
                 </div>
               </div>
             ))}

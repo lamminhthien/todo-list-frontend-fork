@@ -15,7 +15,9 @@ interface IProps {
   id?: string;
 }
 const ModalShare: React.FC<IProps> = ({open, onClose, id}) => {
-  const linkToDoList = window.location.href.split('/').slice(0, -1).join('/');
+  const href = window.location.href.split('/');
+  // const linkToDoList = href[0] + href[1] + href[2] + href[3];
+  const linkToDoList = [href[0], href[1], href[2], 'list', id].join('/');
 
   return (
     <div className={cn(styles['com-modal-share'])}>
