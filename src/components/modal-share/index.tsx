@@ -1,9 +1,8 @@
 import cn from 'classnames';
-import Image from 'next/image';
 import React from 'react';
 
-import IconClose from '@/assets/images/icon-close.svg';
 import Button from '@/core-ui/button';
+import Icon from '@/core-ui/icon';
 import Input from '@/core-ui/input';
 
 import Modal from '../../core-ui/modal';
@@ -23,7 +22,7 @@ const ModalShare: React.FC<IProps> = ({open, onClose, id}) => {
     <div className={cn(styles['com-modal-share'])}>
       <Modal open={open} onClose={onClose}>
         <div className="icon-close" onClick={onClose}>
-          <Image src={IconClose} alt="Close" width={21} />
+          <Icon name="abc-x-circle" />
         </div>
         <div className="modal-share">
           <div className="content-modal">

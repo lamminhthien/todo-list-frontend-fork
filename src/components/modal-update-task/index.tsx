@@ -1,10 +1,13 @@
-import Button from '@/core-ui/button';
-import API from '@/api/network/task';
-import Modal from '@/core-ui/modal';
+import {yupResolver} from '@hookform/resolvers/yup';
 import React from 'react';
 import {SubmitHandler, useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+
+import API from '@/api/network/task';
+import Button from '@/core-ui/button';
+import Input from '@/core-ui/input';
+import Modal from '@/core-ui/modal';
+
 import styles from './style.module.scss';
 
 const Schema = yup.object().shape({
@@ -54,9 +57,13 @@ const ModalUpdateList: React.FC<IProps> = ({taskId, taskName, open, onClose}) =>
         </Modal.Header>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Body>
-            <input className="hidden" type="text" {...register('taskID')} />
-            <input className="input" type="text" placeholder={taskName} {...register('taskName', {required: true})} />
-            {errors.taskName && <p>{errors.taskName.message}</p>}
+            <Input className="hidden" {...register('taskID')} />
+            <Input
+              className={`input ${errors.taskName && 'error'}`}
+              placeholder={taskName}
+              {...register('taskName', {required: true})}
+            />
+            {errors.taskName && <p className="invalid">{errors.taskName.message}</p>}
           </Modal.Body>
           <Modal.Footer>
             <Button className="btn" text="Close" theme="white" type="reset" onClick={onClose} />

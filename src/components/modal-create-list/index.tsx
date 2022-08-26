@@ -1,10 +1,13 @@
+import {yupResolver} from '@hookform/resolvers/yup';
 import React from 'react';
 import {SubmitHandler, useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+
 import API from '@/api/network/todo-list';
 import Button from '@/core-ui/button';
+import Input from '@/core-ui/input';
 import Modal from '@/core-ui/modal';
+
 import styles from './style.module.scss';
 
 const Schema = yup.object().shape({
@@ -57,13 +60,12 @@ const ModalCreateList: React.FC<IProps> = ({open, onClose}) => {
         </Modal.Header>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Body>
-            <input
-              className="input"
-              type="text"
+            <Input
+              className={errors.listName && 'error'}
               placeholder="Enter your list"
               {...register('listName', {required: true})}
             />
-            {errors.listName && <p>{errors.listName.message}</p>}
+            {errors.listName && <p className="invalid">{errors.listName.message}</p>}
           </Modal.Body>
           <Modal.Footer>
             <Button className="btn" text="Cancel" theme="white" onClick={onClose} />

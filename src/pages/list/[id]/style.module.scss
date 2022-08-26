@@ -31,6 +31,13 @@
     .detail-list {
       @apply mb-5 flex w-full items-center justify-between bg-white sm:mb-5 sm:h-12 sm:max-w-7xl;
     }
+    .list-group {
+      @apply flex items-center justify-between;
+    }
+    // CHECKED
+    .checked {
+      @apply text-red-500 line-through;
+    }
     .title-group {
       @apply my-3.5 pl-4 text-base font-normal sm:my-5 sm:text-h4;
     }
