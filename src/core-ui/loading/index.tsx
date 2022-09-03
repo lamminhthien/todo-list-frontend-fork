@@ -1,10 +1,10 @@
 import React, {FC, HTMLAttributes} from 'react';
 
-interface IProps extends HTMLAttributes<HTMLElement> {}
+type IProps = HTMLAttributes<HTMLElement>;
 
 const Loading: FC<IProps> = ({className, ...rest}) => {
   return (
-    <div className={['abc-loading', className].filter((x: string) => !!x).join(' ')} {...rest}>
+    <div className={['abc-loading', className].filter(x => !!x).join(' ')} {...rest}>
       <div></div>
       <div></div>
       <div></div>

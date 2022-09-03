@@ -18,6 +18,7 @@ module.exports = {
         xl: '0'
       }
     },
+    screens: Object.fromEntries(Object.entries(defaultTheme.screens).filter(([key]) => key !== '2xl')),
     fontFamily: {
       // Khai báo các font chữ được sử dụng trong website. Mặc định Tailwind sẽ sử dụng font họ "sans". Có nghĩa là font được sử dụng trong website hiện tại là "Quicksand".
       sans: ['Montserrat', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'sans-serif'],
@@ -178,7 +179,7 @@ module.exports = {
         '.invalid': {
           fontSize: theme('fontSize.sm'),
           color: theme('colors.abc-dark-red'),
-          fontStyle: 'normal',
+          fontStyle: 'italic',
           marginTop: theme('spacing.1')
         },
         '.overflow-initial': {

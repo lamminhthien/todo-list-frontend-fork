@@ -5,7 +5,7 @@ export interface IModalBodyProps {
 }
 
 const Body: FC<IModalBodyProps> = ({children}) => {
-  return <div className="modal-body">{children}</div>;
+  return <div className="abc-modal-body scrollbar">{children}</div>;
 };
 
 export default Body;

@@ -1,9 +1,9 @@
-import React, {createContext, FC, ReactNode, useContext, useMemo, useState} from 'react';
 import cls from 'classnames';
+import React, { FC, ReactNode, createContext, useContext, useMemo, useState } from 'react';
 
-import {Tab, ITabProps} from './tab';
-import {Items, ITabItemsProps} from './items';
-import {Panel, IPanelProps} from './panel';
+import { ITabItemsProps, Items } from './items';
+import { IPanelProps, Panel } from './panel';
+import { ITabProps, Tab } from './tab';
 
 interface ITabsContext {
   activeTab: string;
@@ -24,9 +24,9 @@ interface ITabsProps {
 
 const TabsContext = createContext<ITabsContext | undefined>(undefined);
 
-const Tabs: FC<ITabsProps> & ITabsComposition = ({className, children, active = ''}) => {
+const Tabs: FC<ITabsProps> & ITabsComposition = ({ className, children, active = '' }) => {
   const [activeTab, setActiveTab] = useState<string>(active);
-  const memoizedContextValue = useMemo(() => ({activeTab, setActiveTab}), [activeTab, setActiveTab]);
+  const memoizedContextValue = useMemo(() => ({ activeTab, setActiveTab }), [activeTab, setActiveTab]);
 
   return (
     <TabsContext.Provider value={memoizedContextValue}>
@@ -47,4 +47,4 @@ Tabs.Tab = Tab;
 Tabs.Items = Items;
 Tabs.Panel = Panel;
 
-export {Tabs};
+export { Tabs };

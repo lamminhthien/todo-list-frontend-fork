@@ -13,10 +13,10 @@ const Header: FC<IModalHeaderProps> = ({text, children}) => {
   const content = text ? <h5>{text}</h5> : children;
 
   return (
-    <div className="modal-header">
+    <div className="abc-modal-header">
       {content}
       <button
-        className="modal-close"
+        className="abc-modal-close"
         onClick={() => {
           onClose(false);
         }}

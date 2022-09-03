@@ -1,82 +1,92 @@
-import * as yup from 'yup';
-import API from '@/api/network/todo-list';
-import Auth from '../auth';
-import Button from '@/core-ui/button';
-import LayoutDefault from '@/layouts/default';
-import Input from '@/core-ui/input';
-import styles from './style.module.scss';
-import useToast from '@/core-ui/toast';
-import {SubmitHandler, useForm} from 'react-hook-form';
-import {useRouter} from 'next/router';
 import {yupResolver} from '@hookform/resolvers/yup';
+import {GetStaticProps} from 'next';
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
+import {useRouter} from 'next/router';
+import {SubmitHandler, useForm} from 'react-hook-form';
+import * as yup from 'yup';
+
+import API from '@/api/network/todo';
+import {ROUTES} from '@/configs/routes.config';
+import Button from '@/core-ui/button';
+import Input from '@/core-ui/input';
+import useToast from '@/core-ui/toast';
+import LayoutDefault from '@/layouts/default';
+
+import styles from './style.module.scss';
 
 interface IFormInputs {
-  ID: string;
+  todoId: string;
 }
 
 const Schema = yup.object().shape({
-  ID: yup.string().required('Please fill ID.')
+  todoId: yup.string().required('Please enter room ID.')
 });
 
-function Action() {
+export default function Action() {
   const router = useRouter();
   const toast = useToast();
 
   const {register, handleSubmit, formState} = useForm<IFormInputs>({
-    mode: 'onChange',
     resolver: yupResolver(Schema)
   });
 
   const {errors} = formState;
 
   const onSubmit: SubmitHandler<IFormInputs> = data => {
-    API.readTodoList(Number(data.ID))
+    API.getTodo(data.todoId)
       .then(res => {
-        if (res.status == 200) {
-          router.push(`/list/${data.ID}`);
-        }
+        if (res.status == 200) router.push(`${ROUTES.TODO}/${data.todoId}`);
       })
-      .catch(error => {
-        toast.show({type: 'danger', title: 'Xin chào!', content: error.response.data.message, lifeTime: 3000});
+      .catch(() => {
+        toast.show({type: 'danger', title: 'Error!', content: 'Room not found.', lifeTime: 3000});
       });
   };
+
   return (
-    <Auth>
-      <div className={styles['create-room']}>
-        <div className="container">
-          <div className="inner">
-            <p className="title">TO DO LIST</p>
-            <p className="headline">Organize your work and life, finally.</p>
-            <div className="actions">
-              <div className="item">
-                <Button
-                  variant="contained"
-                  className="w-full"
-                  color="primary"
-                  onClick={() => {
-                    router.push('/list');
-                  }}
-                >
-                  Create New List
-                </Button>
-              </div>
-              <div className="item">
-                <form className="input-group" onSubmit={handleSubmit(onSubmit)}>
-                  <Input className={errors.ID && 'error'} placeholder="Enter ID" {...register('ID')} />
-                  <Button variant="contained" className="input-group-text" color="primary" type="submit">
-                    Join
-                  </Button>
-                </form>
-                {errors.ID && <p className=" invalid">{errors.ID.message}</p>}
-              </div>
+    <div className={styles['create-room']}>
+      <div className="container">
+        <div className="inner">
+          <p className="title">TO DO LIST</p>
+          <p className="headline">Organize your work and life, finally.</p>
+          <div className="actions">
+            <div className="item">
+              <Button variant="contained" className="w-full" color="primary" onClick={() => router.push(ROUTES.TODO)}>
+                Create New List
+              </Button>
+            </div>
+            <div className="item">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Input
+                  groupEnd={
+                    <Button
+                      className="input-group-text"
+                      color="primary"
+                      variant="contained"
+                      text="Join"
+                      type="submit"
+                    />
+                  }
+                  placeholder="Enter Link or ID"
+                  error={errors.todoId?.message}
+                  {...register('todoId')}
+                />
+              </form>
             </div>
           </div>
         </div>
       </div>
-    </Auth>
+    </div>
   );
 }
 
 Action.Layout = LayoutDefault;
 
-export default Action;
+export const getStaticProps: GetStaticProps = async ({locale}) => {
+  const translate = await serverSideTranslations(locale!, ['common']);
+
+  return {
+    props: {
+      ...translate
+    }
+  };
+};

@@ -1,10 +1,11 @@
-import * as yup from 'yup';
-import Button from '@/core-ui/button';
-import API, {ITodo} from '@/api/network/todo-list';
-import React, {FC, useEffect} from 'react';
-import {Modal} from '@/core-ui/modal';
-import {SubmitHandler, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
+import React, {FC, useEffect} from 'react';
+import {SubmitHandler, useForm} from 'react-hook-form';
+import * as yup from 'yup';
+
+import API, {ITodo} from '@/api/network/todo';
+import Button from '@/core-ui/button';
+import {Modal} from '@/core-ui/modal';
 
 import styles from './style.module.scss';
 
@@ -16,58 +17,57 @@ interface IProps {
 }
 
 interface IFormInputs {
-  listName: string;
+  name: string;
 }
 
 const Schema = yup.object().shape({
-  listName: yup.string().required()
+  name: yup.string().required()
 });
 
-const ModalAddEditTodoList: FC<IProps> = ({data, open, onCancel, onSave}) => {
+const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
   const {register, handleSubmit, setValue, formState} = useForm<IFormInputs>({
+    defaultValues: {
+      name: ''
+    },
     resolver: yupResolver(Schema)
   });
 
-  const onSubmit: SubmitHandler<IFormInputs> = formData => {
-    if (data?.id) {
-      API.updateTodoList(data.id, formData).then(() => onSave?.());
-    } else {
-      API.createTodoList(formData).then(() => onSave?.());
-    }
-  };
-
   const {errors} = formState;
 
-  const getTodo = (id: any) => {
-    API.readTodoList(id).then(res => {
+  const getTodo = (id: string) => {
+    API.getTodo(id).then(res => {
       const resp = res.data as ITodo;
-      setValue('listName', resp.listName);
+      setValue('name', resp.name);
     });
   };
 
-  useEffect(() => {
+  const onSubmit: SubmitHandler<IFormInputs> = formData => {
     if (data?.id) {
-      getTodo(data.id);
+      API.updateTodo(data.id, formData).then(() => onSave?.());
+    } else {
+      API.createTodo(formData).then(() => onSave?.());
     }
+  };
+
+  useEffect(() => {
+    if (data?.id) getTodo(data.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
     <div className={styles['com-modal-todo-add-edit']}>
-      <Modal open={open} onClose={onSave}>
+      <Modal open={open} variant="center" onClose={() => onSave?.()}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Header>
             <h3 className="title">{data?.id ? 'Update list' : 'Create New List'}</h3>
           </Modal.Header>
           <Modal.Body>
-            <input className="form-input" {...register('listName')} placeholder="Enter your list" />
-            {errors.listName && <p>{errors.listName.message}</p>}
+            <input className="form-input" {...register('name')} placeholder="Enter your list" />
+            {errors.name && <p>{errors.name.message}</p>}
           </Modal.Body>
           <Modal.Footer>
-            <button className="btn btn-cancel" type="button" onClick={onCancel}>
-              Cancel
-            </button>
-            <Button className="btn" type="submit" variant="contained" color="primary" text="Save" />
+            <Button variant="outlined" color="secondary" text="Cancel" onClick={onCancel} />
+            <Button variant="contained" color="primary" text="Save" type="submit" />
           </Modal.Footer>
         </form>
       </Modal>
@@ -75,4 +75,4 @@ const ModalAddEditTodoList: FC<IProps> = ({data, open, onCancel, onSave}) => {
   );
 };
 
-export default ModalAddEditTodoList;
+export default ModalTodoAddEdit;

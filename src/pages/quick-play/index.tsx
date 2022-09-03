@@ -1,7 +1,10 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import cn from 'classnames';
+import {GetStaticProps} from 'next';
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
 import {useRouter} from 'next/router';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -10,6 +13,7 @@ import TodoListLogo from '@/components/icons/todolist-logo';
 import {ROUTES} from '@/configs/routes.config';
 import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
+import useToast from '@/core-ui/toast';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import LayoutDefault from '@/layouts/default';
 
@@ -25,35 +29,25 @@ const Schema = yup.object().shape({
 
 export default function QuickPlay() {
   const router = useRouter();
-
+  const toast = useToast();
+  const matches = useMediaQuery('(min-width:640px)');
   const {register, handleSubmit, formState} = useForm<IFormInputs>({
-    mode: 'onChange',
     resolver: yupResolver(Schema)
   });
-
-  const {errors} = formState;
-
-  useEffect(() => {
-    localStorage.setItem('toast', 'close');
-  });
-
   const onSubmit: SubmitHandler<IFormInputs> = data => {
     API.createUser(data)
-      .then(async res => {
+      .then(res => {
         if (res.status === 201) {
-          localStorage.setItem('user', JSON.stringify(res.data, null, 2));
-          localStorage.setItem('modalCreateList', 'close');
-          localStorage.setItem('toast', 'close');
-          await router.push(ROUTES.ACTION);
-          window.location.reload();
+          localStorage.setItem('user', JSON.stringify(res.data));
+          router.push(ROUTES.ACTION);
         }
       })
-      .catch(error => {
-        console.log(error);
+      .catch(() => {
+        toast.show({type: 'danger', title: 'Error', content: 'Can&lsquo;t create user.'});
       });
   };
 
-  const matches = useMediaQuery('(min-width:640px)');
+  const {errors} = formState;
 
   return (
     <div className={cn(styles['com-quick-play'])}>
@@ -61,6 +55,9 @@ export default function QuickPlay() {
         <div className="inner">
           <div className="logo-wrapper">
             <TodoListLogo width={matches ? 249 : 175} />
+            <Link href="/action">
+              <a>Action</a>
+            </Link>
           </div>
           <div className="enter-your-name">
             <h2>Let&apos;s start!</h2>
@@ -79,3 +76,11 @@ export default function QuickPlay() {
 }
 
 QuickPlay.Layout = LayoutDefault;
+
+export const getStaticProps: GetStaticProps = async ({locale}) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale!, ['common', 'footer']))
+    }
+  };
+};

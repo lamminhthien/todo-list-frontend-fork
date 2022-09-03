@@ -3,6 +3,11 @@ export interface IPropsBase {
   theme?: 'dark' | 'light';
 }
 
+export interface IAction {
+  type: string;
+  payload: any;
+}
+
 export interface IAppContext {
   menuVisible: boolean;
   modalCreateNewVisible: boolean;

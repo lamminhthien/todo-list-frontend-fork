@@ -2,33 +2,60 @@ import '@/vendors/tailwindcss/style.scss';
 import '@/vendors/menu/style.scss';
 import '@/vendors/abc-icons/dist/abc.scss';
 
+import {appWithTranslation} from 'next-i18next';
 import type {AppProps} from 'next/app';
 import {useRouter} from 'next/router';
-import {appWithTranslation} from 'next-i18next';
-import NextNProgress from 'nextjs-progressbar';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-import DefaultSeo from '@/components/common/seo/default-seo';
-import GoogleTagManager from '@/components/common/third-party/google-analytics/gtag';
+import DefaultSeo from '@/components/seo/default-seo';
+import {ROUTES} from '@/configs/routes.config';
 import QueryProvider from '@/contexts/query.provider';
-
-const Noop: React.FC = ({children}: React.PropsWithChildren<any>) => <>{children}</>;
+import {CoreUIProvider, defaultTheme} from '@/core-ui/contexts/index';
+import Noop from '@/core-ui/noop';
 
 const CustomApp = ({Component, pageProps}: AppProps) => {
   const router = useRouter();
+  const [visible, setVisible] = useState(false);
 
   const Layout = (Component as any).Layout || Noop;
 
+  function authCheck(url: string) {
+    const userJson = localStorage.getItem('user');
+    const user = JSON.parse(userJson || '{}');
+
+    const currentPath = url.split('?')[0];
+
+    if (!user.id && !['/', '/quick-play'].includes(currentPath)) {
+      setVisible(true);
+      router.push({pathname: ROUTES.HOME});
+    } else if (user.id && ['/quick-play'].includes(currentPath)) {
+      setVisible(true);
+      router.push({pathname: ROUTES.ACTION});
+    } else {
+      setVisible(true);
+    }
+  }
+
+  useEffect(() => {
+    authCheck(router.asPath);
+
+    const hideContent = () => setVisible(false);
+
+    router.events.on('routeChangeStart', hideContent);
+    router.events.on('routeChangeComplete', authCheck);
+    return () => {
+      router.events.off('routeChangeStart', hideContent);
+      router.events.off('routeChangeComplete', authCheck);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <QueryProvider pageProps={pageProps}>
-      <DefaultSeo />
-      <NextNProgress color="#3D99D3" />
-      <GoogleTagManager />
-      {/* <Auth> */}
-      <Layout pageProps={pageProps}>
-        <Component {...pageProps} key={router.route} />
-      </Layout>
-      {/* </Auth> */}
+      <CoreUIProvider theme={defaultTheme}>
+        <DefaultSeo />
+        <Layout pageProps={pageProps}>{visible && <Component {...pageProps} key={router.route} />}</Layout>
+      </CoreUIProvider>
     </QueryProvider>
   );
 };

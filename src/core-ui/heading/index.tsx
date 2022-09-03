@@ -1,13 +1,11 @@
-import React, {FC, memo, ReactNode} from 'react';
 import cls from 'classnames';
-
-type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+import React, {FC, ReactNode, memo} from 'react';
 
 interface IProps {
   className?: string;
   text?: string;
   children?: ReactNode;
-  as: HeadingTag;
+  as: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
 const Heading: FC<IProps> = ({className, text, children, as = 'h1'}) => {

@@ -1,0 +1,60 @@
+.create-detail-section :global {
+  @apply py-20;
+  .detail-content {
+    @apply flex justify-between  border-b-2 border-black pb-2 md:pb-4;
+  }
+  .detail-left {
+    @apply flex items-center justify-between;
+  }
+  .icon-arrow-left {
+    @apply flex cursor-pointer items-center justify-between;
+    .abc-icon::before {
+      @apply text-xl md:text-[28px];
+    }
+  }
+
+  .title-todo {
+    @apply px-2 text-h6 font-normal sm:text-h5 md:px-4  md:text-h3 md:font-semibold;
+  }
+
+  .detail-right {
+    @apply flex items-center justify-between sm:gap-4 md:gap-8;
+    .items {
+      @apply flex cursor-pointer items-center justify-between bg-transparent text-black hover:bg-transparent;
+      .abc-icon::before {
+        @apply text-xl md:text-2xl;
+      }
+    }
+    .title-right {
+      @apply hidden sm:ml-4 md:block md:text-h5 md:font-normal;
+    }
+  }
+  //-----------------------------------------
+
+  .detail-group {
+    @apply pt-5;
+    .detail-list {
+      @apply mb-5 flex h-12 w-full items-center justify-between bg-white sm:mb-5 sm:max-w-7xl;
+    }
+    .list-group {
+      @apply flex items-center justify-between;
+
+      .title-group {
+        @apply my-3.5 pl-4 text-h6 font-normal md:my-3 md:text-h4;
+      }
+      .checked {
+        @apply line-through;
+      }
+    }
+
+    .actions {
+      @apply flex gap-3 pr-4;
+      .abc-icon::before {
+        @apply text-xl md:text-2xl;
+      }
+    }
+    .btn-hover-hand {
+      @apply cursor-pointer bg-transparent p-0;
+    }
+  }
+}
