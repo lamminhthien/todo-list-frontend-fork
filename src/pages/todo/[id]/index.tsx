@@ -8,6 +8,7 @@ import {ROUTES} from '@/configs/routes.config';
 import Button from '@/core-ui/button';
 import Checkbox from '@/core-ui/checkbox';
 import Icon from '@/core-ui/icon';
+import IconButton from '@/core-ui/icon-button';
 import LayoutDefault from '@/layouts/default';
 import {IAction} from '@/types';
 
@@ -54,11 +55,11 @@ export default function Detail() {
               </div>
             </div>
             <div className="detail-right">
-              <Button variant="contained" color="primary" className="items">
+              <Button className="items">
                 <Icon name="ico-trash" />
                 <div className="title-right">Delete</div>
               </Button>
-              <Button variant="contained" color="primary" className="items">
+              <Button className="items">
                 <Icon name="ico-share" />
                 <div className="title-right">Share</div>
               </Button>
@@ -78,8 +79,8 @@ export default function Detail() {
                 <p className={`title-group ${task.isDone ? 'checked' : ''}`}>{task.name}</p>
               </div>
               <div className="actions">
-                <Button text="ico-edit" onClick={() => setAction({type: 'edit', payload: task})} />
-                <Button text="ico-trash" onClick={() => setAction({type: 'delete', payload: task})} />
+                <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: task})} />
+                <IconButton name="ico-trash" onClick={() => setAction({type: 'delete', payload: task})} />
               </div>
             </div>
           ))}

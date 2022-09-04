@@ -9,6 +9,7 @@ import ModalTodoConfirmDelete from '@/components/modal-todo-confirm-delete';
 import {ROUTES} from '@/configs/routes.config';
 import Button from '@/core-ui/button';
 import Icon from '@/core-ui/icon';
+import IconButton from '@/core-ui/icon-button';
 import LayoutDefault from '@/layouts/default';
 import {IAction} from '@/types';
 
@@ -68,21 +69,29 @@ export default function List() {
             <div className="text-group" key={item.id}>
               <p className="title-group">{item.name}</p>
               <div className="actions">
-                <Button text="ico-edit" onClick={() => setAction({type: 'edit', payload: item})} />
-                <Button text="ico-trash" onClick={() => setAction({type: 'delete', payload: item})} />
-                <Button text="ico-share" onClick={() => {}} />
-                <Button text="ico-arrow-right" onClick={() => router.push(`${ROUTES.TODO}/${item.id}`)} />
+                <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: item})} />
+                <IconButton name="ico-trash" onClick={() => setAction({type: 'delete', payload: item})} />
+                <IconButton name="ico-share" onClick={() => {}} />
+                <IconButton name="ico-arrow-right" onClick={() => router.push(`${ROUTES.TODO}/${item.id}`)} />
               </div>
             </div>
           ))}
         </div>
       </div>
-      {['add', 'edit'].includes(action.type) && (
-        <ModalTodoAddEdit data={action.payload} open={true} onSave={reset} onCancel={resetAction} />
-      )}
-      {['delete'].includes(action.type) && (
-        <ModalTodoConfirmDelete open={true} data={action.payload} onConfirm={reset} onCancel={resetAction} />
-      )}
+      {/* <pre>{JSON.stringify(action)}</pre> */}
+      {/* <pre>{['add', 'edit'].includes(action.type).toString()}</pre> */}
+      <ModalTodoAddEdit
+        data={action.payload}
+        open={['add', 'edit'].includes(action.type)}
+        onSave={reset}
+        onCancel={resetAction}
+      />
+      <ModalTodoConfirmDelete
+        open={['delete'].includes(action.type)}
+        data={action.payload}
+        onConfirm={reset}
+        onCancel={resetAction}
+      />
     </div>
   );
 }

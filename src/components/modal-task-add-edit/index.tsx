@@ -55,8 +55,8 @@ const ModalTaskAddEdit: FC<IProps> = ({data, open, onSave, onCancel}) => {
   }, [data]);
 
   return (
-    <div className={styles['com-modal-task-add-edit']}>
-      <Modal variant="center" onClose={() => onSave?.()} open={open}>
+    <Modal variant="center" onClose={() => onSave?.()} open={open}>
+      <div className={styles['com-modal-task-add-edit']}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Header>
             <h3 className="title">{data?.id ? 'Update task' : 'Add New To-Do'}</h3>
@@ -70,8 +70,8 @@ const ModalTaskAddEdit: FC<IProps> = ({data, open, onSave, onCancel}) => {
             <Button variant="contained" color="primary" text="Save" type="submit" />
           </Modal.Footer>
         </form>
-      </Modal>
-    </div>
+      </div>
+    </Modal>
   );
 };
 

@@ -2,6 +2,7 @@
 
 @tailwind base;
 @layer base {
+  @import './bases/root';
   @import './bases/html';
   @import './bases/body';
   @import './bases/heading';

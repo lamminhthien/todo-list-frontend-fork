@@ -17,6 +17,7 @@ const Header: FC<IModalHeaderProps> = ({text, children}) => {
       {content}
       <button
         className="abc-modal-close"
+        type="button"
         onClick={() => {
           onClose(false);
         }}

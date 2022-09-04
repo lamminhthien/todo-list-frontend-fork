@@ -34,7 +34,7 @@
   .detail-group {
     @apply pt-5;
     .detail-list {
-      @apply mb-5 flex h-12 w-full items-center justify-between bg-white sm:mb-5 sm:max-w-7xl;
+      @apply px-4 mb-5 flex h-12 w-full items-center justify-between bg-white sm:mb-5 sm:max-w-7xl;
     }
     .list-group {
       @apply flex items-center justify-between;
@@ -48,13 +48,10 @@
     }
 
     .actions {
-      @apply flex gap-3 pr-4;
+      @apply flex gap-x-1;
       .abc-icon::before {
         @apply text-xl md:text-2xl;
       }
-    }
-    .btn-hover-hand {
-      @apply cursor-pointer bg-transparent p-0;
     }
   }
 }

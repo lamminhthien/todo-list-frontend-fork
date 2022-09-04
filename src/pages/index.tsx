@@ -8,13 +8,11 @@ import LayoutDefault from '@/layouts/default';
 
 export default function PageHome() {
   return (
-    <>
-      <Button>
-        <Link href={ROUTES.QUICKPLAY}>
-          <a>Quick play</a>
-        </Link>
-      </Button>
-    </>
+    <Button>
+      <Link href={ROUTES.QUICKPLAY}>
+        <a>Quick play</a>
+      </Link>
+    </Button>
   );
 }
 

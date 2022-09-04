@@ -1,13 +1,12 @@
 import cls from 'classnames';
-import React, {FC, ReactNode, createContext, useContext, useMemo} from 'react';
-import {CSSTransition, SwitchTransition} from 'react-transition-group';
+import React, {FC, ReactNode, createContext, useContext, useEffect, useMemo, useState} from 'react';
+import {CSSTransition} from 'react-transition-group';
 
 import Backdrop from '../backdrop';
 import Portal from '../portal';
 import Body, {IModalBodyProps} from './body';
 import Footer, {IModalFooterProps} from './footer';
 import Header, {IModalHeaderProps} from './header';
-
 interface IModalComposition {
   Header: FC<IModalHeaderProps>;
   Body: FC<IModalBodyProps>;
@@ -34,12 +33,13 @@ const ModalContext = createContext<IModalContext | undefined>(undefined);
 export const Modal: FC<IModalProps> & IModalComposition = ({
   className = 'max-w-xl',
   children,
-  transitionTime = 300,
+  transitionTime = 5000,
   backdrop = true,
   variant = 'top',
-  open,
+  open = false,
   onClose
 }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const memoizedContextValue = useMemo(() => ({open, onClose}), [open, onClose]);
 
   const getVariantClass = (currentVariant: string) => {
@@ -61,22 +61,22 @@ export const Modal: FC<IModalProps> & IModalComposition = ({
   };
 
   const dialogVariantClass = getVariantClass(variant);
-  const setBodyClass = (value: boolean) => {
-    document.body.classList.toggle('no-scroll', value);
-    document.body.classList.toggle(`${dialogVariantClass}-opened`, value);
-  };
+  // const setBodyClass = (value: boolean) => {
+  //   document.body.classList.toggle('no-scroll', value);
+  //   document.body.classList.toggle(`${dialogVariantClass}-opened`, value);
+  // };
+
+  useEffect(() => {
+    setIsOpen(open);
+    return () => setIsOpen(false);
+  }, [open]);
+
+  if (!open) return null;
 
   return (
     <ModalContext.Provider value={memoizedContextValue}>
       <Portal>
-        <CSSTransition
-          in={open}
-          timeout={transitionTime}
-          classNames={{enter: 'mu-enter'}}
-          unmountOnExit
-          onEnter={() => setBodyClass(true)}
-          onExit={() => setBodyClass(false)}
-        >
+        <CSSTransition in={isOpen} timeout={transitionTime}>
           <div className={cls('abc-modal', 'scrollbar', `abc-modal-${variant}`)}>
             <div className={cls('abc-modal-dialog', className, dialogVariantClass)}>
               <div className="abc-modal-content">{children}</div>

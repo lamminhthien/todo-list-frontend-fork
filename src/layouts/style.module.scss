@@ -1,6 +1,6 @@
 .layout-default :global {
-  @apply flex h-screen flex-col justify-between;
+  @apply flex h-full flex-col justify-between;
   main {
-    @apply h-full;
+    @apply py-5;
   }
 }

@@ -8,7 +8,7 @@ export default class CustomDocument extends Document {
 
   render() {
     return (
-      <Html lang="en">
+      <Html lang="en" className="h-full">
         <Head>
           <meta charSet="UTF-8" />
           <meta httpEquiv="cleartype" content="on" />
@@ -20,7 +20,7 @@ export default class CustomDocument extends Document {
             rel="stylesheet"
           />
         </Head>
-        <body className="scrollbar bg-blue-50">
+        <body className="scrollbar h-full bg-blue-50">
           <Main />
           <NextScript />
           <div id="react-modal-root"></div>
