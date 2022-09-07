@@ -107,7 +107,7 @@ export default function Detail() {
           {!todoList?.tasks.length && <span>Empty list</span>}
           {todoList.tasks &&
             todoList.tasks.map(task => (
-              <div className="item cursor-pointer" key={task.id} onClick={() => setDone(task.id, !task.isDone)}>
+              <div className="item" key={task.id}>
                 <div className="checkbox-task">
                   <Checkbox className="mr-3" checked={task.isDone} onChange={() => setDone(task.id, !task.isDone)} />
                   <p className={`title ${task.isDone ? 'checked' : ''}`}>{task.name}</p>
