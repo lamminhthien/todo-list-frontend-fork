@@ -84,6 +84,13 @@ export default function List() {
           ))}
         </div>
       </div>
+      <div className="menu-footer">
+        <Button
+          className="btn-create"
+          startIcon={<Icon name="ico-plus-circle" size={28} />}
+          onClick={() => setAction({type: 'add', payload: null})}
+        />
+      </div>
       {/* <pre>{JSON.stringify(action)}</pre> */}
       {/* <pre>{['add', 'edit'].includes(action.type).toString()}</pre> */}
       {/* <ModalTodoAddEdit
