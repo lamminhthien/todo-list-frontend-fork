@@ -8,6 +8,7 @@ import API, {ITask} from '@/api/network/task';
 import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
 import {Modal} from '@/core-ui/modal';
+import useToast from '@/core-ui/toast';
 
 import styles from './style.module.scss';
 
@@ -28,15 +29,16 @@ interface IFormInputs {
 const Schema = yup.object().shape({
   name: yup.string().required('Please enter your task name.')
 });
+const FORM_DEFAULT_VALUES = {
+  name: ''
+};
 
 const ModalTaskAddEdit: FC<IProps> = ({data, open, todoListId, onSave, onCancel}) => {
-  const {register, handleSubmit, setValue, formState} = useForm<IFormInputs>({
-    defaultValues: {
-      name: ''
-    },
+  const {register, handleSubmit, reset, setValue, formState} = useForm<IFormInputs>({
+    defaultValues: FORM_DEFAULT_VALUES,
     resolver: yupResolver(Schema)
   });
-
+  const toast = useToast();
   const {errors} = formState;
 
   const getTask = (id: string) => {
@@ -54,14 +56,23 @@ const ModalTaskAddEdit: FC<IProps> = ({data, open, todoListId, onSave, onCancel}
     formData.userId = userId;
 
     if (data?.id) {
-      API.updateTask(data.id, formData).then(() => onSave?.());
+      API.updateTask(data.id, formData).then(() => {
+        onSave?.();
+        toast.show({type: 'success', title: 'Update To-Do', content: 'Successful!'});
+      });
     } else {
-      API.createTask(formData).then(() => onSave?.());
+      API.createTask(formData).then(() => {
+        onSave?.();
+        toast.show({type: 'success', title: 'Create To-Do', content: 'Successful!'});
+      });
     }
   };
 
   useEffect(() => {
     if (data?.id) getTask(data.id);
+    else {
+      reset(FORM_DEFAULT_VALUES);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 

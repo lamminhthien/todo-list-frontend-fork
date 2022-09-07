@@ -86,12 +86,16 @@ export default function List() {
       </div>
       {/* <pre>{JSON.stringify(action)}</pre> */}
       {/* <pre>{['add', 'edit'].includes(action.type).toString()}</pre> */}
-      <ModalTodoAddEdit
+      {/* <ModalTodoAddEdit
         data={action.payload}
         open={['add', 'edit'].includes(action.type)}
         onSave={reset}
         onCancel={resetAction}
-      />
+      /> */}
+
+      {['add', 'edit'].includes(action.type) && (
+        <ModalTodoAddEdit data={action.payload} open={true} onSave={() => reset()} onCancel={() => resetAction()} />
+      )}
       <ModalTodoConfirmDelete
         open={['delete'].includes(action.type)}
         data={action.payload}

@@ -64,7 +64,6 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
       });
     }
   };
-
   useEffect(() => {
     if (data?.id) {
       getTodo(data.id);
