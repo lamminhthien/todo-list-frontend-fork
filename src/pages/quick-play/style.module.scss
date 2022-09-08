@@ -6,28 +6,28 @@
     @apply flex justify-center md:mt-6;
   }
   svg {
-    @apply w-[175px] lg:w-[243px];
+    @apply w-[175px] md:w-[243px];
   }
   .todolist-logo {
     @apply w-28;
   }
   .enter-your-name {
-    @apply mt-2 rounded-lg border border-slate-100 bg-white py-9 px-4 lg:mt-12 lg:py-16 lg:px-20;
+    @apply mt-10 rounded-lg border border-slate-100 bg-white py-10 px-4 lg:mt-16 lg:py-16 lg:px-20;
     .name-input {
       @apply p-3 md:pl-4;
     }
     h2 {
-      @apply text-center text-h2;
+      @apply text-center text-h2 font-normal;
     }
   }
 
   form {
     @apply relative mt-8 lg:mt-12;
     .invalid {
-      @apply absolute  left-0 top-12 text-xs;
+      @apply absolute left-0;
     }
   }
   .btn-submit {
-    @apply mt-6 w-full p-3 text-h6 font-normal md:text-h4 md:leading-6 lg:mt-8;
+    @apply mt-8 w-full p-3 text-h4 font-normal;
   }
 }
