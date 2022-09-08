@@ -16,7 +16,7 @@ const DefaultSeo: React.FC = () => {
         description: siteSettings.description,
         images: [
           {
-            url: '/todolist.jpg',
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/public/todolist.png`,
             width: 1200,
             height: 630,
             alt: 'ABC Software Solutions Company'
