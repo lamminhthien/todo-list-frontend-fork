@@ -11,9 +11,7 @@ interface SeoProps extends NextSeoProps {
 
 const Seo: React.FC<SeoProps> = ({title, description, cover, url, ...rest}: SeoProps) => {
   const image = cover?.formats.large;
-  let images: ReadonlyArray<OpenGraphMedia> = [
-    {url: `${process.env.NEXT_PUBLIC_SITE_URL}/public/todolist.png`, width: 1200, height: 630, alt: 'ToDo List'}
-  ];
+  let images: ReadonlyArray<OpenGraphMedia> = [{url: '/todolist.png', width: 1200, height: 630, alt: 'ToDo List'}];
   if (image)
     images = [{url: getImageURL(image.url), width: image.width, height: image.height, alt: cover?.alternativeText}];
   return (
