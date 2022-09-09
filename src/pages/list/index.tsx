@@ -44,6 +44,10 @@ export default function List() {
   };
 
   useEffect(() => {
+    if (localStorage.getItem('createNewList')) {
+      setAction({type: 'add', payload: null});
+      localStorage.removeItem('createNewList');
+    }
     getTodoList();
   }, []);
 

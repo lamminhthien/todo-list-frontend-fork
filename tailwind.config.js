@@ -33,20 +33,20 @@ module.exports = {
       // Do đó Tailwind cung cấp tính năng mở rộng để tạo thêm cấu hình một cách dễ dàng.
       fontSize: {
         none: ['0', '0'],
-        hero: ['3.5rem', { lineHeight: '4rem', letterSpacing: '0' }],
-        h1: ['2.5rem', { lineHeight: '3rem', letterSpacing: '0' }],
-        h2: ['1.75rem', { lineHeight: '2.25rem', letterSpacing: '0' }],
-        h3: ['1.5rem', { lineHeight: '2rem', letterSpacing: '0' }],
-        h4: ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '0' }],
-        h5: ['1.125rem', { lineHeight: '1.625rem', letterSpacing: '0' }],
-        h6: ['1rem', { lineHeight: '1.5rem', letterSpacing: '0' }],
-        display1: ['5rem', { lineHeight: '3.5rem', letterSpacing: '0' }],
-        display2: ['4.5rem', { lineHeight: '3.5rem', letterSpacing: '0' }],
-        display3: ['4rem', { lineHeight: '3.5rem', letterSpacing: '0' }],
-        display4: ['3.5rem', { lineHeight: '3.5rem', letterSpacing: '0' }],
-        display5: ['3rem', { lineHeight: '3.5rem', letterSpacing: '0' }],
-        display6: ['2.5rem', { lineHeight: '3.5rem', letterSpacing: '0' }],
-        figure: ['0.688rem', { lineHeight: '3.5rem', letterSpacing: '0' }]
+        hero: ['3.5rem', {lineHeight: '4rem', letterSpacing: '0'}],
+        h1: ['2.5rem', {lineHeight: '3rem', letterSpacing: '0'}],
+        h2: ['1.75rem', {lineHeight: '2.25rem', letterSpacing: '0'}],
+        h3: ['1.5rem', {lineHeight: '2rem', letterSpacing: '0'}],
+        h4: ['1.25rem', {lineHeight: '1.75rem', letterSpacing: '0'}],
+        h5: ['1.125rem', {lineHeight: '1.625rem', letterSpacing: '0'}],
+        h6: ['1rem', {lineHeight: '1.5rem', letterSpacing: '0'}],
+        display1: ['5rem', {lineHeight: '3.5rem', letterSpacing: '0'}],
+        display2: ['4.5rem', {lineHeight: '3.5rem', letterSpacing: '0'}],
+        display3: ['4rem', {lineHeight: '3.5rem', letterSpacing: '0'}],
+        display4: ['3.5rem', {lineHeight: '3.5rem', letterSpacing: '0'}],
+        display5: ['3rem', {lineHeight: '3.5rem', letterSpacing: '0'}],
+        display6: ['2.5rem', {lineHeight: '3.5rem', letterSpacing: '0'}],
+        figure: ['0.688rem', {lineHeight: '3.5rem', letterSpacing: '0'}]
       },
       letterSpacing: {
         4: '0.04em', // -4%
@@ -59,16 +59,16 @@ module.exports = {
       },
       colors: {
         blue: {
-          '50': '#f6fafe',
-          '100': '#edf5fd',
-          '200': '#d2e6f9',
-          '300': '#b7d7f6',
-          '400': '#81b8ef',
-          '500': '#4b9ae8',
-          '600': '#448bd1',
-          '700': '#3874ae',
-          '800': '#2d5c8b',
-          '900': '#254b72'
+          50: '#f6fafe',
+          100: '#edf5fd',
+          200: '#d2e6f9',
+          300: '#b7d7f6',
+          400: '#81b8ef',
+          500: '#4b9ae8',
+          600: '#448bd1',
+          700: '#3874ae',
+          800: '#2d5c8b',
+          900: '#254b72'
         }
       },
       backgroundImage: {
@@ -121,16 +121,16 @@ module.exports = {
       },
       keyframes: {
         hLine: {
-          '0%': { width: '0px' },
-          '100%': { width: '100%' }
+          '0%': {width: '0px'},
+          '100%': {width: '100%'}
         },
         zoomIn: {
-          '0%': { transform: 'translateY(0) scale(1, 1)' },
-          '100%': { transform: 'translateY(-20px) scale(1.3, 1.3)' }
+          '0%': {transform: 'translateY(0) scale(1, 1)'},
+          '100%': {transform: 'translateY(-20px) scale(1.3, 1.3)'}
         },
         zoomOut: {
-          '0%': { transform: 'translateY(-20px) scale(1.3, 1.3)' },
-          '100%': { transform: 'translateY(0) scale(1, 1)' }
+          '0%': {transform: 'translateY(-20px) scale(1.3, 1.3)'},
+          '100%': {transform: 'translateY(0) scale(1, 1)'}
         }
       },
       typography: theme => ({
@@ -168,18 +168,18 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/line-clamp'),
-    plugin(function ({ addUtilities, theme, e }) {
+    plugin(function ({addUtilities, theme, e}) {
       const animationDelayValues = theme('animationDelay');
       addUtilities(
         Object.entries(animationDelayValues).map(([key, value]) => {
           return {
-            [`.${e(`animate-delay-${key}`)}`]: { animationDelay: `${value}` }
+            [`.${e(`animate-delay-${key}`)}`]: {animationDelay: `${value}`}
           };
         })
       );
       addUtilities({
         '.invalid': {
-          fontSize: theme('fontSize.sm'),
+          fontSize: theme('fontSize.xs'),
           color: theme('colors.abc-dark-red'),
           fontStyle: 'italic',
           marginTop: theme('spacing.1')

@@ -22,7 +22,7 @@ interface IFormInputs {
 }
 
 const Schema = yup.object().shape({
-  todoId: yup.string().required(' ')
+  todoId: yup.string().required('Please enter your room id')
 });
 
 export default function Action() {
@@ -38,6 +38,7 @@ export default function Action() {
   const onSubmit: SubmitHandler<IFormInputs> = data => {
     API.getTodo(data.todoId)
       .then(res => {
+        toast.show({type: 'success', title: 'Success', content: 'Join List Successfull', lifeTime: 3000});
         if (res.status == 200) router.push(`${ROUTES.TODO_LIST}/${data.todoId}`);
       })
       .catch(() => {
@@ -48,10 +49,6 @@ export default function Action() {
   useEffect(() => {
     if (localStorage.getItem('listID')) {
       localStorage.removeItem('listID');
-    }
-
-    if (errors.todoId?.message) {
-      toast.show({type: 'danger', title: 'Error!', content: 'Please enter Link or ID.', lifeTime: 3000});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errors]);
@@ -70,7 +67,10 @@ export default function Action() {
                   variant="contained"
                   className="w-full font-medium"
                   color="primary"
-                  onClick={() => router.push(ROUTES.TODO_LIST)}
+                  onClick={() => {
+                    localStorage.setItem('createNewList', '1');
+                    router.push(ROUTES.TODO_LIST);
+                  }}
                 >
                   Create New List
                 </Button>
