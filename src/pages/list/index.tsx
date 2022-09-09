@@ -44,6 +44,10 @@ export default function List() {
   };
 
   useEffect(() => {
+    if (localStorage.getItem('createNewList')) {
+      setAction({type: 'add', payload: null});
+      localStorage.removeItem('createNewList');
+    }
     getTodoList();
   }, []);
 
@@ -70,7 +74,7 @@ export default function List() {
                 startIcon={<Icon name="ico-plus-circle" size={28} />}
                 onClick={() => setAction({type: 'add', payload: null})}
               >
-                <span className="text-h5 font-medium">New List</span>
+                <span className="h5 font-medium">New List</span>
               </Button>
             </div>
           </div>

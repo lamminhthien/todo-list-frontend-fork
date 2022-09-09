@@ -88,7 +88,12 @@ const ModalTaskAddEdit: FC<IProps> = ({data, open, todoListId, onSave, onCancel}
           <h3 className="title">{data?.id ? 'Update To-Do' : 'Add New To-Do'}</h3>
         </Modal.Header>
         <Modal.Body>
-          <Input error={errors.name?.message} {...register('name')} placeholder="Enter your to-do" />
+          <Input
+            className="name-enter"
+            error={errors.name?.message}
+            {...register('name')}
+            placeholder="Enter your to-do"
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex w-full gap-x-3">

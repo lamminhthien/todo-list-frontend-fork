@@ -29,13 +29,11 @@ const ModalShare: React.FC<IProps> = ({id, open, onClose}) => {
 
   return (
     <Modal variant="center" className={cls(styles['com-modal-share'], 'max-w-3xl')} open={open} onClose={onClose}>
-      <Modal.Header>
-        <h3>Share this list to a teammate</h3>
-      </Modal.Header>
+      <Modal.Header text="Share this list to a teammate" />
       <Modal.Body className="inputs">
         <div className="item">
           <Input
-            label="Link"
+            label="Link:"
             groupEnd={<Button variant="contained" color="primary" text="Copy" onClick={() => copy('link', link)} />}
             value={link}
             readOnly
@@ -43,7 +41,7 @@ const ModalShare: React.FC<IProps> = ({id, open, onClose}) => {
         </div>
         <div className="item mt-3">
           <Input
-            label="ID List"
+            label="ID List:"
             groupEnd={<Button variant="contained" color="primary" text="Copy" onClick={() => copy('id', id)} />}
             value={id}
             readOnly

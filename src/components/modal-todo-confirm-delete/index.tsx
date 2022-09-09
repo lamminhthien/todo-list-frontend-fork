@@ -41,11 +41,12 @@ const ModalTodoConfirmDelete: FC<IProps> = ({data, open, page, onCancel, onConfi
       onClose={() => onCancel?.()}
     >
       <Modal.Header>
-        <h3 className="title">Are you sure you want to delete list: {data.name}</h3>
+        <h3 className="title">Are you sure you want to delete list: </h3>
+        <h3 className="title break-words">{data.name}</h3>
       </Modal.Header>
 
       <Modal.Footer>
-        <div className="flex w-full gap-x-3 md:gap-x-5">
+        <div className="flex w-full gap-x-3 md:gap-x-4">
           <Button
             className="w-full"
             variant="outlined"

@@ -87,7 +87,12 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
           <h3 className="title">{data?.id ? 'Update List' : 'Create New List'}</h3>
         </Modal.Header>
         <Modal.Body>
-          <Input error={errors.name?.message} {...register('name')} placeholder="Enter your list name" />
+          <Input
+            className="name-enter"
+            error={errors.name?.message}
+            {...register('name')}
+            placeholder="Enter your list name"
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex w-full gap-x-3 md:gap-x-5">

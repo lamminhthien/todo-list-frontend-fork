@@ -15,7 +15,7 @@ const Topbar: FC<IProps> = () => {
   return (
     <div className={styles.topbar}>
       <Icon name="ico-user" />
-      <h4 className="title-user">{user.userName}</h4>
+      <h4 className="h5">{user.userName}</h4>
     </div>
   );
 };

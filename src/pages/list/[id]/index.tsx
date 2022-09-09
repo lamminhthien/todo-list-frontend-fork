@@ -85,7 +85,7 @@ export default function Detail() {
           <div className="toolbar">
             <div className="left">
               <IconButton name="ico-arrow-left-circle" size={32} onClick={() => router.push(ROUTES.TODO_LIST)} />
-              <h3 className="title">{todoList.name}</h3>
+              <h3 className="h3">{todoList.name}</h3>
             </div>
             <div className="right">
               <Button
@@ -93,36 +93,30 @@ export default function Detail() {
                 startIcon={<Icon name="ico-trash-2" />}
                 onClick={() => setActionTodo({type: 'delete', payload: todoList})}
               >
-                <span className="title-icon text-h5 font-medium">Delete List</span>
+                <span className="h5 font-medium">Delete List</span>
               </Button>
 
               <Button className="btn btn-share" startIcon={<Icon name="ico-share-2" />} onClick={handleShare}>
-                <span className="title-icon text-h5 font-medium">Share</span>
+                <span className="h5 font-medium">Share</span>
               </Button>
               <Button
                 className="btn btn-create-new"
                 startIcon={<Icon name="ico-plus-circle" />}
                 onClick={() => setAction({type: 'add', payload: null})}
               >
-                <span className="title-icon text-h5 font-medium">Add To-Do</span>
+                <span className="h5 font-medium">Add To-Do</span>
               </Button>
             </div>
           </div>
-
           <div className="tasks">
             {!todoList?.tasks.length && <span>Empty list</span>}
             {todoList.tasks &&
               todoList.tasks.map(task => (
                 <div className="item" key={task.id}>
-                  <div className="checkbox-task">
-                    <Checkbox className="mr-3" checked={task.isDone} onChange={() => setDone(task.id, !task.isDone)} />
-                    <p
-                      onClick={() => setDone(task.id, !task.isDone)}
-                      className={`title ${task.isDone ? 'checked' : ''}`}
-                    >
-                      {task.name}
-                    </p>
-                  </div>
+                  <Checkbox checked={task.isDone} onChange={() => setDone(task.id, !task.isDone)} />
+                  <p onClick={() => setDone(task.id, !task.isDone)} className={`h6 ${task.isDone ? 'checked' : ''}`}>
+                    {task.name}
+                  </p>
                   <div className="actions">
                     <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: task})} />
                     <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: task})} />
