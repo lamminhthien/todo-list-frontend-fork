@@ -1,27 +1,27 @@
 .hero {
-  @apply text-hero font-extrabold;
+  @apply text-5xl font-extrabold md:text-hero;
 }
 h1,
 .h1 {
-  @apply text-2xl font-medium md:text-3xl lg:text-4xl;
+  @apply text-h2 font-medium md:text-h1;
 }
 h2,
 .h2 {
-  @apply font-normal lg:text-h2;
+  @apply text-h2 font-normal;
 }
 h3,
 .h3 {
-  @apply font-medium md:text-lg lg:text-2xl;
+  @apply text-h5 font-semibold md:text-h3;
 }
 h4,
 .h4 {
-  @apply font-normal md:text-lg lg:text-2xl;
+  @apply text-h4 font-normal;
 }
 h5,
 .h5 {
-  @apply font-normal md:text-lg lg:text-2xl;
+  @apply text-h6 font-normal md:text-h5;
 }
 h6,
 .h6 {
-  @apply font-bold md:text-lg lg:text-2xl;
+  @apply text-h6 font-normal;
 }

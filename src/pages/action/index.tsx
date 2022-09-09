@@ -62,13 +62,13 @@ export default function Action() {
       <div className={styles['page-action']}>
         <div className="container">
           <div className="inner">
-            <p className="title">TO DO LIST</p>
-            <p className="headline">Organize your work and life, finally.</p>
+            <p className="title">TO-DO LIST</p>
+            <p className="h1">Organize your work and life, finally.</p>
             <div className="actions">
               <div className="item">
                 <Button
                   variant="contained"
-                  className="w-full"
+                  className="w-full font-medium"
                   color="primary"
                   onClick={() => router.push(ROUTES.TODO_LIST)}
                 >
@@ -80,7 +80,7 @@ export default function Action() {
                   <Input
                     groupEnd={
                       <Button
-                        className="btn-join input-group-text"
+                        className="px-5 font-medium "
                         color="primary"
                         variant="contained"
                         text="Join"

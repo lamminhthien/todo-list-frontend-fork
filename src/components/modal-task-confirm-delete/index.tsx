@@ -1,4 +1,3 @@
-import cls from 'classnames';
 import {useRouter} from 'next/router';
 import {FC} from 'react';
 
@@ -6,8 +5,6 @@ import TaskAPI, {ITask} from '@/api/network/task';
 import {ROUTES} from '@/configs/routes.config';
 import Button from '@/core-ui/button';
 import {Modal} from '@/core-ui/modal';
-
-import styles from './style.module.scss';
 
 interface IProps {
   data?: ITask;
@@ -34,17 +31,13 @@ const ModalTaskConfirmDelete: FC<IProps> = ({data, open, page, onCancel, onConfi
   if (!data) return null;
 
   return (
-    <Modal
-      className={cls(styles['com-modal-task-confirm-delete'], 'max-w-3xl')}
-      variant="center"
-      open={open}
-      onClose={() => onCancel?.()}
-    >
+    <Modal className="max-w-3xl" variant="center" open={open} onClose={() => onCancel?.()}>
       <Modal.Header>
-        <h3 className="title">Are you sure you want to delete task: {data.name}</h3>
+        <h3 className="title">Are you sure you want to delete task:</h3>
+        <h3 className="title">{data.name}</h3>
       </Modal.Header>
       <Modal.Footer>
-        <div className="flex w-full gap-x-3">
+        <div className="flex w-full gap-x-3 md:gap-x-4 ">
           <Button
             className="w-full"
             variant="outlined"

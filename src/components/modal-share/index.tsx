@@ -29,9 +29,7 @@ const ModalShare: React.FC<IProps> = ({id, open, onClose}) => {
 
   return (
     <Modal variant="center" className={cls(styles['com-modal-share'], 'max-w-3xl')} open={open} onClose={onClose}>
-      <Modal.Header>
-        <h3>Share this list to a teammate</h3>
-      </Modal.Header>
+      <Modal.Header text="Share this list to a teammate" />
       <Modal.Body className="inputs">
         <div className="item">
           <Input

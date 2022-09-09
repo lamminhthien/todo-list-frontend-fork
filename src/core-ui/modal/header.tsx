@@ -11,7 +11,7 @@ export interface IModalHeaderProps {
 const Header: FC<IModalHeaderProps> = ({text, children}) => {
   const {onClose} = useModal();
 
-  const content = text ? <h5>{text}</h5> : children;
+  const content = text ? <h3>{text}</h3> : children;
 
   return (
     <div className="abc-modal-header">

@@ -22,7 +22,7 @@
     }
   }
   .abc-modal-dialog {
-    @apply pointer-events-none relative z-modal mx-4 sm:mx-auto;
+    @apply pointer-events-none relative z-modal mx-4 md:mx-auto;
   }
   .abc-modal-content {
     @apply pointer-events-auto relative flex w-full flex-col rounded-lg bg-blue-50;
@@ -30,17 +30,20 @@
   .abc-modal-header {
     @apply flex flex-col items-center justify-between px-5 py-4;
     h3 {
-      @apply w-full flex-grow text-center leading-none;
+      @apply w-full flex-grow text-center text-h4 font-normal leading-none md:text-h3;
+    }
+    .abc-icon {
+      @apply -mr-3 -mt-3 text-xl md:-mr-1 md:-mt-1;
     }
   }
   .abc-modal-close {
     @apply absolute top-1 right-4 -mr-2 p-2 text-[30px] leading-none text-black/[0.3];
   }
   .abc-modal-footer {
-    @apply flex shrink-0 flex-wrap items-center justify-end gap-x-2 p-5;
+    @apply my-4 flex shrink-0 flex-wrap items-center justify-end gap-x-2 p-4 md:mx-5 md:my-3;
   }
   .abc-modal-body {
-    @apply relative p-5;
+    @apply relative -mb-6 p-4 pt-2 md:mx-5 md:pb-6;
   }
   // Variant
   .abc-modal-center {

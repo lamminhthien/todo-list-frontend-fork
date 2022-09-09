@@ -1,11 +1,11 @@
 .com-modal-todo-add-edit :global {
-  .abc-modal-body {
-    @apply pb-3;
-  }
   .abc-input {
     @apply relative;
     .message {
       @apply absolute left-0;
+    }
+    .name-enter {
+      @apply p-3;
     }
   }
 }
