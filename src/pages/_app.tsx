@@ -29,8 +29,8 @@ const CustomApp = ({Component, pageProps}: AppProps) => {
 
     if (isString(listIDDetect)) {
       setVisible(true);
-      const listID = parseInt(window.location.href.split('/')[4]);
-      localStorage.setItem('listID', JSON.stringify(listID));
+      const listID = window.location.href.split('/')[4];
+      localStorage.setItem('listID', listID);
     }
 
     if (!user.id && !['/', '/quick-play'].includes(currentPath)) {
