@@ -7,7 +7,7 @@ export interface ITask {
   isDone?: boolean;
   createdAt?: string;
   updatedAt?: string;
-  todoListId?: number;
+  todoListId?: string;
 }
 
 type Task = IAxiosResponse<ITask>;
