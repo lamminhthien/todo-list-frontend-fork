@@ -4,7 +4,7 @@
       @apply text-xl;
     }
     .title {
-      @apply -mt-5 mb-4;
+      @apply -mt-3 mb-4 px-5 md:px-0;
     }
   }
   .abc-modal-footer {
