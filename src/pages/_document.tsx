@@ -8,7 +8,7 @@ export default class CustomDocument extends Document {
 
   render() {
     return (
-      <Html lang="en">
+      <Html lang="en" className="h-full">
         <Head>
           <meta charSet="UTF-8" />
           <meta httpEquiv="cleartype" content="on" />
@@ -16,11 +16,11 @@ export default class CustomDocument extends Document {
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link rel="preload" href="/fonts/abc.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
           />
         </Head>
-        <body className="scrollbar bg-blue-50">
+        <body className="scrollbar h-full bg-blue-50 text-slate-700">
           <Main />
           <NextScript />
           <div id="react-modal-root"></div>

@@ -1,77 +1,121 @@
-import * as yup from 'yup';
-import TaskAPI, {ITask} from '@/api/network/task';
-import {FC, useEffect} from 'react';
-import {Modal} from '@/core-ui/modal';
-import {SubmitHandler, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
+import cls from 'classnames';
+import {FC, useEffect} from 'react';
+import {SubmitHandler, useForm} from 'react-hook-form';
+import * as yup from 'yup';
+
+import API, {ITask} from '@/api/network/task';
+import Button from '@/core-ui/button';
+import Input from '@/core-ui/input';
+import {Modal} from '@/core-ui/modal';
+import useToast from '@/core-ui/toast';
 
 import styles from './style.module.scss';
 
-const Schema = yup.object().shape({
-  taskName: yup.string().required('Please enter your task name.')
-});
-
-interface IFormInputs {
-  taskName: string;
-  todolistId?: number;
-  userId?: string;
-}
-
 interface IProps {
   data: ITask;
-  onSave?: () => void;
   open: boolean;
-  todolistId?: number;
+  todoListId?: string;
+  onSave?: () => void;
+  onCancel?: () => void;
+}
+
+interface IFormInputs {
+  name: string;
+  todoListId?: string;
   userId?: string;
 }
 
-const ModalTaskAddEdit: FC<IProps> = ({data, open, onSave, todolistId, userId}) => {
-  const {register, handleSubmit, setValue, formState} = useForm<IFormInputs>({
-    mode: 'onChange',
+const Schema = yup.object().shape({
+  name: yup.string().required('Please enter your task name.')
+});
+const FORM_DEFAULT_VALUES = {
+  name: ''
+};
+
+const ModalTaskAddEdit: FC<IProps> = ({data, open, todoListId, onSave, onCancel}) => {
+  const {register, handleSubmit, reset, setValue, formState} = useForm<IFormInputs>({
+    defaultValues: FORM_DEFAULT_VALUES,
     resolver: yupResolver(Schema)
   });
-
+  const toast = useToast();
   const {errors} = formState;
 
+  const getTask = (id: string) => {
+    API.getTask(id).then(res => {
+      const resp = res.data as ITask;
+      setValue('name', resp.name);
+    });
+  };
+
   const onSubmit: SubmitHandler<IFormInputs> = formData => {
-    formData.todolistId = Number(todolistId);
+    const userObject = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = userObject.id;
+
+    formData.todoListId = todoListId;
     formData.userId = userId;
 
     if (data?.id) {
-      TaskAPI.updateTask(data.id, formData).then(() => onSave?.());
+      API.updateTask(data.id, formData).then(() => {
+        onSave?.();
+        toast.show({type: 'success', title: 'Update To-Do', content: 'Successful!'});
+      });
     } else {
-      TaskAPI.createTask(formData).then(() => onSave?.());
+      API.createTask(formData).then(() => {
+        onSave?.();
+        toast.show({type: 'success', title: 'Create To-Do', content: 'Successful!'});
+      });
     }
   };
 
   useEffect(() => {
-    if (data?.id) {
-      setValue('taskName', data.taskName);
+    if (data?.id) getTask(data.id);
+    else {
+      reset(FORM_DEFAULT_VALUES);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
-    <div className={styles['com-modal-task-add-edit']}>
-      <Modal onClose={onSave} open={open}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Modal.Header>
-            <h3 className="title">{data?.id ? 'Update task' : 'Add New To-Do'}</h3>
-          </Modal.Header>
-          <Modal.Body>
-            <input className="form-input" placeholder="Enter your task" type="text" {...register('taskName')} />
-            {errors.taskName && <p>{errors.taskName.message}</p>}
-          </Modal.Body>
-          <Modal.Footer>
-            <button className="btn btn-cancel" onClick={onSave}>
-              Cancel
-            </button>
-            <button className="btn btn-submit" type="submit">
-              {data?.id ? 'Save' : 'Add New'}
-            </button>
-          </Modal.Footer>
-        </form>
-      </Modal>
-    </div>
+    <Modal
+      className={cls(styles['com-modal-task-add-edit'], 'max-w-3xl')}
+      variant="center"
+      open={open}
+      onClose={() => onCancel?.()}
+    >
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Modal.Header>
+          <h3 className="title">{data?.id ? 'Update To-Do' : 'Add New To-Do'}</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <Input
+            className="name-enter"
+            error={errors.name?.message}
+            {...register('name')}
+            placeholder="Enter your to-do"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="flex w-full gap-x-3">
+            <Button
+              className="w-full"
+              variant="outlined"
+              color="primary"
+              text="Cancel"
+              onClick={() => onCancel?.()}
+              type="button"
+            />
+            <Button
+              className="w-full"
+              variant="contained"
+              color="primary"
+              text={data?.id ? 'Save' : 'Create'}
+              type="submit"
+            />
+          </div>
+        </Modal.Footer>
+      </form>
+    </Modal>
   );
 };
 

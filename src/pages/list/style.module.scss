@@ -1,54 +1,49 @@
-.create-list-section :global {
-  @apply py-10;
-  .list-user {
-    @apply flex items-center justify-end gap-3;
-    .title-user {
-      @apply text-h5 md:text-h4;
-    }
-  }
-  .list-content {
-    @apply mt-1 flex justify-between border-b-2 border-black  md:mt-10 md:pb-4;
-  }
-  .list-left {
-    @apply flex items-center justify-between;
-  }
-  .icon-arrow-left {
-    @apply flex cursor-pointer items-center justify-between;
-    .abc-icon::before {
-      @apply text-xl md:text-[28px];
-    }
-  }
-  .title-left {
-    @apply flex;
-  }
-  .title-todo {
-    @apply px-2 text-h6 font-normal leading-4 sm:text-h5 md:px-4  md:text-h3 md:font-semibold;
-  }
-  .title-todo:first-child {
-    @apply border-r-2  border-black;
-  }
-  .list-right {
-    @apply flex cursor-pointer items-center justify-between bg-transparent text-black hover:bg-transparent;
-    .title-right {
-      @apply ml-2 text-h6 font-normal leading-4  md:ml-4 md:text-h3;
-    }
-  }
-  .list-group {
-    @apply pt-8;
-    .text-group {
-      @apply mb-5 flex h-12 w-full items-center justify-between bg-white sm:mb-5 sm:max-w-7xl;
-    }
-    .title-group {
-      @apply my-3.5 pl-4 text-h6 font-normal md:my-3 md:text-h4;
-    }
-    .actions {
-      @apply flex gap-3 pr-4;
-      .abc-icon::before {
-        @apply text-xl md:text-2xl;
+.page-list :global {
+  .toolbar {
+    @apply mt-5 flex justify-between;
+    .left {
+      @apply flex items-center;
+      .icon-btn {
+        @apply pl-0 pr-3;
+        .abc-icon {
+          @apply text-2xl md:text-3xl;
+        }
       }
     }
-    .btn-hover-hand {
-      @apply cursor-pointer bg-transparent p-0;
+    .sep {
+      @apply mx-2 inline-flex h-4 w-[1px] bg-cyan-800;
     }
+    .title {
+      @apply flex items-center;
+    }
+    .btn-create-new {
+      @apply px-0;
+    }
+    .right {
+      @apply hidden md:block;
+      .icon {
+        @apply mr-3;
+      }
+    }
+  }
+
+  .list {
+    @apply mt-5;
+    .item {
+      @apply flex items-center justify-between border bg-white;
+      @apply border-t-0 px-4 first:border-t;
+      @apply first:rounded-t-lg last:rounded-b-lg;
+      @apply transition-all duration-100;
+      @apply hover:bg-blue-100;
+    }
+    .title {
+      @apply w-full cursor-pointer truncate py-3;
+    }
+    .actions {
+      @apply -mr-4 flex gap-x-1;
+    }
+  }
+  .float-icon {
+    @apply flex cursor-pointer md:hidden;
   }
 }

@@ -5,7 +5,7 @@ export interface IModalFooterProps {
 }
 
 const Footer: FC<IModalFooterProps> = ({children}) => {
-  return <div className="modal-footer">{children}</div>;
+  return <div className="abc-modal-footer">{children}</div>;
 };
 
 export default Footer;

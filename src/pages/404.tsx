@@ -1,8 +1,8 @@
 import {GetStaticProps} from 'next';
 import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 
-import ErrorInformation from '@/components/common/404';
-import Seo from '@/components/common/seo/seo';
+import ErrorInformation from '@/components/404';
+import Seo from '@/components/seo/seo';
 
 export default function PageNotFound() {
   return (
@@ -14,9 +14,11 @@ export default function PageNotFound() {
 }
 
 export const getStaticProps: GetStaticProps = async ({locale}) => {
+  const translate = await serverSideTranslations(locale!, ['common']);
+
   return {
     props: {
-      ...(await serverSideTranslations(locale!, ['common']))
+      ...translate
     }
   };
 };

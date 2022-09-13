@@ -1,184 +1,160 @@
-import Auth from '@/pages/auth';
-import Button from '@/core-ui/button';
-import Checkbox from '@/core-ui/checkbox';
-import Icon from '@/core-ui/icon';
-import IconButton from '@/core-ui/ico-button';
-import ModalCreateEditTask from '@/components/modal-task-add-edit';
-import ModalShare from '@/components/modal-share';
-import useCheckUserLocalStorage from '@/hooks/useCheckUserLocalStorage';
 import {useRouter} from 'next/router';
-import API, {ITodo} from '@/api/network/todo-list';
-import TaskAPI, {ITask} from '@/api/network/task';
-import React, {ChangeEvent, ChangeEventHandler, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import io from 'socket.io-client';
 
-import styles from './style.module.scss';
+import API, {ITask} from '@/api/network/task';
+// import TodoAPI, {ITodo} from '@/api/network/todo';
+import {ITodo} from '@/api/network/todo';
+import ModalShare from '@/components/modal-share';
+import ModalTaskAddEdit from '@/components/modal-task-add-edit';
 import ModalTaskConfirmDelete from '@/components/modal-task-confirm-delete';
 import ModalTodoConfirmDelete from '@/components/modal-todo-confirm-delete';
+import Seo from '@/components/seo/seo';
+import Topbar from '@/components/topbar';
+import {ROUTES} from '@/configs/routes.config';
+import {siteSettings} from '@/configs/site.config';
+import Button from '@/core-ui/button';
+import Checkbox from '@/core-ui/checkbox';
+import FloatIcon from '@/core-ui/float-icon';
+import Icon from '@/core-ui/icon';
+import IconButton from '@/core-ui/icon-button';
+import LayoutDefault from '@/layouts/default';
+import {IAction} from '@/types';
 
-interface IAction {
-  type: string;
-  payload: any;
-}
+import styles from './style.module.scss';
 
-const Detail: React.FC = () => {
+const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`);
+
+export default function Detail() {
   const router = useRouter();
-  const {id} = router.query;
-
-  const {user} = useCheckUserLocalStorage();
-  const [list, setList] = useState<ITodo | null>(null);
-  const [shareOpen, setShareOpen] = useState<boolean>(false);
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [todoList, setTodoList] = useState<ITodo>();
   const [action, setAction] = useState<IAction>({type: '', payload: null});
-  const [actionList, setActionList] = useState<IAction>({type: '', payload: null});
+  const [actionTodo, setActionTodo] = useState<IAction>({type: '', payload: null});
+  const [shareOpen, setShareOpen] = useState(false);
 
-  // Get tasks.
-  const getTasks = () => TaskAPI.getTasks(id ? id.toString() : '').then(res => setTasks(res.data));
+  const {id} = router.query;
+  const page = 'detail';
 
-  // Reset action.
-  const resetAction = () => {
-    setAction({type: '', payload: null});
+  const socketMsgToServer = () => socket.emit('msgToServer');
+  const getListTasks = (todoListId: string) => API.getListTasks(todoListId).then(res => setTodoList(res.data));
+  // const getTodo = () => TodoAPI.getTodo(id ? id.toString() : '').then(res => setTodo(res.data));
+
+  const handleShare = () => {
+    setShareOpen(true);
   };
 
-  const resetActionList = () => {
-    setActionList({type: '', payload: null});
-  };
-
-  const reset = () => {
-    getTasks();
-    resetAction();
-  };
-
-  useEffect(() => {
-    getTasks();
-  }, [id]);
-
-  // Handle checkbox.
-  const handleCheckBox = (event: ChangeEvent<HTMLInputElement>, id: string) => {
-    TaskAPI.updateActive(id).then(() => {
-      getTasks();
+  const setDone = (taskId: string) => {
+    if (!taskId) return;
+    API.updateStatusTask(taskId).then(() => {
+      getListTasks(id);
+      socketMsgToServer();
     });
   };
 
-  const handleShare = () => {
-    setShareOpen(false);
+  const resetAction = () => setAction({type: '', payload: null});
+  const resetActionTodo = () => setActionTodo({type: '', payload: null});
+  const socketMsgToClient = () => {
+    socket.on('msgToClient', () => {
+      getListTasks(id);
+    });
   };
 
-  // Get list name.
-  useEffect(() => {
-    const fetch = async () => {
-      await API.readTodoList(Number(id)).then(res => {
-        setList(res.data);
-      });
-    };
+  const reset = () => {
+    getListTasks(id);
+    resetAction();
+    resetActionTodo();
+    socketMsgToServer();
+  };
 
-    fetch();
+  useEffect(() => {
+    if (id) {
+      getListTasks(id);
+      socketMsgToClient();
+    }
   }, [id]);
 
-  if (!id) return null;
-  if (!user) return null;
-  if (!tasks) return null;
+  if (!todoList || !id) return null;
 
   return (
-    <Auth>
-      <div className={styles['create-detail-section']}>
+    <>
+      <Seo title={`${siteSettings.name} | ${todoList.name}`} description={siteSettings.description} />
+
+      <div className={styles['page-detail']}>
         <div className="container">
-          <div className="banner-detail">
-            <div className="detail-content">
-              <div className="detail-left">
-                <div
-                  className="icon-arrow-left"
-                  onClick={() => {
-                    router.push('/list');
-                  }}
-                >
-                  <Icon name="ico-arrow-left-circle" />
-                </div>
-                <div className="title-left">
-                  <h3 className="title-todo">{list ? list.listName : ''}</h3>
-                </div>
-              </div>
-              <div className="detail-right">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className="items"
-                  onClick={() => setActionList({type: 'delete', payload: list})}
-                >
-                  <Icon name="ico-trash" />
-                  <div className="title-right">Delete</div>
-                </Button>
-                <Button variant="contained" color="primary" className="items" onClick={() => setShareOpen(true)}>
-                  <Icon name="ico-share" />
-                  <div className="title-right">Share</div>
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className="items"
-                  onClick={() => setAction({type: 'add', payload: null})}
-                >
-                  <Icon name="ico-plus-circle" />
-                  <div className="title-right">Add To-Do</div>
-                </Button>
-              </div>
+          <Topbar />
+          <h2 className="h2">{todoList.name}</h2>
+          <div className="toolbar">
+            <div className="left">
+              <IconButton name="ico-arrow-left-circle" size={32} onClick={() => router.push(ROUTES.TODO_LIST)} />
+              <h3 className="h3">Back</h3>
+            </div>
+            <div className="right">
+              <Button
+                className="btn btn-delete"
+                startIcon={<Icon name="ico-trash-2" />}
+                onClick={() => setActionTodo({type: 'delete', payload: todoList})}
+              >
+                <span className="h5 font-medium">Delete List</span>
+              </Button>
+
+              <Button className="btn btn-share" startIcon={<Icon name="ico-share-2" />} onClick={handleShare}>
+                <span className="h5 font-medium">Share</span>
+              </Button>
+              <Button
+                className="btn btn-create-new"
+                startIcon={<Icon name="ico-plus-circle" />}
+                onClick={() => setAction({type: 'add', payload: null})}
+              >
+                <span className="h5 font-medium">Add To-Do</span>
+              </Button>
             </div>
           </div>
-          <div className="detail-group">
-            {tasks.map(task => (
-              <>
-                <div className="detail-list">
-                  <div className="list-group">
-                    <Checkbox
-                      className="list-box"
-                      checked={task.isDone}
-                      onChange={event => handleCheckBox(event, task.id ? task.id : '')}
-                    />
-
-                    <p className={`title-group ${task.isDone ? 'checked' : ''}`}>{task.taskName}</p>
-                  </div>
+          <div className="tasks">
+            {!todoList?.tasks.length && <span>Empty list</span>}
+            {todoList.tasks &&
+              todoList.tasks.map(task => (
+                <div className="item" key={task.id}>
+                  <Checkbox checked={task.isDone} onChange={() => setDone(task.id, !task.isDone)} />
+                  <p onClick={() => setDone(task.id, !task.isDone)} className={`h6 ${task.isDone ? 'checked' : ''}`}>
+                    {task.name}
+                  </p>
                   <div className="actions">
-                    <IconButton
-                      className="btn-hover-hand"
-                      icon="ico-edit"
-                      onClick={() => setAction({type: 'edit', payload: task})}
-                    />
-
-                    <IconButton
-                      className="btn-hover-hand"
-                      icon="ico-trash"
-                      onClick={() => setAction({type: 'delete', payload: task})}
-                    />
+                    <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: task})} />
+                    <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: task})} />
                   </div>
                 </div>
-              </>
-            ))}
+              ))}
           </div>
-          {['add', 'edit'].includes(action.type) && (
-            <ModalCreateEditTask
-              open={true}
-              data={action.payload}
-              onSave={reset}
-              todolistId={Number(id)}
-              userId={user.id}
-            />
-          )}
-          {['delete'].includes(action.type) && (
-            <ModalTaskConfirmDelete data={action.payload} open={true} onCancel={resetAction} onConfirm={reset} />
-          )}
-          {['delete'].includes(actionList.type) && (
-            <ModalTodoConfirmDelete
-              open={true}
-              data={actionList.payload}
-              page={'detail'}
-              onCancel={resetActionList}
-              onConfirm={() => reset()}
-            />
-          )}
-          <ModalShare open={shareOpen} onClose={handleShare} id={id} />
         </div>
+        <FloatIcon className="float-icon" onClick={() => setAction({type: 'add', payload: null})} />
+        {['add', 'edit'].includes(action.type) && (
+          <ModalTaskAddEdit
+            data={action.payload}
+            todoListId={id.toString()}
+            open={true}
+            onSave={() => reset()}
+            onCancel={() => resetAction()}
+          />
+        )}
+        {['delete'].includes(action.type) && (
+          <ModalTaskConfirmDelete
+            data={action.payload}
+            open={true}
+            onConfirm={() => reset()}
+            onCancel={() => resetAction()}
+          />
+        )}
+        <ModalTodoConfirmDelete
+          open={['delete'].includes(actionTodo.type)}
+          data={actionTodo.payload}
+          page={page}
+          onConfirm={reset}
+          onCancel={resetActionTodo}
+        />
+        <ModalShare open={shareOpen} onClose={() => setShareOpen(false)} id={id} />
       </div>
-    </Auth>
+    </>
   );
-};
+}
 
-export default Detail;
+Detail.Layout = LayoutDefault;

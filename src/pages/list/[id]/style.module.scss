@@ -1,62 +1,57 @@
-.create-detail-section :global {
-  @apply py-20;
-  .detail-content {
-    @apply flex justify-between  border-b-2 border-black pb-2 md:pb-4;
+.page-detail :global {
+  .h2 {
+    @apply mx-auto w-full break-words text-center text-h4 font-semibold md:text-h2;
   }
-  .detail-left {
-    @apply flex items-center justify-between;
-  }
-  .icon-arrow-left {
-    @apply flex cursor-pointer items-center justify-between;
-    .abc-icon::before {
-      @apply text-xl md:text-[28px];
-    }
-  }
-
-  .title-todo {
-    @apply px-2 text-h6 font-normal sm:text-h5 md:px-4  md:text-h3 md:font-semibold;
-  }
-
-  .detail-right {
-    @apply flex items-center justify-between sm:gap-4 md:gap-8;
-    .items {
-      @apply flex cursor-pointer items-center justify-between bg-transparent text-black hover:bg-transparent;
-      .abc-icon::before {
-        @apply text-xl md:text-2xl;
+  .toolbar {
+    @apply mt-4 flex justify-between;
+    .left {
+      @apply flex items-center truncate;
+      .h3 {
+        @apply m-0 flex items-center;
+      }
+      .icon-btn {
+        @apply pl-0 pr-2;
+        .abc-icon {
+          @apply text-2xl md:text-3xl;
+        }
       }
     }
-    .title-right {
-      @apply hidden sm:ml-4 md:block md:text-h5 md:font-normal;
+    .right {
+      @apply flex justify-end gap-2 md:gap-6 lg:gap-8;
+      .btn-create-new {
+        @apply hidden md:flex;
+      }
+      .h5 {
+        @apply m-auto hidden items-center md:flex md:whitespace-nowrap;
+      }
+      .btn {
+        @apply -mr-4 whitespace-nowrap p-0 md:mr-0;
+      }
+      .abc-btn {
+        @apply p-0;
+      }
     }
   }
-  //-----------------------------------------
-
-  .detail-group {
-    @apply pt-5;
-    .detail-list {
-      @apply mb-5 flex h-12 w-full items-center justify-between bg-white sm:mb-5 sm:max-w-7xl;
+  .tasks {
+    @apply mt-5;
+    .item {
+      @apply flex items-center justify-between border bg-white;
+      @apply border-t-0 px-4 first:border-t;
+      @apply first:rounded-t-lg last:rounded-b-lg;
+      @apply transition-all duration-100;
+      @apply hover:bg-blue-100;
     }
-    .list-group {
-      @apply flex items-center justify-between;
-      .list-box {
-        @apply h-5 w-6;
-      }
-      .title-group {
-        @apply my-3.5 pl-4 text-h6 font-normal md:my-3 md:text-h4;
-      }
-      .checked {
-        @apply line-through;
-      }
+    .h6 {
+      @apply ml-3 w-full cursor-pointer truncate py-3;
     }
-
+    .checked {
+      @apply line-through opacity-50;
+    }
     .actions {
-      @apply flex gap-3 pr-4;
-      .abc-icon::before {
-        @apply text-xl md:text-2xl;
-      }
+      @apply -mr-4 flex gap-x-1;
     }
-    .btn-hover-hand {
-      @apply cursor-pointer bg-transparent p-0;
-    }
+  }
+  .float-icon {
+    @apply flex cursor-pointer md:hidden;
   }
 }

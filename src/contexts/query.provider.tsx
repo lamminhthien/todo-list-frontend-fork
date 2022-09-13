@@ -1,5 +1,5 @@
 import type {AppProps} from 'next/app';
-import React from 'react';
+import React, {useState} from 'react';
 import {Hydrate, QueryClient, QueryClientProvider} from 'react-query';
 import {ReactQueryDevtools} from 'react-query/devtools';
 
@@ -8,7 +8,7 @@ interface QueryProviderProps {
 }
 
 export default function QueryProvider({pageProps, children}: React.PropsWithChildren<QueryProviderProps>) {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>

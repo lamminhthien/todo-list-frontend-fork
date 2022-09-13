@@ -1,5 +1,11 @@
 .abc-switcher {
   @apply inline-flex items-center justify-center align-middle leading-none;
+
+  &:not(:disabled, .disabled):hover {
+    label {
+      @apply cursor-pointer;
+    }
+  }
   .layer1 {
     @apply pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out;
   }

@@ -1,115 +1,143 @@
-import Button from '@/core-ui/button';
-import IconButton from '@/core-ui/ico-button';
-import Icon from '@/core-ui/icon';
+import {GetStaticProps} from 'next';
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
+import {useRouter} from 'next/router';
+import React, {useEffect, useState} from 'react';
+
+import API, {ITodo} from '@/api/network/todo';
+import ModalShare from '@/components/modal-share';
 import ModalTodoAddEdit from '@/components/modal-todo-add-edit';
 import ModalTodoConfirmDelete from '@/components/modal-todo-confirm-delete';
-import Portal from '@/core-ui/portal';
-import {useRouter} from 'next/router';
-import API, {ITodo} from '@/api/network/todo-list';
-import React, {useEffect, useState} from 'react';
+import Seo from '@/components/seo/seo';
+import Topbar from '@/components/topbar';
+import {ROUTES} from '@/configs/routes.config';
+import {siteSettings} from '@/configs/site.config';
+import Button from '@/core-ui/button';
+import FloatIcon from '@/core-ui/float-icon';
+import Icon from '@/core-ui/icon';
+import IconButton from '@/core-ui/icon-button';
+import LayoutDefault from '@/layouts/default';
+import {IAction} from '@/types';
+
 import styles from './style.module.scss';
-import {IUser} from '@/api/network/user';
-import Auth from '../auth';
 
-interface IAction {
-  type: string;
-  payload: any;
-}
-
-function List() {
+export default function List() {
   const router = useRouter();
-  const [todos, setTodos] = useState<ITodo[]>([]);
-  const [user, setUser] = useState<IUser>();
+  const [todoList, setTodoList] = useState<ITodo[]>([]);
   const [action, setAction] = useState<IAction>({type: '', payload: null});
+  const [shareOpen, setShareOpen] = useState(false);
+  const [id, setId] = useState<string>('');
+  const userObject = JSON.parse(localStorage.getItem('user') || '{}');
+  const userId = userObject.id;
 
-  const getUser = () => {
-    const json = localStorage.getItem('user');
-    const object = json && JSON.parse(json);
+  const getTodoList = () => API.getTodos(userId).then(res => setTodoList(res.data));
 
-    setUser(object);
-  };
-  const getTodoLists = () => API.getTodoLists().then(res => setTodos(res.data));
+  const resetAction = () => setAction({type: '', payload: null});
 
-  const resetAction = () => {
-    setAction({type: '', payload: null});
+  const handleShare = (todoListId: string) => {
+    setShareOpen(true);
+    setId(todoListId);
   };
 
   const reset = () => {
-    getTodoLists();
+    getTodoList();
     resetAction();
   };
 
   useEffect(() => {
-    getTodoLists();
-    getUser();
+    if (localStorage.getItem('createNewList')) {
+      setAction({type: 'add', payload: null});
+      localStorage.removeItem('createNewList');
+    }
+    getTodoList();
   }, []);
 
-  if (!todos) return null;
+  if (!todoList) return null;
 
   return (
-    <Auth>
-      <div className={styles['create-list-section']}>
+    <>
+      <Seo title={`${siteSettings.name} | Your List`} description={siteSettings.description} />
+      <div className={styles['page-list']}>
         <div className="container">
-          <div className="banner-list">
-            <div className="list-user">
-              <Icon name="ico-user" />
-              <h4 className="title-user">{user?.userName}</h4>
-            </div>
-            <div className="list-content">
-              <div className="list-left">
-                <div
-                  className="icon-arrow-left"
-                  onClick={() => {
-                    router.push('/action');
-                  }}
-                >
-                  <Icon size={28} name="ico-arrow-left-circle" />
-                </div>
-                <div className="title-left">
-                  <h3 className="title-todo">TO DO</h3>
-                  <h3 className="title-todo">YOUR LIST</h3>
-                </div>
+          <Topbar />
+          <div className="toolbar">
+            <div className="left">
+              <IconButton name="ico-arrow-left-circle" size={32} onClick={() => router.push(ROUTES.ACTION)} />
+              <div className="title">
+                <span className="h3">TO DO</span>
+                <span className="sep"></span>
+                <span className="h3">YOUR LIST</span>
               </div>
+            </div>
+            <div className="right">
               <Button
-                variant="contained"
-                color="primary"
-                className="list-right"
-                startIcon={<Icon name="ico-plus-circle" />}
+                className="btn-create-new"
+                startIcon={<Icon name="ico-plus-circle" size={28} />}
                 onClick={() => setAction({type: 'add', payload: null})}
               >
-                <h3 className="title-right">New List</h3>
+                <span className="h5 font-medium">New List</span>
               </Button>
             </div>
           </div>
-          <div className="list-group">
-            {todos.map(item => (
-              <div className="text-group" key={item.id}>
-                <p className="title-group">{item.listName}</p>
+          <div className="list">
+            {!todoList.length && <span>Empty list</span>}
+            {todoList.map(item => (
+              <div className="item" key={item.id}>
+                <p className="title" onClick={() => router.push(`${ROUTES.TODO_LIST}/${item.id}`)}>
+                  {item.name}
+                </p>
                 <div className="actions">
-                  <IconButton icon="ico-edit" onClick={() => setAction({type: 'edit', payload: item})} />
-                  <IconButton icon="ico-trash" onClick={() => setAction({type: 'delete', payload: item})} />
-                  <IconButton icon="ico-share" onClick={() => {}} />
-                  <IconButton icon="ico-arrow-right" onClick={() => router.push(`/list/${item.id}`)} />
+                  <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: item})} />
+                  <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: item})} />
+                  <IconButton name="ico-share-2" onClick={() => handleShare(item?.id)} />
+                  <IconButton name="ico-chevron-right" onClick={() => router.push(`${ROUTES.TODO_LIST}/${item.id}`)} />
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <Portal>
-          {['add', 'edit'].includes(action.type) && (
-            <ModalTodoAddEdit data={action.payload} open={true} onSave={reset} onCancel={resetAction} />
-          )}
-          {['delete'].includes(action.type) && (
-            <ModalTodoConfirmDelete
-              open={true}
-              data={action.payload}
-              onCancel={resetAction}
-              onConfirm={() => reset()}
-            />
-          )}
-        </Portal>
+        {/* <pre>{JSON.stringify(action)}</pre> */}
+        {/* <pre>{['add', 'edit'].includes(action.type).toString()}</pre> */}
+        {/* <ModalTodoAddEdit
       </div>
-    </Auth>
+      <div className="menu-footer">
+        <Button
+          className="btn-create"
+          startIcon={<Icon name="ico-plus-circle" size={28} />}
+          onClick={() => setAction({type: 'add', payload: null})}
+        />
+      </div>
+      {/* <pre>{JSON.stringify(action)}</pre> */}
+        {/* <pre>{['add', 'edit'].includes(action.type).toString()}</pre> */}
+        {/* <ModalTodoAddEdit
+        data={action.payload}
+        open={['add', 'edit'].includes(action.type)}
+        onSave={reset}
+        onCancel={resetAction}
+      /> */}
+        <FloatIcon className="float-icon" onClick={() => setAction({type: 'add', payload: null})} />
+        {['add', 'edit'].includes(action.type) && (
+          <ModalTodoAddEdit data={action.payload} open={true} onSave={() => reset()} onCancel={() => resetAction()} />
+        )}
+        <ModalTodoConfirmDelete
+          open={['delete'].includes(action.type)}
+          data={action.payload}
+          onConfirm={reset}
+          onCancel={resetAction}
+        />
+        <ModalShare open={shareOpen} onClose={() => setShareOpen(false)} id={id} />
+      </div>
+    </>
   );
 }
-export default List;
+
+List.Layout = LayoutDefault;
+
+export const getStaticProps: GetStaticProps = async ({locale}) => {
+  const translate = await serverSideTranslations(locale!, ['common']);
+
+  return {
+    props: {
+      ...translate
+    }
+  };
+};

@@ -3,10 +3,9 @@
   @apply font-medium no-underline;
   @apply transition-all duration-300;
   @apply pointer-events-auto cursor-pointer select-none;
-  @apply min-w-[4rem] rounded-none p-3;
+  @apply min-w-[3rem] rounded p-3;
   @apply appearance-none;
   @apply hover:no-underline;
-
   &.danger {
     &.contained {
       @apply border-red-500;
@@ -17,9 +16,9 @@
   }
   // Variants
   &.contained {
-    @apply text-white;
+    @apply border text-white;
     &.primary {
-      @apply bg-blue-500;
+      @apply border-blue-500 bg-blue-500;
     }
     &.secondary {
       @apply bg-slate-500;
@@ -36,9 +35,15 @@
     &.info {
       @apply bg-sky-500;
     }
+    &.blue {
+      @apply bg-blue-500 text-white;
+    }
+    &.white {
+      @apply bg-white text-blue-500;
+    }
     &:not(:disabled, .disabled):hover {
       &.primary {
-        @apply bg-blue-700;
+        @apply border-blue-600 bg-blue-600;
       }
       &.secondary {
         @apply bg-slate-600;
@@ -54,6 +59,12 @@
       }
       &.info {
         @apply bg-sky-600;
+      }
+      &.blue {
+        @apply bg-white text-blue-500;
+      }
+      &.white {
+        @apply bg-blue-500 text-white;
       }
     }
     &:disabled,
@@ -172,7 +183,7 @@
   }
   // Icons
   .icon {
-    @apply leading-0;
+    @apply leading-none;
     i {
       @apply leading-none;
     }

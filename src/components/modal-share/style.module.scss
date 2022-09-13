@@ -1,29 +1,5 @@
 .com-modal-share :global {
-  .modal-content {
-    @apply pt-4;
-  }
-  .icon-close {
-    @apply mt-1.5 cursor-pointer p-0 text-right;
-  }
-  .title-modal {
-    @apply -mt-1 text-center text-h3 font-medium;
-  }
-  .input-group-link {
-    @apply text-left text-h5 font-normal;
-  }
-  .input-group-ID {
-    @apply mt-4  text-left text-h5 font-normal;
-  }
-  .input-control {
-    @apply w-full;
-    ::placeholder {
-      @apply text-h4 font-normal;
-    }
-  }
-  .input-group-modal {
-    @apply mt-1 flex;
-  }
-  .text-copy {
-    @apply grid h-16 w-20 cursor-pointer items-center p-0 text-center text-h4 font-medium capitalize text-white;
+  .abc-btn {
+    @apply w-20;
   }
 }

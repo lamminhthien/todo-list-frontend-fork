@@ -1,4 +1,4 @@
-.create-room :global {
+.page-action :global {
   @apply h-full;
   .container {
     @apply h-full;
@@ -6,13 +6,28 @@
   .inner {
     @apply mx-auto flex h-full max-w-[708px] flex-col items-center justify-center;
   }
-  .title {
-    @apply text-center text-5xl font-extrabold text-blue-500 md:text-hero;
+  .user {
+    @apply ml-auto mt-7 mr-5 flex items-center;
+    .sep {
+      @apply mx-2 inline-flex h-4 w-[1px] bg-cyan-800;
+    }
   }
-  .headline {
-    @apply mt-16 text-center text-3xl font-medium text-blue-500 md:text-h1;
+  .title {
+    @apply mt-20 text-center text-5xl font-extrabold text-blue-500 md:text-hero;
+  }
+  .h1 {
+    @apply mt-6 text-center font-medium text-blue-500 md:mt-16;
   }
   .actions {
-    @apply mt-4 grid grid-cols-2 gap-x-3;
+    @apply mt-8 grid w-full gap-x-5 gap-y-5 md:grid-cols-2;
+  }
+  .form-input {
+    @apply p-0 px-4;
+  }
+  .abc-input.error {
+    @apply relative;
+    .message {
+      @apply absolute left-0;
+    }
   }
 }

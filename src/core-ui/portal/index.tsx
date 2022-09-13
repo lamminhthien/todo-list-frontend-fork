@@ -1,8 +1,8 @@
-import {FC, ReactNode, useEffect, useState} from 'react';
+import {FC, ReactElement, useEffect, useState} from 'react';
 import {createPortal} from 'react-dom';
 
 interface IProps {
-  children: ReactNode;
+  children: ReactElement;
 }
 
 const Portal: FC<IProps> = ({children}) => {

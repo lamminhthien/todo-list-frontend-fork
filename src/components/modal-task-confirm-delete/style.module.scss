@@ -1,20 +1,19 @@
 .com-modal-task-confirm-delete :global {
-  .modal-content {
-    @apply bg-abc-light;
+  .abc-modal-header {
+    .abc-icon {
+      @apply text-xl;
+    }
+    .title-des {
+      @apply hidden overflow-x-hidden px-0 pt-4 md:block md:pt-2 md:text-center;
+    }
+    .title-mob {
+      @apply flex justify-center px-0 pt-4 md:hidden md:pt-2;
+    }
+    .title-mob:last-child {
+      @apply mb-4 break-words p-0 italic md:m-0;
+    }
   }
-  .modal-footer {
-    @apply flex-nowrap gap-5 pt-1;
-  }
-  .title {
-    @apply text-h4 font-medium sm:text-h3;
-  }
-  .btn {
-    @apply w-full py-3 text-h6 font-medium leading-4 sm:text-h4 sm:leading-5;
-  }
-  .btn-cancel {
-    @apply bg-white text-abc-blue;
-  }
-  .btn-delete {
-    @apply bg-abc-blue text-white;
+  .abc-modal-footer {
+    @apply m-0 px-0 pb-0 md:pb-0.5;
   }
 }

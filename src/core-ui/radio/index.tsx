@@ -1,16 +1,16 @@
+import cls from 'classnames';
 import React, {
   ChangeEvent,
   ChangeEventHandler,
   FC,
-  forwardRef,
   InputHTMLAttributes,
-  memo,
   ReactNode,
   Ref,
+  forwardRef,
+  memo,
   useEffect,
   useState
 } from 'react';
-import cls from 'classnames';
 
 import {Color, XPosition} from '../types';
 
@@ -66,5 +66,7 @@ const Radio: FC<IRadioProps> = forwardRef(
     );
   }
 );
+
+Radio.displayName = 'AIRadio';
 
 export default memo(Radio);

@@ -6,7 +6,12 @@ const Footer: React.FC = () => {
   return (
     <footer className={styles.footer}>
       <div className="container">
-        <div className="copyright">Copyright © 2022 By ABC Software Solutions Company.</div>
+        <div className="copyright">
+          <h6>Copyright © 2022 </h6>
+          <a className="text-abc-grey  " href="https://www.abcsoftwarecompany.com/" target="_blank" rel="noreferrer">
+            by ABC Software Solutions Company
+          </a>
+        </div>
       </div>
     </footer>
   );

@@ -1,0 +1,194 @@
+{
+  "users": [
+    {
+      "userName": "sdaf",
+      "id": 1
+    },
+    {
+      "userName": "tin",
+      "id": 2
+    },
+    {
+      "userName": "sdfa",
+      "id": 3
+    },
+    {
+      "userName": "tin",
+      "id": 4
+    },
+    {
+      "userName": "df",
+      "id": 5
+    },
+    {
+      "userName": "sdf",
+      "id": 6
+    },
+    {
+      "userName": "df",
+      "id": 7
+    },
+    {
+      "userName": "ad",
+      "id": 8
+    },
+    {
+      "userName": "dfd",
+      "id": 9
+    },
+    {
+      "userName": "sdf",
+      "id": 10
+    },
+    {
+      "userName": "lamminhafasfafasf",
+      "id": 11
+    },
+    {
+      "userName": "fsafass",
+      "id": 12
+    },
+    {
+      "userName": "lamminhchi",
+      "id": 13
+    },
+    {
+      "userName": "fasfsaf",
+      "id": 14
+    },
+    {
+      "userName": "lamminha",
+      "id": 15
+    },
+    {
+      "userName": "lamminha",
+      "id": 16
+    },
+    {
+      "userName": "lamminha",
+      "id": 17
+    },
+    {
+      "userName": "534twe",
+      "id": 18
+    },
+    {
+      "userName": "thien1234",
+      "id": 19
+    },
+    {
+      "userName": "Ten",
+      "id": 20
+    },
+    {
+      "userName": "tt",
+      "id": 21
+    }
+  ],
+  "lists": [
+    {
+      "name": "rwqrqw",
+      "userId": 19,
+      "id": 1
+    },
+    {
+      "name": "sfdijfs",
+      "userId": 20,
+      "id": 2
+    },
+    {
+      "name": "hhh",
+      "userId": 21,
+      "id": 3
+    }
+  ],
+  "tasks": [
+    {
+      "name": "fsafassa",
+      "todoListId": 1,
+      "userId": 19,
+      "id": 1,
+      "isDone": true
+    },
+    {
+      "name": "ghsdgs",
+      "todoListId": 1,
+      "userId": 19,
+      "id": 2,
+      "isDone": true
+    },
+    {
+      "name": "hdhdsh",
+      "todoListId": 1,
+      "userId": 19,
+      "id": 3,
+      "isDone": true
+    },
+    {
+      "name": "hdshdshdshs",
+      "todoListId": 1,
+      "userId": 19,
+      "id": 4,
+      "isDone": true
+    },
+    {
+      "name": "ád",
+      "todoListId": 2,
+      "userId": 20,
+      "id": 5
+    },
+    {
+      "name": "hdjdjd",
+      "todoListId": 2,
+      "userId": 20,
+      "id": 6
+    },
+    {
+      "name": "hh",
+      "todoListId": 3,
+      "userId": 21,
+      "id": 7
+    },
+    {
+      "name": "ffff",
+      "todoListId": 3,
+      "userId": 21,
+      "id": 8
+    },
+    {
+      "name": "fffff",
+      "todoListId": 3,
+      "userId": 21,
+      "id": 9
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    },
+    {
+      "id": 2,
+      "body": "some comment 1",
+      "postId": 1
+    },
+    {
+      "id": 3,
+      "body": "some comment 2",
+      "postId": 1
+    },
+    {
+      "id": 4,
+      "body": "some comment 4",
+      "postId": 1
+    }
+  ]
+}

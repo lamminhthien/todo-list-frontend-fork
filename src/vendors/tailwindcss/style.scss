@@ -2,6 +2,7 @@
 
 @tailwind base;
 @layer base {
+  @import './bases/root';
   @import './bases/html';
   @import './bases/body';
   @import './bases/heading';
@@ -10,6 +11,7 @@
 @tailwind components;
 @layer components {
   @import './components/button';
+  @import './components/icon';
   @import './components/icon-button';
   @import './components/link';
   @import './components/loading';
@@ -25,6 +27,7 @@
   @import './components/drawer';
   @import './components/backdrop';
   @import './components/error';
+  @import './components/icon-float';
 }
 
 @tailwind utilities;

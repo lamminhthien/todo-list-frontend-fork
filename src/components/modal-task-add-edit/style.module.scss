@@ -1,26 +1,22 @@
 .com-modal-task-add-edit :global {
-  .modal-content {
-    @apply bg-abc-light;
+  .abc-modal-header {
+    .abc-icon {
+      @apply text-xl;
+    }
+    .title {
+      @apply mb-4 pt-4;
+    }
   }
-  .modal-body {
-    @apply py-4;
+  .abc-modal-footer {
+    @apply mx-0 mt-2 mb-0 px-0 pb-0 md:pb-0.5;
   }
-  .modal-footer {
-    @apply flex-nowrap gap-5 pt-1;
-  }
-  .title {
-    @apply text-h4 font-medium;
-  }
-  .form-input {
-    @apply text-h6 font-normal leading-4 sm:text-h4;
-  }
-  .btn {
-    @apply w-full py-3 text-h4 font-medium;
-  }
-  .btn-cancel {
-    @apply bg-white text-abc-blue;
-  }
-  .btn-submit {
-    @apply bg-abc-blue text-white;
+  .abc-input {
+    @apply relative;
+    .message {
+      @apply absolute left-0;
+    }
+    .name-enter {
+      @apply p-3;
+    }
   }
 }

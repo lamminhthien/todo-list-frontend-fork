@@ -1,5 +1,6 @@
 import React, {FC, ReactNode} from 'react';
 
+import IconButton from '../icon-button';
 import {useModal} from './modal';
 
 export interface IModalHeaderProps {
@@ -10,19 +11,12 @@ export interface IModalHeaderProps {
 const Header: FC<IModalHeaderProps> = ({text, children}) => {
   const {onClose} = useModal();
 
-  const content = text ? <h5>{text}</h5> : children;
+  const content = text ? <h3>{text}</h3> : children;
 
   return (
-    <div className="modal-header">
+    <div className="abc-modal-header">
+      <IconButton className="ml-auto" name="ico-x-circle" onClick={() => onClose(false)} />
       {content}
-      <button
-        className="modal-close"
-        onClick={() => {
-          onClose(false);
-        }}
-      >
-        &times;
-      </button>
     </div>
   );
 };

@@ -1,18 +1,18 @@
+import cls from 'classnames';
 import React, {
   ChangeEvent,
   ChangeEventHandler,
   FC,
-  forwardRef,
   InputHTMLAttributes,
-  memo,
   ReactNode,
   Ref,
+  forwardRef,
+  memo,
   useEffect,
   useState
 } from 'react';
-import cls from 'classnames';
 
-import {Color, XPosition} from '../types';
+import { Color } from '../types';
 
 interface ISwitcherProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
@@ -25,7 +25,7 @@ interface ISwitcherProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Switcher: FC<ISwitcherProps> = forwardRef(
-  ({className, name, color, disabled, error, checked = false, onChange}, ref: Ref<HTMLInputElement>) => {
+  ({ className, name, color, disabled, error, checked = false, onChange }, ref: Ref<HTMLInputElement>) => {
     const [value, setValue] = useState<boolean>(checked);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +47,7 @@ const Switcher: FC<ISwitcherProps> = forwardRef(
           disabled && 'disabled',
           error && 'error',
           value ? 'checked' : 'unchecked'
-        )}
-      >
+        )}>
         <label>
           <div className="layer1">
             <div className="layer2"></div>

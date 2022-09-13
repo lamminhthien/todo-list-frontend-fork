@@ -1,7 +1,12 @@
-import React, {FC} from 'react';
-import API, {ITodo} from '@/api/network/todo-list';
-import {Modal} from '@/core-ui/modal';
+import cls from 'classnames';
 import {useRouter} from 'next/router';
+import React, {FC} from 'react';
+
+import API, {ITodo} from '@/api/network/todo';
+import {ROUTES} from '@/configs/routes.config';
+import Button from '@/core-ui/button';
+import {Modal} from '@/core-ui/modal';
+import useToast from '@/core-ui/toast';
 
 import styles from './style.module.scss';
 
@@ -15,18 +20,15 @@ interface IProps {
 
 const ModalTodoConfirmDelete: FC<IProps> = ({data, open, page, onCancel, onConfirm}) => {
   const router = useRouter();
-
-  const cancel = () => {
-    onCancel?.();
-  };
+  const toast = useToast();
 
   const deletePost = () => {
     if (data?.id)
-      API.deleteTodoList(data?.id).then(() => {
+      API.deleteTodo(data?.id).then(() => {
         onConfirm?.();
-
+        toast.show({type: 'success', title: 'Delete list', content: 'Successful!'});
         if (page == 'detail') {
-          router.push('/list');
+          router.push(ROUTES.TODO_LIST);
         }
       });
   };
@@ -34,22 +36,41 @@ const ModalTodoConfirmDelete: FC<IProps> = ({data, open, page, onCancel, onConfi
   if (!data) return null;
 
   return (
-    <div className={styles['com-modal-todo-confirm-delete']}>
-      <Modal open={open} onClose={onConfirm}>
-        {/* <Modal.Header>{'Delete Post'}</Modal.Header> */}
-        <Modal.Body>
-          <h3 className="title">Are you sure you want to delete list {data.listName}?</h3>
-        </Modal.Body>
-        <Modal.Footer>
-          <button className="btn btn-cancel" type="button" onClick={cancel}>
-            Cancel
-          </button>
-          <button className="btn btn-delete" type="button" onClick={deletePost}>
-            Delete
-          </button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+    <Modal
+      className={cls(styles['com-modal-todo-confirm-delete'], 'max-w-3xl')}
+      variant="center"
+      open={open}
+      onClose={() => onCancel?.()}
+    >
+      <Modal.Header>
+        <h3 className="title-des">
+          Are you sure you want to delete list:&nbsp;<i>{data.name}</i>{' '}
+        </h3>
+        <h3 className="title-mob">Are you sure you want to delete list: </h3>
+        <h3 className="title-mob">{data.name}</h3>
+      </Modal.Header>
+
+      <Modal.Footer>
+        <div className="flex w-full gap-x-3 md:gap-x-4">
+          <Button
+            className="w-full"
+            variant="outlined"
+            color="primary"
+            text="No"
+            onClick={() => onCancel?.()}
+            type="button"
+          />
+          <Button
+            className="w-full"
+            variant="contained"
+            color="primary"
+            text="Yes"
+            type="submit"
+            onClick={() => deletePost()}
+          />
+        </div>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
