@@ -16,10 +16,10 @@ const Topbar: FC<IProps> = () => {
       <div className="container">
         <div className="authenticated">
           <Icon name="ico-user" />
-          <span className="h5">Thiện</span>
+          <span className="h2">Thiện</span>
           <span className="sep"></span>
           <Link href={ROUTES.TODO_LIST}>
-            <a className="h5">My List</a>
+            <a className="h2">My List</a>
           </Link>
         </div>
       </div>
