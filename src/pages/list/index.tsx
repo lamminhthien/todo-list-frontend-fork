@@ -8,7 +8,6 @@ import ModalShare from '@/components/modal-share';
 import ModalTodoAddEdit from '@/components/modal-todo-add-edit';
 import ModalTodoConfirmDelete from '@/components/modal-todo-confirm-delete';
 import Seo from '@/components/seo/seo';
-import Topbar from '@/components/topbar';
 import {ROUTES} from '@/configs/routes.config';
 import {siteSettings} from '@/configs/site.config';
 import Button from '@/core-ui/button';
@@ -62,7 +61,6 @@ export default function List() {
         <Seo title={`${siteSettings.name} | Your List`} description={siteSettings.description} />
         <div className={styles['page-list']}>
           <div className="container">
-            <Topbar />
             <div className="toolbar">
               <div className="left">
                 <IconButton name="ico-arrow-left-circle" size={32} onClick={() => router.push(ROUTES.ACTION)} />
