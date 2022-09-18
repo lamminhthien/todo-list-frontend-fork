@@ -1,5 +1,5 @@
 .topbar :global {
-  @apply mt-3 md:mt-12;
+  @apply mt-3 sm:mt-3 md:mt-12;
   .container {
     @apply flex items-center justify-between;
   }
