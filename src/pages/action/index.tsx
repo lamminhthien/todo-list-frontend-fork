@@ -2,7 +2,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {GetStaticProps} from 'next';
 import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 import {useRouter} from 'next/router';
-import {useContext, useEffect, useState} from 'react';
+import {useState} from 'react';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -11,12 +11,13 @@ import ModalTodoAddEdit from '@/components/modal-todo-add-edit';
 import Seo from '@/components/seo/seo';
 import {ROUTES} from '@/configs/routes.config';
 import {siteSettings} from '@/configs/site.config';
+import {useStateAuth} from '@/contexts/auth/context';
 import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
 import useToast from '@/core-ui/toast';
-import {ThemeContext} from '@/hooks/useAuthContext';
 import LayoutDefault from '@/layouts/default';
 import {IAction} from '@/types';
+import checkUnAuthorized from '@/utils/check-unauthorized';
 
 import styles from './style.module.scss';
 
@@ -27,21 +28,19 @@ interface IFormInputs {
 const Schema = yup.object().shape({
   todoId: yup.string().required('Please enter Link or ID')
 });
+checkUnAuthorized();
 
 export default function Action() {
   const router = useRouter();
   const toast = useToast();
-  const userObject = useContext(ThemeContext);
   const [action, setAction] = useState<IAction>({type: '', payload: null});
+  const auth = useStateAuth();
 
   const resetAction = () => setAction({type: '', payload: null});
-
   const {register, handleSubmit, formState} = useForm<IFormInputs>({
     resolver: yupResolver(Schema)
   });
-
   const {errors} = formState;
-
   const onSubmit: SubmitHandler<IFormInputs> = data => {
     const todoId = data.todoId.toLowerCase();
     API.getTodo(todoId)
@@ -54,19 +53,10 @@ export default function Action() {
       });
   };
 
-  useEffect(() => {
-    if (userObject.id === '') {
-      router.push(ROUTES.QUICKPLAY);
-    }
-    if (localStorage.getItem('listID')) {
-      localStorage.removeItem('listID');
-    }
-  }, [errors]);
-
-  if (userObject.id !== '')
-    return (
-      <>
-        <Seo title={`${siteSettings.name} | Action Page`} description={siteSettings.description} />
+  return (
+    <>
+      <Seo title={`${siteSettings.name} | Action Page`} description={siteSettings.description} />
+      {auth.user && (
         <div className={styles['page-action']}>
           <div className="container">
             <div className="inner">
@@ -102,16 +92,17 @@ export default function Action() {
             </div>
           </div>
         </div>
-        {['add'].includes(action.type) && (
-          <ModalTodoAddEdit
-            data={action.payload}
-            open={true}
-            onSave={() => router.push(ROUTES.TODO_LIST)}
-            onCancel={() => resetAction()}
-          />
-        )}
-      </>
-    );
+      )}
+      {['add'].includes(action.type) && (
+        <ModalTodoAddEdit
+          data={action.payload}
+          open={true}
+          onSave={() => router.push(ROUTES.TODO_LIST)}
+          onCancel={resetAction}
+        />
+      )}
+    </>
+  );
 }
 
 Action.Layout = LayoutDefault;

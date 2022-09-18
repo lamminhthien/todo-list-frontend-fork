@@ -1,15 +1,15 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import cls from 'classnames';
-import React, {FC, useCallback, useContext, useEffect} from 'react';
+import React, {FC, useCallback, useEffect} from 'react';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import * as yup from 'yup';
 
-import API, {ITodo} from '@/api/network/todo';
+import API from '@/api/network/todo';
+import {ITodo} from '@/api/types/todo.type';
 import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
 import {Modal} from '@/core-ui/modal';
 import useToast from '@/core-ui/toast';
-import {ThemeContext} from '@/hooks/useAuthContext';
 
 import styles from './style.module.scss';
 
@@ -41,7 +41,6 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
     resolver: yupResolver(Schema)
   });
   const toast = useToast();
-  const userObject = useContext(ThemeContext);
   const {errors} = formState;
 
   const getTodo = (id: string) => {
@@ -52,10 +51,6 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
   };
 
   const onSubmit: SubmitHandler<IFormInputs> = formData => {
-    const userId = userObject.id;
-
-    formData.userId = userId;
-
     if (data?.id) {
       API.updateTodo(data.id, formData)
         .then(() => {
@@ -66,7 +61,6 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
           toast.show({type: 'danger', title: 'Update List', content: 'Error, too much character'});
         });
     } else {
-      formData.userId = userId;
       API.createTodo(formData)
         .then(() => {
           onSave?.();

@@ -1,14 +1,7 @@
 import * as HttpRequest from '@/api/http-request';
 import {IAxiosResponse} from '@/types';
 
-export interface ITask {
-  id?: string;
-  name: string;
-  isDone?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  todoListId?: string;
-}
+import {ITask} from '../types/task.type';
 
 type Task = IAxiosResponse<ITask>;
 type Tasks = IAxiosResponse<ITask[]>;
@@ -21,4 +14,5 @@ const deleteTask = (id: string) => HttpRequest.destroy<ITask>(`/tasks/${id}`);
 const updateTask = (id: string, data: ITask) => HttpRequest.patch<ITask>(`/tasks/${id}`, data);
 const updateStatusTask = (id: string) => HttpRequest.put(`/tasks/${id}`, {});
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {getTasks, getListTasks, getTask, createTask, deleteTask, updateTask, updateStatusTask};

@@ -1,9 +1,9 @@
 import {useRouter} from 'next/router';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import io from 'socket.io-client';
 
 import API from '@/api/network/task';
-import {ITodo} from '@/api/network/todo';
+import {ITodo} from '@/api/types/todo.type';
 import ModalShare from '@/components/modal-share';
 import ModalTaskAddEdit from '@/components/modal-task-add-edit';
 import ModalTaskConfirmDelete from '@/components/modal-task-confirm-delete';
@@ -11,28 +11,33 @@ import ModalTodoConfirmDelete from '@/components/modal-todo-confirm-delete';
 import Seo from '@/components/seo/seo';
 import {ROUTES} from '@/configs/routes.config';
 import {siteSettings} from '@/configs/site.config';
+import {useStateAuth} from '@/contexts/auth/context';
 import Button from '@/core-ui/button';
 import Checkbox from '@/core-ui/checkbox';
 import FloatIcon from '@/core-ui/float-icon';
 import Icon from '@/core-ui/icon';
 import IconButton from '@/core-ui/icon-button';
-import {ThemeContext} from '@/hooks/useAuthContext';
+import useQueryTypeScript from '@/hooks/useQueryTypeScript';
 import LayoutDefault from '@/layouts/default';
 import {IAction} from '@/types';
+import checkUnAuthorized from '@/utils/check-unauthorized';
+import useLocalStorage from '@/utils/local-storage';
 
 import styles from './style.module.scss';
 
 const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`);
+checkUnAuthorized();
 
 export default function Detail() {
   const router = useRouter();
-  const userObject = useContext(ThemeContext);
   const [todoList, setTodoList] = useState<ITodo>();
   const [action, setAction] = useState<IAction>({type: '', payload: null});
   const [actionTodo, setActionTodo] = useState<IAction>({type: '', payload: null});
   const [shareOpen, setShareOpen] = useState(false);
+  const auth = useStateAuth();
+  const {removePreviousLink} = useLocalStorage();
 
-  const {id} = router.query;
+  const id = useQueryTypeScript();
   const page = 'detail';
 
   const socketMsgToServer = () => socket.emit('msgToServer', {roomId: id});
@@ -67,22 +72,20 @@ export default function Detail() {
   };
 
   useEffect(() => {
-    if (userObject.id === '') {
-      router.push(ROUTES.QUICKPLAY);
-    }
     if (id) {
       getListTasks(id).catch(() => router.push(ROUTES.TODO_LIST));
       socketMsgToClient();
+      removePreviousLink();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   if (!todoList || !id) return null;
 
-  if (userObject.id !== '')
-    return (
-      <>
-        <Seo title={`${siteSettings.name} | ${todoList.name}`} description={siteSettings.description} />
-
+  return (
+    <>
+      <Seo title={`${siteSettings.name} | ${todoList.name}`} description={siteSettings.description} />
+      {auth.user && (
         <div className={styles['page-detail']}>
           <div className="container">
             <div className="toolbar">
@@ -111,12 +114,12 @@ export default function Detail() {
               </div>
             </div>
             <div className="tasks">
-              {!todoList?.tasks.length && <span className="empty">Empty list</span>}
+              {!todoList?.tasks!.length && <span className="empty">Empty list</span>}
               {todoList.tasks &&
                 todoList.tasks.map(task => (
                   <div className="item" key={task.id}>
-                    <Checkbox checked={task.isDone} onChange={() => setDone(task.id, !task.isDone)} />
-                    <p onClick={() => setDone(task.id, !task.isDone)} className={`h6 ${task.isDone ? 'checked' : ''}`}>
+                    <Checkbox checked={task.isDone} onChange={() => setDone(task.id!)} />
+                    <p onClick={() => setDone(task.id!)} className={`h6 ${task.isDone ? 'checked' : ''}`}>
                       {task.name}
                     </p>
                     <div className="actions">
@@ -154,8 +157,9 @@ export default function Detail() {
           />
           <ModalShare open={shareOpen} onClose={() => setShareOpen(false)} id={id} />
         </div>
-      </>
-    );
+      )}
+    </>
+  );
 }
 
 Detail.Layout = LayoutDefault;
