@@ -57,15 +57,9 @@ const ModalTaskAddEdit: FC<IProps> = ({data, open, todoListId, onSave, onCancel}
 
     if (data?.id) {
       API.updateTask(data.id, formData)
-        .then(res => {
-          switch (res.status) {
-            case HTTP_STATUS_CODE.OK:
-              toast.show({type: 'success', title: 'Update To-Do', content: 'Successful!'});
-              onSave?.();
-              break;
-            default:
-              break;
-          }
+        .then(() => {
+          toast.show({type: 'success', title: 'Update To-Do', content: 'Successful!'});
+          onSave?.();
         })
         .catch(err => {
           const statusCode = err.response.data.statusCode;
@@ -90,15 +84,9 @@ const ModalTaskAddEdit: FC<IProps> = ({data, open, todoListId, onSave, onCancel}
         });
     } else {
       API.createTask(formData)
-        .then(res => {
-          switch (res.status) {
-            case HTTP_STATUS_CODE.CREATED:
-              toast.show({type: 'success', title: 'Create To-Do', content: 'Successful!'});
-              onSave();
-              break;
-            default:
-              break;
-          }
+        .then(() => {
+          toast.show({type: 'success', title: 'Create To-Do', content: 'Successful!'});
+          onSave();
         })
         .catch(err => {
           const statusCode = err.response.data.statusCode;

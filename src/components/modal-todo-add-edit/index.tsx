@@ -54,15 +54,9 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
   const onSubmit: SubmitHandler<IFormInputs> = formData => {
     if (data?.id) {
       API.updateTodo(data.id, formData)
-        .then(res => {
-          switch (res.status) {
-            case HTTP_STATUS_CODE.OK:
-              toast.show({type: 'success', title: 'Update List', content: 'Successful!'});
-              onSave?.();
-              break;
-            default:
-              break;
-          }
+        .then(() => {
+          toast.show({type: 'success', title: 'Update List', content: 'Successful!'});
+          onSave?.();
         })
         .catch(err => {
           const statusCode = err.response.data.statusCode;
@@ -83,15 +77,9 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
         });
     } else {
       API.createTodo(formData)
-        .then(res => {
-          switch (res.status) {
-            case HTTP_STATUS_CODE.CREATED:
-              toast.show({type: 'success', title: 'Create List', content: 'Successful!'});
-              onSave?.();
-              break;
-            default:
-              break;
-          }
+        .then(() => {
+          toast.show({type: 'success', title: 'Create List', content: 'Successful!'});
+          onSave?.();
         })
         .catch(err => {
           const statusCode = err.response.data.statusCode;

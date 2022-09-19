@@ -44,15 +44,9 @@ export default function Lobby() {
     const todoId = detectIdOrLink(data.todoId);
 
     API.getTodo(todoId)
-      .then(res => {
-        switch (res.status) {
-          case HTTP_STATUS_CODE.OK:
-            toast.show({type: 'success', title: 'Success', content: 'Join List Successfull', lifeTime: 3000});
-            router.push(`${ROUTES.LIST}/${todoId}`);
-            break;
-          default:
-            break;
-        }
+      .then(() => {
+        toast.show({type: 'success', title: 'Success', content: 'Join List Successfull', lifeTime: 3000});
+        router.push(`${ROUTES.LIST}/${todoId}`);
       })
       .catch(() => {
         toast.show({type: 'danger', title: 'Error!', content: 'List not found', lifeTime: 3000});
