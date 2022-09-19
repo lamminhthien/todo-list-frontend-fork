@@ -11,22 +11,20 @@ import {AuthActions} from '@/contexts/auth';
 import {useDispatchAuth} from '@/contexts/auth/context';
 import useToast from '@/core-ui/toast';
 import useMediaQuery from '@/hooks/useMediaQuery';
-import useLocalStorage from '@/utils/local-storage';
+import LocalStorage from '@/utils/local-storage';
 
 interface IFormInputs {
   userName: string;
 }
 
 const Schema = yup.object().shape({
-  userName: yup.string().required('Please fill in your name.')
+  userName: yup.string().required('Please fill in your name').max(32, 'Your name must not exceed 32 letters')
 });
 
 export default function useIndexHook() {
   const toast = useToast();
   const router = useRouter();
   const dispatchAuth = useDispatchAuth();
-  const {saveToken, saveUserProfile, removeUserProfile, removeToken, readPreviousLink, removePreviousLink} =
-    useLocalStorage();
 
   const matches = useMediaQuery('(min-width:640px)');
   const {register, handleSubmit, formState} = useForm<IFormInputs>({
@@ -36,17 +34,14 @@ export default function useIndexHook() {
     API.createUser(data)
       .then(res => {
         if (res.status === 201) {
-          saveToken(res.data.accessToken);
-          saveUserProfile(res.data.user);
-          dispatchAuth(AuthActions.setUser(res.data.user));
-          const previousPage = readPreviousLink();
+          LocalStorage.accessToken.set(res.data.accessToken);
+          dispatchAuth(AuthActions.login(res.data.user));
+          const previousPage = LocalStorage.previousPage.get();
           if (previousPage) {
             router.push(previousPage);
           } else {
-            router.push(ROUTES.LOAD_CONTEXT_STATE);
+            router.push(ROUTES.HOME);
           }
-        } else {
-          toast.show({type: 'danger', title: 'Error', content: 'Can&apos;t create user.'});
         }
       })
       .catch(() => {
@@ -55,11 +50,7 @@ export default function useIndexHook() {
   };
 
   useEffect(() => {
-    removeToken();
-    removeUserProfile();
-    if (readPreviousLink()?.endsWith('/list/') || readPreviousLink()?.endsWith('/list')) {
-      removePreviousLink();
-    }
+    LocalStorage.accessToken.remove();
   }, []);
 
   const {errors} = formState;

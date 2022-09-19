@@ -1,38 +1,54 @@
+import '@/vendors/bootstrap/bootstrap.scss';
 import '@/vendors/tailwindcss/style.scss';
 import '@/vendors/menu/style.scss';
 import '@/vendors/abc-icons/dist/abc.scss';
+import 'nprogress/nprogress.css';
 
 import {appWithTranslation} from 'next-i18next';
 import type {AppProps} from 'next/app';
 import {useRouter} from 'next/router';
-import NextNProgress from 'nextjs-progressbar';
-import React from 'react';
+import nProgress from 'nprogress';
+import {useEffect} from 'react';
 
-import AuthProvider from '@/contexts/auth/provider';
-import {GlobalProvider} from '@/contexts/global';
-import QueryProvider from '@/contexts/query.provider';
-import {CoreUIProvider, defaultTheme} from '@/core-ui/contexts/index';
-import Noop from '@/core-ui/noop';
+import DefaultSeo from '@/components/seo/default-seo';
+import {AuthProvider} from '@/contexts/auth';
 
-import PageWrap from './_app.hook';
+const Noop: React.FC = ({children}: React.PropsWithChildren<any>) => <>{children}</>;
 
-const CustomApp = ({Component, pageProps}: AppProps) => {
+const CustomApp = ({Component, pageProps: {session, ...pageProps}}: AppProps) => {
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Layout = (Component as any).Layout || Noop;
 
+  const Layout = (Component as any).Layout || Noop;
+  nProgress.configure({
+    minimum: 0.3,
+    easing: 'ease',
+    speed: 800,
+    showSpinner: true
+  });
+
+  useEffect(() => {
+    const progress = () => {
+      nProgress.start();
+    };
+    const doneProgress = () => {
+      nProgress.done();
+    };
+    router.events.on('routeChangeStart', progress);
+    router.events.on('routeChangeComplete', doneProgress);
+    router.events.on('routeChangeError', doneProgress);
+    return () => {
+      router.events.off('routeChangeStart', progress);
+      router.events.off('routeChangeComplete', doneProgress);
+      router.events.off('routeChangeError', doneProgress);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <AuthProvider>
-      <QueryProvider pageProps={pageProps}>
-        <GlobalProvider>
-          <CoreUIProvider theme={defaultTheme}>
-            <NextNProgress color="#4b9ae8" />
-            <PageWrap>
-              <Layout pageProps={pageProps}>{<Component {...pageProps} key={router.route} />}</Layout>
-            </PageWrap>
-          </CoreUIProvider>
-        </GlobalProvider>
-      </QueryProvider>
+      <DefaultSeo />
+      <Layout pageProps={pageProps}>
+        <Component {...pageProps} key={router.route} />
+      </Layout>
     </AuthProvider>
   );
 };
