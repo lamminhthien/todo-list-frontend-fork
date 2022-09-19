@@ -25,7 +25,8 @@ export default function useIndexHook() {
   const toast = useToast();
   const router = useRouter();
   const dispatchAuth = useDispatchAuth();
-  const {saveToken, saveUserProfile, removeUserProfile, removeToken, readPreviousLink} = useLocalStorage();
+  const {saveToken, saveUserProfile, removeUserProfile, removeToken, readPreviousLink, removePreviousLink} =
+    useLocalStorage();
 
   const matches = useMediaQuery('(min-width:640px)');
   const {register, handleSubmit, formState} = useForm<IFormInputs>({
@@ -54,6 +55,9 @@ export default function useIndexHook() {
   useEffect(() => {
     removeToken();
     removeUserProfile();
+    if (readPreviousLink()?.endsWith('/list/') || readPreviousLink()?.endsWith('/list')) {
+      removePreviousLink();
+    }
   }, []);
 
   const {errors} = formState;
