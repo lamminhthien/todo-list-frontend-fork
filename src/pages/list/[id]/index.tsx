@@ -53,7 +53,7 @@ export default function Detail() {
                 startIcon={<Icon name="ico-edit" />}
                 onClick={() => setActionTodo({type: 'edit', payload: todoList})}
               >
-                <span className="h5 font-medium">Edit List</span>
+                <span className="h5 font-medium">Edit</span>
               </Button>
               <Button
                 startIcon={<Icon name="ico-trash-2" />}
@@ -83,8 +83,8 @@ export default function Detail() {
                     {task.name}
                   </p>
                   <div className="actions">
-                    <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: task})} />
                     <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: task})} />
+                    <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: task})} />
                   </div>
                 </div>
               ))}

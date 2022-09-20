@@ -48,8 +48,8 @@ export default function List() {
                   {item.name}
                 </p>
                 <div className="actions">
-                  <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: item})} />
                   <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: item})} />
+                  <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: item})} />
                   <IconButton name="ico-share-2" onClick={() => handleShare(item.id!)} />
                   <IconButton name="ico-chevron-right" onClick={() => router.push(`${ROUTES.LIST}/${item.id}`)} />
                 </div>
