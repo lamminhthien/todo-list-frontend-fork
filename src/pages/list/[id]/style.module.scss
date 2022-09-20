@@ -5,7 +5,7 @@
   .toolbar {
     @apply mt-3 flex items-start justify-between lg:mt-5;
     h2 {
-      @apply mr-auto break-words text-h4 font-semibold leading-none md:text-h2;
+      @apply mr-auto break-words text-h4 font-semibold leading-[18px] md:text-h2 lg:leading-none;
     }
     .left {
       @apply flex items-center;
