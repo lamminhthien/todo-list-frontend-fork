@@ -56,7 +56,7 @@
       @apply hover:bg-blue-100;
     }
     .h6 {
-      @apply ml-3 flex w-full cursor-pointer items-start break-all py-3 leading-none;
+      @apply mx-3 flex w-full cursor-pointer items-start break-all py-3 leading-none;
     }
     .checked {
       @apply line-through opacity-50;
