@@ -26,5 +26,4 @@ jobs:
       - run: npm install -g yarn
       - run: cp .env.stage.sample .env
       - run: yarn
-        # This is nest start command, don't misread about development mode. It's ready at production mode1
-      # - run: yarn build
+      - run: yarn build
