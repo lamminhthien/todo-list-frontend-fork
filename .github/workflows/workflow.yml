@@ -1,13 +1,16 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: VMWare or EC2 Auto Deploy (CI/CD)
+name: Auto Deploy Lucky Draw To EC2
 
 on:
   push:
-    branches: [main]
+    branches: ["main"]
   pull_request:
-    branches: [main]
+    branches: ["main"]
+
+env:
+  test: test
 
 jobs:
   build:
@@ -16,15 +19,26 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install -g yarn
-      - run: cp .env.stage.sample .env
-      - run: yarn
-      - run: yarn genfont
-      - run: yarn build
+
+      - name: Copy .env.template --> .env
+        run: cp .env.stage.sample .env
+
+      - name: Install Yarn, PM2
+        run: npm install -g yarn pm2
+
+      - name: Install Node Module
+        run: yarn
+
+      - name: Generated SVG Font
+        run: yarn genfont
+
+      - name: Build,Start and Restart Web Application
+        run: RUNNER_TRACKING_ID="" && yarn build && pm2 start yarn -- start && pm2 restart yarn

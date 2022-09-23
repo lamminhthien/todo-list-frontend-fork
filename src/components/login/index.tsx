@@ -23,7 +23,7 @@ export default function Login() {
               <TodoListLogo width={matches ? 249 : 175} />
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <h2 className="text-center">Let&apos;s start! edit and test CI CD </h2>
+              <h2 className="text-center">Let&apos;s start! edit and test CI CD 2 </h2>
               <Input
                 placeholder="Enter your name"
                 className="name-input"
