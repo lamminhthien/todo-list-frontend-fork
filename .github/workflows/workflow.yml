@@ -26,4 +26,5 @@ jobs:
       - run: npm install -g yarn
       - run: cp .env.stage.sample .env
       - run: yarn
+      - run: yarn genfont
       - run: yarn build
