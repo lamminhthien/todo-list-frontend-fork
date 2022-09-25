@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 # Change Directory to HOME directory
 cd $HOME
 
@@ -14,7 +16,7 @@ curl -o actions-runner-linux-x64-2.296.2.tar.gz -L https://github.com/actions/ru
 tar xzf ./actions-runner-linux-x64-2.296.2.tar.gz
 ##########################################################################################################################################
 # Warning this token and link is getting from TAB Setting -> Actions -> Runner -> Create New Runner -> Linux  in your GitHub Repository
-echo -ne '\n' | ./config.sh --url https://github.com/abc-software-solutions-company/todo-list-website --token AXUUDP6B4YREFJCIMUSCXI3DF6NPG
+echo -ne '\n' | ./config.sh --url https://github.com/abc-software-solutions-company/todo-list-website --token SECRETTOKEN
 ##########################################################################################################################################
 sudo ./svc.sh install
 sudo ./svc.sh start
