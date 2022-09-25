@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 80",
     "export": "next export",
     "start-dev": "docker-compose up && yarn dev",
     "build-stats": "cross-env ANALYZE=true yarn build",
