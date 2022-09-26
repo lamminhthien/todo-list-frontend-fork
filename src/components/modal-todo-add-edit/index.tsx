@@ -50,11 +50,11 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
     });
   };
 
-  const onSubmit: SubmitHandler<IFormInputs> = formData => {
+  const onSubmit: SubmitHandler<IFormInputs> = async formData => {
     if (formState.isSubmitting) return;
 
     if (data?.id) {
-      API.updateTodo(data.id, formData)
+      await API.updateTodo(data.id, formData)
         .then(() => {
           toast.show({type: 'success', title: 'Update List', content: 'Successful!'});
           onSave?.();
@@ -63,7 +63,7 @@ const ModalTodoAddEdit: FC<IProps> = ({data, open, onCancel, onSave}) => {
           toast.show({type: 'danger', title: 'Update List', content: 'Error, Cannot update List'});
         });
     } else {
-      API.createTodo(formData)
+      await API.createTodo(formData)
         .then(() => {
           toast.show({type: 'success', title: 'Create List', content: 'Successful!'});
           onSave?.();
