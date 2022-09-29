@@ -1,5 +1,7 @@
 import {GoogleAuthProvider, getAuth, signInWithPopup, signOut} from 'firebase/auth';
 
+import API from '@/api/network/user';
+import {IEmail} from '@/api/types/email.type';
 import {initFirebase} from '@/lib/firebase/initFirebase';
 import LocalStorage from '@/utils/local-storage';
 
@@ -7,15 +9,18 @@ initFirebase(); // initialize firebase
 const auth = getAuth();
 
 export class FireAuthUtils {
-  attachEmailToUser = (email: string | null | undefined) => {
-    console.log('🏘️📧 Your Email is registered successfully');
-    console.log(`🤩Will be save email ${email} to user record in postgres lately`);
+  attachEmailToUser = async (email: IEmail) => {
+    await API.attachEmail(email)
+      .then(() => {})
+      .catch(() => {});
   };
 
   saveAuthProfile = () => {
     auth.onAuthStateChanged(user => {
       LocalStorage.firebaseAuthData.set(JSON.stringify(user));
-      this.attachEmailToUser(user?.email);
+      if (user?.email) {
+        this.attachEmailToUser({email: user?.email});
+      }
     });
   };
 
@@ -26,13 +31,21 @@ export class FireAuthUtils {
   signInWithGoogle = () => {
     const googleProvider = new GoogleAuthProvider();
     signInWithPopup(auth, googleProvider)
-      .then(() => this.saveAuthProfile())
-      .catch(err => console.log(`🥲🥲🥲 ${JSON.stringify(err)} `));
+      .then(() => {
+        this.saveAuthProfile();
+        return '😁😁😁😁😁😁🏘️🏘️🏘️Logined SuccessFully';
+      })
+      .catch(() => {
+        return '🤦‍♂️🤦‍♂️🤦‍♂️🤦‍♂️🤦‍♂️Logined SuccessFully';
+      });
   };
 
   signOutOfGoogle = () => {
     signOut(auth)
-      .then(() => this.removeAuthProfile())
+      .then(() => {
+        this.removeAuthProfile();
+        LocalStorage.accessToken.remove();
+      })
       .catch(err => console.log(`🥲🥲🥲 ${JSON.stringify(err)} `));
   };
 }

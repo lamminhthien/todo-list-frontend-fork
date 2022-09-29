@@ -102,7 +102,6 @@ export default function Lobby() {
           </div>
         </div>
       </div>
-
       {['add'].includes(action.type) && (
         <ModalTodoAddEdit data={action.payload} open={true} onSave={() => reset()} onCancel={resetAction} />
       )}

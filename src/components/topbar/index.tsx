@@ -1,23 +1,28 @@
 import cls from 'classnames';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
-import {FC} from 'react';
+import {FC, useState} from 'react';
 
 import {ROUTES} from '@/configs/routes.config';
 import {useStateAuth} from '@/contexts/auth/context';
 import Icon from '@/core-ui/icon';
+import {FireAuthUtils} from '@/lib/firebase/fireAuth-utils';
 
 import Back from '../back';
+import ModalSocial from '../modal-social';
 import styles from './style.module.scss';
 
 interface IProps {
   className?: string;
 }
 
+const fireAuthUtils = new FireAuthUtils();
+
 const Topbar: FC<IProps> = ({className}) => {
   const router = useRouter();
   const auth = useStateAuth();
-
+  const [socialOpen, setSocialOpen] = useState(false);
+  const handleSocial = () => setSocialOpen(true);
   const currentPage = router.pathname;
 
   const returnTo = (curPage: string) => {
@@ -39,6 +44,22 @@ const Topbar: FC<IProps> = ({className}) => {
           <div className="authenticated">
             <Icon name="ico-user" />
             <span className="h2">{auth && auth.userName}</span>
+            {auth?.email == null ? (
+              <span className="unverified" onClick={() => handleSocial()}>
+                (Unverified)
+              </span>
+            ) : (
+              <span
+                className="logout"
+                onClick={() => {
+                  fireAuthUtils.signOutOfGoogle();
+                  router.reload();
+                }}
+              >
+                (Log Out)
+              </span>
+            )}
+
             <span className="sep"></span>
             <Link href={ROUTES.LIST}>
               <a className="h2 text">My List</a>
@@ -46,6 +67,7 @@ const Topbar: FC<IProps> = ({className}) => {
           </div>
         </div>
       )}
+      <ModalSocial open={socialOpen} onClose={() => setSocialOpen(false)} />
     </div>
   );
 };
