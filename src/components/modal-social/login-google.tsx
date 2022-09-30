@@ -5,13 +5,15 @@ import API from '@/api/network/user';
 import {IEmail} from '@/api/types/email.type';
 import {ROUTES} from '@/configs/routes.config';
 import useToast from '@/core-ui/toast';
-import LocalStorage from '@/utils/local-storage';
+import useLoginHandler from '@/hooks/page/login-handler';
 
 const auth = getAuth();
 
 export default function useLoginGoogle() {
   const router = useRouter();
   const toast = useToast();
+
+  const {loginSuccess, loginFailed} = useLoginHandler();
 
   const googleProvider = new GoogleAuthProvider();
   const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
@@ -20,21 +22,11 @@ export default function useLoginGoogle() {
   const loginWithGmail = async (email: IEmail) => {
     await API.loginWithEmail(email)
       .then(res => {
-        LocalStorage.accessToken.set(res.data.accessToken);
-        toast.show({type: 'success', title: 'Successful', content: 'Login Successfully', lifeTime: 3000});
-        const previousPage = LocalStorage.previousPage.get();
-        if (router.asPath != ROUTES.LOGIN) {
-          router.reload();
-        }
-        if (previousPage?.includes(ROUTES.LIST)) {
-          router.push(previousPage);
-        } else {
-          router.reload();
-        }
+        loginSuccess(res);
       })
       .catch(() => {
         signOutOfGoogle();
-        toast.show({type: 'danger', title: 'Error', content: 'Account not available', lifeTime: 3000});
+        loginFailed();
       });
   };
 
