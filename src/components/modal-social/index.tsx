@@ -4,7 +4,7 @@ import React from 'react';
 import Button from '@/core-ui/button';
 
 import {Modal} from '../../core-ui/modal';
-import useLoginGoogle from './login-google';
+import useLoginGoogle from '../../hooks/login/social-login/login-google';
 import styles from './style.module.scss';
 
 interface IProps {

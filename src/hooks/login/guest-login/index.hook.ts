@@ -5,9 +5,8 @@ import {SubmitHandler, useForm} from 'react-hook-form';
 import * as yup from 'yup';
 
 import API from '@/api/network/user';
+import useLoginHandler from '@/hooks/login/workflow/login-handler';
 import useMediaQuery from '@/hooks/useMediaQuery';
-
-import useLoginHandler from './login-handler';
 
 interface IFormInputs {
   userName: string;
@@ -17,7 +16,7 @@ const Schema = yup.object().shape({
   userName: yup.string().required('Please fill in your name').max(32, 'Your name must not exceed 32 letters').trim()
 });
 
-export default function useIndexHook() {
+export default function useGuestLoginHook() {
   const [socialOpen, setSocialOpen] = useState(false);
   const handleSocial = () => setSocialOpen(true);
 

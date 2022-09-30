@@ -4,7 +4,7 @@ import React from 'react';
 import TodoListLogo from '@/components/icons/todolist-logo';
 import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
-import useIndexHook from '@/hooks/page/index.hook';
+import useGuestLoginHook from '@/hooks/login/guest-login/index.hook';
 import LayoutDefault from '@/layouts/default';
 
 import ModalSocial from '../modal-social';
@@ -12,7 +12,7 @@ import styles from './style.module.scss';
 
 export default function Login() {
   const {formState, onSubmit, matches, register, handleSubmit, errors, handleSocial, socialOpen, setSocialOpen} =
-    useIndexHook();
+    useGuestLoginHook();
   return (
     <>
       <div className={cn(styles['com-quick-play'])}>
