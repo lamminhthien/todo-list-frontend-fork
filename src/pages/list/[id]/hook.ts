@@ -26,9 +26,7 @@ export default function useListDetail() {
       .then(res => {
         if (res.status >= 200) setTodoList(res.data);
       })
-      .catch(() => {
-        router.push(ROUTES.LIST);
-      });
+      .catch(() => router.push(ROUTES.MY_LIST));
 
   const handleShare = () => {
     setShareOpen(true);
@@ -46,7 +44,7 @@ export default function useListDetail() {
   const resetActionTodo = () => setActionTodo({type: '', payload: null});
   const socketMsgToClient = () => {
     socket.on(`msgToClient_${id}`, () => {
-      getListTasks(String(id) || '').catch(() => router.push(ROUTES.LIST));
+      getListTasks(String(id) || '').catch(() => router.push(ROUTES.MY_LIST));
     });
   };
 
@@ -59,7 +57,7 @@ export default function useListDetail() {
 
   useEffect(() => {
     if (id) {
-      getListTasks(String(id) || '').catch(() => router.push(ROUTES.LIST));
+      getListTasks(String(id) || '').catch(() => router.push(ROUTES.MY_LIST));
       socketMsgToClient();
       LocalStorage.previousPage.remove();
     }
