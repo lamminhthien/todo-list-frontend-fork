@@ -40,6 +40,7 @@ const Authentication: FC<IProps> = ({children}) => {
           .getUserProfile()
           .then(res => {
             if (res.status === 200) authDispatch(AuthActions.login(res.data));
+            if (asPath.includes(ROUTES.LOGIN)) router.push(ROUTES.HOME);
           })
           .catch(() => {
             if (!asPath.includes(ROUTES.LOGIN)) router.push(ROUTES.LOGIN);
