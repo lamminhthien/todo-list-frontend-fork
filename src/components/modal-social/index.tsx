@@ -22,7 +22,7 @@ const ModalSocial: React.FC<IProps> = ({open, onClose}) => {
           <img src="/google.png" />
           <span>Sign in with Google</span>
         </Button>
-        <Button className="mt-5 bg-blue-600  text-white">
+        {/* <Button className="mt-5 bg-blue-600  text-white">
           <img src="/facebook.png" />
           <span>Sign in with Facebook</span>
         </Button>
@@ -41,7 +41,7 @@ const ModalSocial: React.FC<IProps> = ({open, onClose}) => {
         <Button className="mt-5 bg-green-500  text-white">
           <img src="/phone-filled.png" />
           <span>Sign in with Phone</span>
-        </Button>
+        </Button> */}
       </Modal.Body>
     </Modal>
   );
