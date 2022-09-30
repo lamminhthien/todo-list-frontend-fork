@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {yupResolver} from '@hookform/resolvers/yup';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -8,7 +8,6 @@ import API from '@/api/network/user';
 import useMediaQuery from '@/hooks/useMediaQuery';
 
 import useLoginHandler from './login-handler';
-import LogOutHandler from './logout-handler';
 
 interface IFormInputs {
   userName: string;
@@ -39,11 +38,6 @@ export default function useIndexHook() {
       })
       .catch(() => loginFailed());
   };
-
-  useEffect(() => {
-    LogOutHandler();
-  }, []);
-
   const {errors} = formState;
 
   return {onSubmit, matches, register, handleSubmit, formState, errors, handleSocial, socialOpen, setSocialOpen};
