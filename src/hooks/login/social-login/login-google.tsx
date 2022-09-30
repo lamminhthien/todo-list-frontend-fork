@@ -1,4 +1,4 @@
-import {GoogleAuthProvider, getAuth, signInWithPopup, signOut} from 'firebase/auth';
+import {GoogleAuthProvider, getAuth, signInWithPopup} from 'firebase/auth';
 import {useRouter} from 'next/router';
 
 import API from '@/api/network/user';
@@ -13,11 +13,10 @@ export default function useLoginGoogle() {
   const router = useRouter();
   const toast = useToast();
 
-  const {loginSuccess, loginFailed} = useLoginHandler();
+  const {loginSuccess} = useLoginHandler();
 
   const googleProvider = new GoogleAuthProvider();
   const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
-  const signOutOfGoogle = () => signOut(auth);
 
   const loginWithGmail = async (email: IEmail) => {
     await API.loginWithEmail(email)
@@ -25,8 +24,16 @@ export default function useLoginGoogle() {
         loginSuccess(res);
       })
       .catch(() => {
-        signOutOfGoogle();
-        loginFailed();
+        auth.onAuthStateChanged(user => {
+          // Then use API to login with email existing
+          if (user?.email) {
+            API.createUser({userName: user?.displayName || ''}).then(res => {
+              loginSuccess(res);
+              // eslint-disable-next-line @typescript-eslint/no-use-before-define
+              attachEmailToUser({email: user?.email || ''});
+            });
+          }
+        });
       });
   };
 
