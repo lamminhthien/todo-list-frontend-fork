@@ -41,17 +41,14 @@ export default function List() {
             {!todoList.length && <span className="empty">Empty list</span>}
             {todoList.map(item => (
               <div className="item" key={item.id}>
-                <p className="title" onClick={() => router.push(`${ROUTES.LIST_DETAIL}/${item.id}`)}>
+                <p className="title" onClick={() => router.push(`${ROUTES.LIST}/${item.id}`)}>
                   {item.name}
                 </p>
                 <div className="actions">
                   <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: item})} />
                   <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: item})} />
                   <IconButton name="ico-share-2" onClick={() => handleShare(item.id!)} />
-                  <IconButton
-                    name="ico-chevron-right"
-                    onClick={() => router.push(`${ROUTES.LIST_DETAIL}/${item.id}`)}
-                  />
+                  <IconButton name="ico-chevron-right" onClick={() => router.push(`${ROUTES.LIST}/${item.id}`)} />
                 </div>
               </div>
             ))}
