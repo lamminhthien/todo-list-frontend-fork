@@ -19,43 +19,38 @@ const Authentication: FC<IProps> = ({children}) => {
   const auth = useStateAuth();
   const router = useRouter();
   const asPath = router.asPath;
+  const isLoginPage = asPath.includes(ROUTES.LOGIN);
   const authDispatch = useDispatchAuth();
-  if (!asPath.includes(ROUTES.LOGIN)) {
-    if (typeof window !== 'undefined') {
-      //FIXME: This is temporary method to fix id not recognize in production mode
-      if (asPath.includes(`${ROUTES.LIST}/[id]`)) LocalStorage.previousPage.set(window.location.href.slice(-10));
-      else {
-        LocalStorage.previousPage.set(asPath);
+  let showPage = false;
+  useEffect(() => {
+    if (!asPath.includes(ROUTES.LOGIN)) {
+      if (typeof window !== 'undefined') {
+        //FIXME: This is temporary method to fix id not recognize in production mode
+        if (asPath.includes(`${ROUTES.LIST}/[id]`)) LocalStorage.previousPage.set(window.location.href.slice(-10));
+        else {
+          LocalStorage.previousPage.set(asPath);
+        }
       }
     }
-  }
-
-  useEffect(() => {
-    const accessToken = LocalStorage.accessToken.get();
-    if (!accessToken) {
-      if (!asPath.includes(ROUTES.LOGIN)) router.push(ROUTES.LOGIN);
-    } else {
-      if (!auth) {
-        api
-          .getUserProfile()
-          .then(res => {
-            if (res.status === 200) authDispatch(AuthActions.login(res.data));
-            if (asPath.includes(ROUTES.LOGIN)) router.push(ROUTES.HOME);
-          })
-          .catch(() => {
-            if (!asPath.includes(ROUTES.LOGIN)) router.push(ROUTES.LOGIN);
-          });
-      }
+    if (!auth && !isLoginPage) {
+      api.getUserProfile().then(res => {
+        if (res.status === 200) {
+          authDispatch(AuthActions.login(res.data));
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!asPath.includes(ROUTES.LOGIN) && !auth) return null;
-
-  return <>{children}</>;
+  if (isLoginPage || auth) showPage = true;
+  return (
+    <div style={{height: 'inherit'}} className={showPage ? '' : 'invisible'}>
+      {children}
+    </div>
+  );
 };
 
-const AuthProvider: FC<IProps> = ({children}) => {
+const Provider: FC<IProps> = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
@@ -67,4 +62,4 @@ const AuthProvider: FC<IProps> = ({children}) => {
   );
 };
 
-export default AuthProvider;
+export default Provider;
