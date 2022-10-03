@@ -43,9 +43,17 @@ const Authentication: FC<IProps> = ({children}) => {
           }
         })
         .catch(() => {
-          api.createUser({userName: `${randomName.first()} (Anonymous)`}).then(userRes => {
-            loginSuccess(userRes);
-          });
+          // if (asPath.includes(ROUTES.HOME)) {
+          //   router.push(ROUTES.LOGIN);
+          // } else {
+          if (asPath.includes(`${ROUTES.LIST}`))
+            api.createUser({userName: `${randomName.first()} (Anonymous)`}).then(userRes => {
+              loginSuccess(userRes);
+            });
+          else {
+            router.push(ROUTES.LOGIN);
+          }
+          // }
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
