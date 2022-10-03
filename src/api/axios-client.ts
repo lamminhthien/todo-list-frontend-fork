@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-import {ROUTES} from '@/configs/routes.config';
 import LocalStorage from '@/utils/local-storage';
 
 import {setupInterceptorsTo} from './interceptors';
@@ -11,7 +10,8 @@ const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 30000,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    api_key: process.env.NEXT_PUBLIC_API_KEY || ''
   }
 });
 

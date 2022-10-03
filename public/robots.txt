@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://c9ea-113-160-250-135.ap.ngrok.io
-
-# Sitemaps
-Sitemap: https://c9ea-113-160-250-135.ap.ngrok.io/sitemap.xml
