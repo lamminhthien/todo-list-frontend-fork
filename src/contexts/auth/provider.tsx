@@ -1,8 +1,10 @@
 import {useRouter} from 'next/router';
+import randomName from 'random-name';
 import React, {FC, ReactNode, useEffect, useReducer} from 'react';
 
 import api from '@/api/network/user';
 import {ROUTES} from '@/configs/routes.config';
+import useLoginHandler from '@/hooks/login/workflow/login-handler';
 import LocalStorage from '@/utils/local-storage';
 
 import {Context, DispatchContext, useDispatchAuth, useStateAuth} from './context';
@@ -21,15 +23,15 @@ const Authentication: FC<IProps> = ({children}) => {
   const asPath = router.asPath;
   const isLoginPage = asPath.includes(ROUTES.LOGIN);
   const authDispatch = useDispatchAuth();
+  const {loginSuccess} = useLoginHandler();
+
   let showPage = false;
   useEffect(() => {
     if (!asPath.includes(ROUTES.LOGIN)) {
       if (typeof window !== 'undefined') {
         //FIXME: This is temporary method to fix id not recognize in production mode
         if (asPath.includes(`${ROUTES.LIST}/[id]`)) LocalStorage.previousPage.set(window.location.href.slice(-10));
-        else {
-          LocalStorage.previousPage.set(asPath);
-        }
+        else LocalStorage.previousPage.set(asPath);
       }
     }
     if (!auth && !isLoginPage) {
@@ -40,9 +42,10 @@ const Authentication: FC<IProps> = ({children}) => {
             authDispatch(AuthActions.login(res.data));
           }
         })
-        // Must remove urgly accessToken to prevent future error
         .catch(() => {
-          LocalStorage.accessToken.remove();
+          api.createUser({userName: `${randomName.first()} (Anonymous)`}).then(userRes => {
+            loginSuccess(userRes);
+          });
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
