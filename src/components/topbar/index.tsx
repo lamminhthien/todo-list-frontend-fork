@@ -1,12 +1,12 @@
 import cls from 'classnames';
 import Link from 'next/link';
-import {useRouter} from 'next/router';
-import {FC, useState} from 'react';
+import { useRouter } from 'next/router';
+import { FC, useState } from 'react';
 
-import {ROUTES} from '@/configs/routes.config';
-import {useStateAuth} from '@/contexts/auth/context';
+import { ROUTES } from '@/configs/routes.config';
+import { useStateAuth } from '@/contexts/auth/context';
 import Icon from '@/core-ui/icon';
-import {FireAuthUtils} from '@/lib/firebase/fireAuth-utils';
+import { FireAuthUtils } from '@/lib/firebase/fireAuth-utils';
 
 import Back from '../back';
 import ModalSocial from '../modal-social';
@@ -18,7 +18,7 @@ interface IProps {
 
 const fireAuthUtils = new FireAuthUtils();
 
-const Topbar: FC<IProps> = ({className}) => {
+const Topbar: FC<IProps> = ({ className }) => {
   const router = useRouter();
   const auth = useStateAuth();
   const [socialOpen, setSocialOpen] = useState(false);
@@ -42,8 +42,14 @@ const Topbar: FC<IProps> = ({className}) => {
         <div className="container">
           <Back visibleOn={['/list', '/list/[id]']} currentPage={currentPage} onClick={() => returnTo(currentPage)} />
           <div className="authenticated">
-            <Icon name="ico-user" />
-            <span className="h2">{auth && auth.userName}</span>
+            <Link href={ROUTES.LIST}>
+              <a className="h2 text">My List</a>
+            </Link>
+            {/* Seperator line */}
+            <span className="sep"></span>
+            <span className="h2">
+              <Icon name="ico-user" />
+              {auth && auth.userName}</span>
             {auth?.email == null ? (
               <span className="unverified" onClick={() => handleSocial()}>
                 (Unverified)
@@ -59,11 +65,6 @@ const Topbar: FC<IProps> = ({className}) => {
                 (Log Out)
               </span>
             )}
-
-            <span className="sep"></span>
-            <Link href={ROUTES.LIST}>
-              <a className="h2 text">My List</a>
-            </Link>
           </div>
         </div>
       )}
