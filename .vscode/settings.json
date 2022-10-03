@@ -18,8 +18,5 @@
     "LICENSE": true,
     "Makefile": true,
     "CHANGELOG.md": true
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }
