@@ -42,8 +42,15 @@ const Topbar: FC<IProps> = ({className}) => {
         <div className="container">
           <Back visibleOn={['/list', '/list/[id]']} currentPage={currentPage} onClick={() => returnTo(currentPage)} />
           <div className="authenticated">
-            <Icon name="ico-user" />
-            <span className="h2">{auth && auth.userName}</span>
+            <Link href={ROUTES.LIST}>
+              <a className="h2 text">My List</a>
+            </Link>
+            {/* Seperator line */}
+            <span className="sep"></span>
+            <span className="h2">
+              <Icon name="ico-user" />
+              {auth && auth.userName}
+            </span>
             {auth?.email == null ? (
               <span className="unverified" onClick={() => handleSocial()}>
                 (Unverified)
@@ -56,14 +63,9 @@ const Topbar: FC<IProps> = ({className}) => {
                   router.reload();
                 }}
               >
-                (Log Out)
+                <Icon name="ico-logout" />
               </span>
             )}
-
-            <span className="sep"></span>
-            <Link href={ROUTES.LIST}>
-              <a className="h2 text">My List</a>
-            </Link>
           </div>
         </div>
       )}
