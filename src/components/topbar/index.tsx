@@ -63,7 +63,9 @@ const Topbar: FC<IProps> = ({className}) => {
                   router.reload();
                 }}
               >
-                <Icon name="ico-logout" />
+                <span className="h2">
+                  <Icon name="ico-logout" />
+                </span>
               </span>
             )}
           </div>
