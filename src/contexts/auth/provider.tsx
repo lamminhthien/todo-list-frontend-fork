@@ -1,5 +1,4 @@
 import {useRouter} from 'next/router';
-import randomName from 'random-name';
 import React, {FC, ReactNode, useEffect, useReducer} from 'react';
 
 import api from '@/api/network/user';
@@ -47,7 +46,7 @@ const Authentication: FC<IProps> = ({children}) => {
           //   router.push(ROUTES.LOGIN);
           // } else {
           if (asPath.includes(`${ROUTES.LIST}`))
-            api.createUser({userName: `${randomName.first()} (Anonymous)`}).then(userRes => {
+            api.createUser({userName: 'Anonymous'}).then(userRes => {
               loginSuccess(userRes);
             });
           else {
