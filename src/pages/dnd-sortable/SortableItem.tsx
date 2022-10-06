@@ -12,7 +12,7 @@ export default function SortableItem(props: any) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <p>BBBB</p>
+      <p>{props.data}</p>
     </div>
   );
 }
