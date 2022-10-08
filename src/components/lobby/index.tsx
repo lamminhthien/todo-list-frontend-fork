@@ -14,6 +14,7 @@ import LayoutDefault from '@/layouts/default';
 import {IAction} from '@/types';
 import detectIdOrLink from '@/utils/detect-id-or-link';
 
+import LobbyTitle from '../lobby-title';
 import styles from './style.module.scss';
 
 interface IFormInputs {
@@ -69,8 +70,7 @@ export default function Lobby() {
       <div className={styles['page-action']}>
         <div className="container">
           <div className="inner">
-            <p className="title">TO-DO LIST</p>
-            <p className="h1">Organize your work and life, finally.</p>
+            <LobbyTitle />
             <div className="actions">
               <div className="item">
                 <Button
