@@ -1,3 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+import {DndContext, MouseSensor, useSensor, useSensors} from '@dnd-kit/core';
+import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
+import {SortableContext, arrayMove, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import {InferGetStaticPropsType} from 'next';
 import {useRouter} from 'next/router';
 import React, {useEffect, useState} from 'react';
@@ -11,12 +15,10 @@ import ModalTaskConfirmDelete from '@/components/modal-task-confirm-delete';
 import ModalTodoAddEdit from '@/components/modal-todo-add-edit';
 import ModalTodoConfirmDelete from '@/components/modal-todo-confirm-delete';
 import Seo from '@/components/seo/seo';
+import TaskItem from '@/components/task-item';
+import ToolbarDetail from '@/components/toolbar-detail';
 import {ROUTES} from '@/configs/routes.config';
-import Button from '@/core-ui/button';
-import Checkbox from '@/core-ui/checkbox';
 import FloatIcon from '@/core-ui/float-icon';
-import Icon from '@/core-ui/icon';
-import IconButton from '@/core-ui/icon-button';
 import {getStaticPaths, getStaticProps} from '@/data/ssr/room.ssr';
 import LayoutDefault from '@/layouts/default';
 import {IAction} from '@/types';
@@ -29,6 +31,16 @@ const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 export {getStaticPaths, getStaticProps};
 
 export default function Detail({roomId}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 10
+        // delay: 7,
+        // tolerance: 1
+      }
+    })
+  );
+
   const router = useRouter();
   const [todoList, setTodoList] = useState<ITodo>();
   const [action, setAction] = useState<IAction>({type: '', payload: null});
@@ -51,14 +63,6 @@ export default function Detail({roomId}: InferGetStaticPropsType<typeof getStati
 
   const handleShare = () => {
     setShareOpen(true);
-  };
-
-  const setDone = (taskId: string) => {
-    if (!taskId) return;
-    API.updateStatusTask(taskId).then(() => {
-      getListTasks(String(id) || '');
-      socketMsgToServer();
-    });
   };
 
   const resetAction = () => setAction({type: '', payload: null});
@@ -92,60 +96,61 @@ export default function Detail({roomId}: InferGetStaticPropsType<typeof getStati
       </>
     );
 
+  function handleDragEnd(event: any) {
+    const {active, over} = event;
+    if (!over) {
+      return;
+    }
+
+    if (active.id !== over.id) {
+      const oldIndex = todoList?.tasks?.findIndex(item => active.id === item.id);
+      const newIndex = todoList?.tasks?.findIndex(item => over.id === item.id);
+
+      const arrangeTask = arrayMove(todoList!.tasks!, oldIndex!, newIndex!);
+      // console.log(arrangeTask);
+
+      setTodoList({...todoList, tasks: arrangeTask});
+    }
+    // console.log(todoList);
+  }
+
   return (
     <>
       <Seo title={roomId} />
       <div className={styles['page-detail']}>
         <div className="container">
-          <div className="toolbar">
-            <div className="left">
-              <div className="title">
-                <h2>{todoList.name}</h2>
-              </div>
+          {todoList.name && (
+            <ToolbarDetail
+              nameTodo={todoList.name || ''}
+              editTodo={() => setActionTodo({type: 'edit', payload: todoList})}
+              deleteTodo={() => setActionTodo({type: 'delete', payload: todoList})}
+              shareTodo={handleShare}
+              addTodo={() => setAction({type: 'add', payload: null})}
+            />
+          )}
+          <DndContext sensors={sensors} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
+            <div className="tasks">
+              {!todoList?.tasks!.length && <span className="empty">Empty list</span>}
+              {todoList.tasks?.length && (
+                <SortableContext items={todoList.tasks.map(task => task.id!)} strategy={verticalListSortingStrategy}>
+                  {todoList.tasks &&
+                    todoList.tasks.map(task => (
+                      <div key={task.id}>
+                        {/* <SortableItem key={task.id} id={task.id} title={task.name} content={task.name} /> */}
+                        <TaskItem
+                          task={task}
+                          msgToServer={socketMsgToServer}
+                          refreshList={() => getListTasks(String(id) || '')}
+                        />
+                      </div>
+                    ))}
+                </SortableContext>
+              )}
             </div>
-            <div className="right">
-              <Button
-                className="btn-edit"
-                startIcon={<Icon name="ico-edit" />}
-                onClick={() => setActionTodo({type: 'edit', payload: todoList})}
-              >
-                <span className="h5 font-medium">Edit</span>
-              </Button>
-              <Button
-                startIcon={<Icon name="ico-trash-2" />}
-                onClick={() => setActionTodo({type: 'delete', payload: todoList})}
-              >
-                <span className="h5 font-medium">Delete List</span>
-              </Button>
-              <Button className="btn-share" startIcon={<Icon name="ico-share-2" />} onClick={handleShare}>
-                <span className="h5 font-medium">Share</span>
-              </Button>
-              <Button
-                className="btn-add-todo"
-                startIcon={<Icon name="ico-plus-circle" />}
-                onClick={() => setAction({type: 'add', payload: null})}
-              >
-                <span className="h5 font-medium">Add To-Do</span>
-              </Button>
-            </div>
-          </div>
-          <div className="tasks">
-            {!todoList?.tasks!.length && <span className="empty">Empty list</span>}
-            {todoList.tasks &&
-              todoList.tasks.map(task => (
-                <div className="item" key={task.id}>
-                  <Checkbox checked={task.isDone} onChange={() => setDone(task.id!)} />
-                  <p onClick={() => setDone(task.id!)} className={`h6 ${task.isDone ? 'checked' : ''}`}>
-                    {task.name}
-                  </p>
-                  <div className="actions">
-                    <IconButton name="ico-edit" onClick={() => setAction({type: 'edit', payload: task})} />
-                    <IconButton name="ico-trash-2" onClick={() => setAction({type: 'delete', payload: task})} />
-                  </div>
-                </div>
-              ))}
-          </div>
+          </DndContext>
         </div>
+
+        {/* Modal Components Area */}
         <FloatIcon className="float-icon" onClick={() => setAction({type: 'add', payload: null})} />
         {['add', 'edit'].includes(action.type) && (
           <ModalTaskAddEdit
