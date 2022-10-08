@@ -7,10 +7,11 @@ import IconButton from '@/core-ui/icon-button';
 import ModalShare from '../modal-share';
 import ModalTodoAddEdit from '../modal-todo-add-edit';
 import ModalTodoConfirmDelete from '../modal-todo-confirm-delete';
+import MyListTitle from '../my-list-title';
 import useList from './hook';
 import styles from './style.module.scss';
 
-export default function List() {
+export default function MyList() {
   const {router, todoList, action, shareOpen, id, handleShare, reset, setAction, resetAction, setShareOpen} = useList();
 
   if (!todoList) return null;
@@ -21,11 +22,7 @@ export default function List() {
         <div className="container">
           <div className="toolbar">
             <div className="left">
-              <div className="title">
-                <span className="h3">TO-DO</span>
-                <span className="sep"></span>
-                <span className="h3">YOUR LIST</span>
-              </div>
+              <MyListTitle />
             </div>
             <div className="right">
               <Button
