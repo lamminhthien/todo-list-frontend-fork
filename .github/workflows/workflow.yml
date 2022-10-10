@@ -30,7 +30,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Copy .env.template --> .env
-        run: cp .env.stage.sample .env
+        run: cp .env.sample .env
 
       - name: Install Yarn, PM2
         run: npm install -g yarn pm2
