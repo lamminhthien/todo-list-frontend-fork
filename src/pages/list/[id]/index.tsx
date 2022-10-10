@@ -22,7 +22,7 @@ import {ROUTES} from '@/configs/routes.config';
 import FloatIcon from '@/core-ui/float-icon';
 import {getStaticPaths, getStaticProps} from '@/data/ssr/room.ssr';
 import LayoutDefault from '@/layouts/default';
-import {useMouseSensor} from '@/lib/dnd-kit/sensor/mouse-sensor';
+import {useMouseSensor} from '@/lib/dnd-kit/sensor/sensor-group';
 import {IAction} from '@/types';
 import LocalStorage from '@/utils/local-storage';
 
