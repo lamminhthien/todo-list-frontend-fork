@@ -134,15 +134,14 @@ export default function Detail({roomId}: InferGetStaticPropsType<typeof getStati
                 <SortableContext items={todoList.tasks.map(task => task.id!)} strategy={verticalListSortingStrategy}>
                   {todoList.tasks &&
                     todoList.tasks.map(task => (
-                      <div key={task.id}>
-                        <TaskItem
-                          task={task}
-                          msgToServer={socketMsgToServer}
-                          refreshList={() => getListTasks(String(id) || '')}
-                          editTask={() => setAction({type: 'edit', payload: task})}
-                          deleteTask={() => setAction({type: 'delete', payload: task})}
-                        />
-                      </div>
+                      <TaskItem
+                        key={task.id}
+                        task={task}
+                        msgToServer={socketMsgToServer}
+                        refreshList={() => getListTasks(String(id) || '')}
+                        editTask={() => setAction({type: 'edit', payload: task})}
+                        deleteTask={() => setAction({type: 'delete', payload: task})}
+                      />
                     ))}
                 </SortableContext>
               )}
