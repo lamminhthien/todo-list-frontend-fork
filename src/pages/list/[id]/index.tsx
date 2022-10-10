@@ -79,17 +79,25 @@ export default function Detail({roomId}: InferGetStaticPropsType<typeof getStati
       const oldIndex = taskList?.findIndex(item => active.id === item.id);
       const newIndex = taskList?.findIndex(item => over.id === item.id);
       const arrangeTask = arrayMove(todoList!.tasks!, oldIndex!, newIndex!);
-      console.log(`TaskFirstName is ${taskList[newIndex - 1].name}`);
-      console.log(`TaskReorderName is ${taskList[oldIndex].name}`);
-      console.log(`TaskSecondName is ${taskList[newIndex].name}`);
-
-      API.reorderTask({
-        taskFirstID: taskList[newIndex - 1].id,
-        taskReorderID: taskList[oldIndex].id,
-        taskSecondID: taskList[newIndex].id
-      });
 
       setTodoList({...todoList, tasks: arrangeTask});
+      console.log(arrangeTask);
+
+      arrangeTask.forEach((element, index) => {
+        if (element.id === active.id) {
+          const taskFirstId = arrangeTask[index - 1].id;
+          const taskSecondId = arrangeTask[index + 1].id;
+          const taskReorderId = arrangeTask[index].id;
+          console.log(
+            `taskFirstID is ${taskFirstId}, taskSecondID is ${taskSecondId}, taskReorderId is ${taskReorderId}`
+          );
+          API.reorderTask({
+            taskFirstID: taskFirstId,
+            taskReorderID: taskReorderId,
+            taskSecondID: taskSecondId
+          }).then(() => getListTasks(String(id) || ''));
+        }
+      });
     }
   }
 
