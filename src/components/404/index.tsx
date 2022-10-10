@@ -1,5 +1,5 @@
-import {useTranslation} from 'next-i18next';
 import Link from 'next/link';
+import {useTranslation} from 'next-i18next';
 import * as React from 'react';
 
 import Seo from '@/components/seo/seo';

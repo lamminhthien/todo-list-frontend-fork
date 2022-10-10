@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {DndContext} from '@dnd-kit/core';
 import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
-import {SortableContext, arrayMove, verticalListSortingStrategy} from '@dnd-kit/sortable';
+import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import {InferGetStaticPropsType} from 'next';
 import {useRouter} from 'next/router';
 import React, {useEffect, useState} from 'react';

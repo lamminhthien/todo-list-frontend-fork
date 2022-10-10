@@ -1,4 +1,4 @@
-import {GoogleAuthProvider, getAuth, signInWithPopup, signOut} from 'firebase/auth';
+import {getAuth, GoogleAuthProvider, signInWithPopup, signOut} from 'firebase/auth';
 
 import API from '@/api/network/user';
 import {IEmail} from '@/api/types/email.type';

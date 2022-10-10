@@ -4,9 +4,9 @@ import '@/vendors/menu/style.scss';
 import '@/vendors/abc-icons/dist/abc.scss';
 import 'nprogress/nprogress.css';
 
-import {appWithTranslation} from 'next-i18next';
 import type {AppProps} from 'next/app';
 import {useRouter} from 'next/router';
+import {appWithTranslation} from 'next-i18next';
 import nProgress from 'nprogress';
 import {useEffect} from 'react';
 
