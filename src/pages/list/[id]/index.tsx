@@ -116,7 +116,7 @@ export default function Detail({title, taskCount}: InferGetStaticPropsType<typeo
     return (
       <Seo
         title={siteSettings.name + ' | ' + title}
-        description={`ABC To-Do List, Your friend have share you a list. Click this link to join with me and collebrate editor. Currently This list have ${taskCount} tasks.`}
+        description={`ABC To-Do List, Your friend have share you a list "${title}". Click this link to join with me and collebrate editor. Currently This list have ${taskCount} tasks.`}
       />
     );
 
@@ -124,7 +124,7 @@ export default function Detail({title, taskCount}: InferGetStaticPropsType<typeo
     <>
       <Seo
         title={siteSettings.name + ' | ' + title}
-        description={`ABC To-Do List, Your friend have share you a list. Click this link to join with me and collebrator editor realtime. Currently This list have ${taskCount} tasks.`}
+        description={`ABC To-Do List, Your friend have share you a list "${title}". Click this link to join with me and collebrator editor realtime. Currently This list have ${taskCount} tasks.`}
       />
       ;
       <div className={styles['page-detail']}>

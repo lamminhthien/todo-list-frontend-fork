@@ -30,7 +30,9 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedQueryParams> = asyn
         title = listData.name!;
         taskCount = listData.tasks?.length || 0;
       })
-      .catch(() => (title = 'This list Not Found'));
+      .catch(() => {
+        title = 'This list Not Found';
+      });
     return {
       props: {
         roomId: id,
