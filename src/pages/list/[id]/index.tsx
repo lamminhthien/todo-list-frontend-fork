@@ -19,6 +19,7 @@ import Seo from '@/components/seo/seo';
 import TaskItem from '@/components/task-item';
 import ToolbarDetail from '@/components/toolbar-detail';
 import {ROUTES} from '@/configs/routes.config';
+import {siteSettings} from '@/configs/site.config';
 import FloatIcon from '@/core-ui/float-icon';
 import {getStaticPaths, getStaticProps} from '@/data/ssr/room.ssr';
 import LayoutDefault from '@/layouts/default';
@@ -32,7 +33,7 @@ const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
 export {getStaticPaths, getStaticProps};
 
-export default function Detail({roomId}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Detail({title, taskCount}: InferGetStaticPropsType<typeof getStaticProps>) {
   const sensor = useMouseSensor();
 
   const router = useRouter();
@@ -111,11 +112,21 @@ export default function Detail({roomId}: InferGetStaticPropsType<typeof getStati
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  if (!todoList || !id) return <Seo title={roomId} />;
+  if (!todoList || !id)
+    return (
+      <Seo
+        title={siteSettings.name + ' | ' + title}
+        description={`ABC To-Do List, Your friend have share you a list. Click this link to join with me and collebrate editor. Currently This list have ${taskCount} tasks.`}
+      />
+    );
 
   return (
     <>
-      <Seo title={roomId} />
+      <Seo
+        title={siteSettings.name + ' | ' + title}
+        description={`ABC To-Do List, Your friend have share you a list. Click this link to join with me and collebrator editor realtime. Currently This list have ${taskCount} tasks.`}
+      />
+      ;
       <div className={styles['page-detail']}>
         <div className="container">
           {todoList.name && (
@@ -129,8 +140,8 @@ export default function Detail({roomId}: InferGetStaticPropsType<typeof getStati
           )}
           <DndContext sensors={sensor} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
             <div className="tasks">
-              {!todoList?.tasks!.length && <span className="empty">Empty list</span>}
-              {todoList.tasks?.length && (
+              {!todoList?.tasks!.length ? <span className="empty">Empty list</span> : ''}
+              {todoList.tasks?.length ? (
                 <SortableContext items={todoList.tasks.map(task => task.id!)} strategy={verticalListSortingStrategy}>
                   {todoList.tasks &&
                     todoList.tasks.map(task => (
@@ -144,6 +155,8 @@ export default function Detail({roomId}: InferGetStaticPropsType<typeof getStati
                       />
                     ))}
                 </SortableContext>
+              ) : (
+                <></>
               )}
             </div>
           </DndContext>
