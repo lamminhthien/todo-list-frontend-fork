@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import {DndContext} from '@dnd-kit/core';
+import {DndContext, DragEndEvent, DragOverlay, UniqueIdentifier} from '@dnd-kit/core';
 import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import {InferGetStaticPropsType} from 'next';
@@ -34,6 +34,7 @@ export {getStaticPaths, getStaticProps};
 
 export default function Detail({title, description}: InferGetStaticPropsType<typeof getStaticProps>) {
   const sensor = useMouseSensor();
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   const router = useRouter();
   const [todoList, setTodoList] = useState<ITodo>();
@@ -59,11 +60,6 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
 
   const resetAction = () => setAction({type: '', payload: null});
   const resetActionTodo = () => setActionTodo({type: '', payload: null});
-  const socketMsgToClient = () => {
-    socket.on(`msgToClient_${id}`, () => {
-      getListTasks(String(id) || '').catch(() => router.push(ROUTES.LIST));
-    });
-  };
 
   const reset = () => {
     getListTasks(String(id) || '');
@@ -72,21 +68,26 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
     socketMsgToServer();
   };
 
-  function handleDragEnd({active, over}: any) {
+  function handleDragEnd({active, over}: DragEndEvent) {
+    console.log(todoList);
+
+    // console.log(active);
+    // console.log(over);
+
+    setActiveId(null);
     if (!over) return;
     if (active.id !== over.id) {
       const taskList: ITask[] = todoList!.tasks!;
       const oldIndex = taskList?.findIndex(item => active.id === item.id);
       const newIndex = taskList?.findIndex(item => over.id === item.id);
       const arrangeTask = arrayMove(todoList!.tasks!, oldIndex!, newIndex!);
-
       setTodoList({...todoList, tasks: arrangeTask});
 
       arrangeTask.forEach((element, index) => {
         if (element.id === active.id) {
-          const taskFirstId = index === 0 ? 'swap-top-list' : arrangeTask[index - 1].id;
+          const taskFirstId = arrangeTask[index - 1]?.id;
           const taskReorderId = arrangeTask[index].id;
-          const taskSecondId = index == arrangeTask.length - 1 ? 'swap-bottom-list' : arrangeTask[index + 1].id;
+          const taskSecondId = arrangeTask[index + 1]?.id;
           console.log(
             `taskFirstID is ${taskFirstId},
             taskSecondID is ${taskSecondId},
@@ -105,10 +106,15 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
   useEffect(() => {
     if (id) {
       getListTasks(String(id) || '').catch(() => router.push(ROUTES.LIST));
-      socketMsgToClient();
+      socket.on(`msgToClient_${id}`, () => {
+        getListTasks(String(id) || '').catch(() => router.push(ROUTES.LIST));
+      });
       LocalStorage.previousPage.remove();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      socket.off(`msgToClient_${id}`);
+    };
   }, [id]);
 
   if (!todoList || !id) return <Seo title={title} description={description} />;
@@ -127,7 +133,19 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
               addTodo={() => setAction({type: 'add', payload: null})}
             />
           )}
-          <DndContext sensors={sensor} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
+          <DndContext
+            sensors={sensor}
+            onDragCancel={() => setActiveId(null)}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis]}
+            onDragStart={({active}) => {
+              if (!active) {
+                return;
+              }
+
+              setActiveId(active.id);
+            }}
+          >
             <div className="tasks">
               {!todoList?.tasks!.length ? <span className="empty">Empty list</span> : ''}
               {todoList.tasks?.length ? (
@@ -147,6 +165,9 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
               ) : (
                 <></>
               )}
+              <DragOverlay>
+                {activeId ? <TaskItem task={todoList.tasks?.filter(e => e.id === activeId)[0]} /> : null}
+              </DragOverlay>
             </div>
           </DndContext>
         </div>
