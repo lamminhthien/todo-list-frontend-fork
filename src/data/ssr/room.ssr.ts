@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedQueryParams> = asyn
         const taskThrid = taskList[2] ? `- ${taskList[2].name}` : '';
         title = listName;
         const inviteText = `Click this link to join with me and collaborate editor.`;
-        if (taskFirst) description = `${listName}. ${taskFirst} ${taskSecond} ${taskThrid}.${inviteText} `;
+        if (taskFirst) description = `${listName}. ${taskFirst} ${taskSecond} ${taskThrid}. ${inviteText} `;
         else description = `${listName}. ${inviteText}`;
       })
       .catch(() => {
