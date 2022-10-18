@@ -5,6 +5,7 @@ import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/
 import {InferGetStaticPropsType} from 'next';
 import {useRouter} from 'next/router';
 import React, {useEffect, useState} from 'react';
+import io from 'socket.io-client';
 
 import API from '@/api/network/task';
 import {ITask} from '@/api/types/task.type';
@@ -20,7 +21,6 @@ import ToolbarDetail from '@/components/toolbar-detail';
 import {ROUTES} from '@/configs/routes.config';
 import {useStateAuth} from '@/contexts/auth';
 import FloatIcon from '@/core-ui/float-icon';
-import socket from '@/data/socket';
 import {SOCKET_EVENTS} from '@/data/socket/type';
 import {getStaticPaths, getStaticProps} from '@/data/ssr/room.ssr';
 import LayoutDefault from '@/layouts/default';
@@ -30,7 +30,7 @@ import {IAction} from '@/types';
 import styles from './style.module.scss';
 
 export {getStaticPaths, getStaticProps};
-
+const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 export default function Detail({title, description}: InferGetStaticPropsType<typeof getStaticProps>) {
   const auth = useStateAuth();
   const sensor = useMouseSensor();
@@ -45,17 +45,16 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
   const id = router.query.id as string;
   const page = 'detail';
 
-  const getListTasks = (todoListId: string | undefined) => {
-    if (todoListId) {
-      return API.getListTasks(todoListId)
-        .then(res => {
-          if (res.status >= 200) setTodoList(res.data);
-        })
-        .catch(() => {
-          router.push(ROUTES.LIST);
-        });
-    } else return Promise.reject('err');
-  };
+  const socketMsgToServer = () => socket.emit('msgToServer', {roomId: id});
+
+  const getListTasks = (todoListId: string) =>
+    API.getListTasks(todoListId)
+      .then(res => {
+        if (res.status >= 200) setTodoList(res.data);
+      })
+      .catch(() => {
+        router.push(ROUTES.LIST);
+      });
 
   const handleShare = () => setShareOpen(true);
 
@@ -67,6 +66,7 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
     getListTasks(id);
     resetAction();
     resetActionTodo();
+    socketMsgToServer();
   };
 
   function handleDragEnd({active, over}: DragEndEvent) {
@@ -121,13 +121,13 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
       console.log('SocketIO', SOCKET_EVENTS.updateList);
       getListTasks(id);
     });
-  });
+  }, []);
 
   if (!todoList || !id) return null;
 
   return (
     <>
-      <Seo title={title} description={description} />;
+      <Seo title={title} description={description} />
       <div className={styles['page-detail']}>
         <div className="container">
           {todoList.name && (
@@ -164,6 +164,8 @@ export default function Detail({title, description}: InferGetStaticPropsType<typ
                         task={task}
                         editTask={() => setAction({type: 'edit', payload: task})}
                         deleteTask={() => setAction({type: 'delete', payload: task})}
+                        msgToServer={() => socketMsgToServer()}
+                        refreshList={() => getListTasks(String(id) || '')}
                       />
                     ))}
                 </SortableContext>
