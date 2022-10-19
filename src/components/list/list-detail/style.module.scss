@@ -53,7 +53,6 @@
       @apply flex w-full  justify-between border bg-white;
       @apply border-t-0 px-4 first:border-t;
       @apply first:rounded-t-lg last:rounded-b-lg;
-      @apply hover:bg-blue-100;
       @apply relative;
       &:hover {
         box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
