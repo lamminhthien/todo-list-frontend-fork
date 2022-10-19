@@ -26,6 +26,9 @@
       .message {
         @apply absolute left-0;
       }
+      .invalid {
+        @apply mt-0;
+      }
     }
   }
   .btn-submit {
