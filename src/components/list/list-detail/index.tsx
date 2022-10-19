@@ -77,6 +77,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
               onDelete={() => onDeleteList()}
               onShare={() => onShareList()}
               onAddTask={() => onCreateUpdateTask()}
+              userId={todoList.userId}
             />
           )}
           <DndContext
