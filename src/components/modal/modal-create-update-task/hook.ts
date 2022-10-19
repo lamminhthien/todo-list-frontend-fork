@@ -5,6 +5,7 @@ import * as yup from 'yup';
 
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
+import iosAutoFocus from '@/utils/ios-autofocus';
 
 import {IProps} from '.';
 
@@ -44,6 +45,7 @@ export default function useModalCreateUpdateTask({onClose, onSuccess, listData, 
 
   useEffect(() => {
     setFocus('name');
+    iosAutoFocus();
   }, []);
 
   return {

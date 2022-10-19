@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import {ROUTES} from '@/configs/routes.config';
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
+import iosAutoFocus from '@/utils/ios-autofocus';
 
 import {IProps} from '.';
 
@@ -48,6 +49,7 @@ export default function useModalCreateUpdateList({onClose, onSuccess, data}: IPr
 
   useEffect(() => {
     setValue('name', data?.name || '');
+    iosAutoFocus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
