@@ -21,7 +21,10 @@ export default class CustomDocument extends Document {
           <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(siteSettings.schemaJsonLd.organization)}} />
           <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(siteSettings.schemaJsonLd.website)}} />
         </Head>
-        <body className="scrollbar h-full bg-blue-50 text-slate-700" style={{overscrollBehaviorY: 'contain'}}>
+        <body
+          className="scrollbar h-full bg-blue-50 text-slate-700"
+          style={{overscrollBehaviorY: 'contain', overflowY: 'auto', WebkitOverflowScrolling: 'touch'}}
+        >
           <Main />
           <NextScript />
           <div id="react-modal-root"></div>
