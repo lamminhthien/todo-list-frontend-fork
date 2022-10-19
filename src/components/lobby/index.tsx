@@ -34,7 +34,7 @@ const Lobby: FC = () => {
           </div>
         </div>
       </div>
-      {<ModalCreateUpdateList open={modalOpen} onClose={() => setModalOpen(true)} />}
+      {<ModalCreateUpdateList open={modalOpen} onClose={() => setModalOpen(false)} />}
     </>
   );
 };
