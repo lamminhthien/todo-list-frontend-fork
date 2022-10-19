@@ -42,6 +42,7 @@ export class FireAuthUtils {
       .then(() => {
         this.removeAuthProfile();
         LocalStorage.accessToken.remove();
+        LocalStorage.previousPage.remove();
       })
       .catch(err => console.log(`🥲🥲🥲 ${JSON.stringify(err)} `));
   };

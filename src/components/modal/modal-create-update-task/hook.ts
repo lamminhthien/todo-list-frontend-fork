@@ -46,7 +46,7 @@ export default function useModalCreateUpdateTask({onClose, onSuccess, listData, 
   useEffect(() => {
     setFocus('name');
     iosAutoFocus();
-  }, []);
+  }, [setFocus]);
 
   return {
     onSubmit: handleSubmit(submitHandler),
