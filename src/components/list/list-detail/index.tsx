@@ -98,7 +98,15 @@ const ListDetail: FC<Iprops> = ({id}) => {
               {activeTasks.length > 0 && (
                 <SortableContext items={activeTasks.map(task => task.id!)} strategy={verticalListSortingStrategy}>
                   {activeTasks &&
-                    activeTasks.map(task => <TaskItem key={task.id} task={task} onEdit={() => onCreateUpdateTask(task)} onDelete={() => onDeleteTask(task)} />)}
+                    activeTasks.map(task => (
+                      <TaskItem
+                        listUserId={todoList.userId}
+                        key={task.id}
+                        task={task}
+                        onEdit={() => onCreateUpdateTask(task)}
+                        onDelete={() => onDeleteTask(task)}
+                      />
+                    ))}
                 </SortableContext>
               )}
               <DragOverlay>{activeId ? <TaskItem task={activeTasks.filter(e => e.id === activeId)[0]} /> : null}</DragOverlay>

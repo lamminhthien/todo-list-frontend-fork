@@ -6,14 +6,17 @@ import IconButton from '@/core-ui/icon-button';
 import API from '@/data/api/index';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
+import {useStateAuth} from '@/states/auth/context';
 
 interface IProp {
   task?: ITaskResponse;
   onEdit?: () => void;
   onDelete?: () => void;
+  listUserId?: string;
 }
 
-export default function TaskItem({task, onEdit, onDelete}: IProp) {
+export default function TaskItem({task, onEdit, onDelete, listUserId}: IProp) {
+  const auth = useStateAuth();
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: task!.id!});
   const setDone = (id: string, isDone: boolean) => {
     if (!id) return;
@@ -54,13 +57,11 @@ export default function TaskItem({task, onEdit, onDelete}: IProp) {
         {`${task!.name}`}
       </p>
       <div className="actions">
-        {!isDragging ? (
+        {!isDragging && (
           <>
             <IconButton name="ico-edit" onClick={onEdit} />
-            <IconButton name="ico-trash-2" onClick={onDelete} />
+            {auth?.id === listUserId && <IconButton name="ico-trash-2" onClick={onDelete} />}
           </>
-        ) : (
-          <></>
         )}
       </div>
     </div>
