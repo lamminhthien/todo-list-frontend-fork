@@ -1,7 +1,9 @@
 import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
+import {useRouter} from 'next/router';
 import {useEffect} from 'react';
 
 import useLoginHandler from '@/components/login/hooks/login-handler';
+import {ROUTES} from '@/configs/routes.config';
 import api from '@/data/api';
 import {IAuthLogin} from '@/data/api/types/auth.type';
 import {initFirebase} from '@/lib/firebase/initFirebase';
@@ -10,6 +12,7 @@ initFirebase();
 const fireAuth = getAuth();
 
 export default function useLoginGoogle() {
+  const router = useRouter();
   const {loginSuccess} = useLoginHandler();
 
   const googleProvider = new GoogleAuthProvider();
@@ -21,6 +24,7 @@ export default function useLoginGoogle() {
       .then(res => {
         const {accessToken, user} = res.data;
         loginSuccess({accessToken, user});
+        if (router.asPath === ROUTES.LIST) router.reload();
       })
       .catch(() => {});
   };
