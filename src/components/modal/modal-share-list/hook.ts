@@ -15,7 +15,7 @@ export default function useModalShareList({data}: IProps) {
   };
 
   useEffect(() => {
-    setLink(window.location.href + `/list/${id}`);
+    setLink(window.location.origin + `/list/${id}`);
   }, [id]);
 
   return {id, copy, link};
