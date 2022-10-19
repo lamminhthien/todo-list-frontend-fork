@@ -10,7 +10,9 @@ const clientCredentials = {
 };
 
 const initFirebase = () => {
-  if (typeof window !== undefined) initializeApp(clientCredentials);
+  if (typeof window !== undefined) {
+    initializeApp(clientCredentials);
+  }
 };
 
 export {initFirebase};

@@ -1,15 +1,15 @@
 import {MouseSensor, TouchSensor, useSensor, useSensors} from '@dnd-kit/core';
 
-export const useMouseSensor = () => {
+export const useSensorGroup = () => {
   return useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 10
+        distance: {y: 10}
       }
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 300,
+        delay: 250,
         tolerance: {y: 15, x: 5}
       }
     })

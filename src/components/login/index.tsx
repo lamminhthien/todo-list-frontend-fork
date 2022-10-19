@@ -1,62 +1,56 @@
 import cn from 'classnames';
-import React from 'react';
+import React, {FC, useEffect} from 'react';
 
-import TodoListLogo from '@/components/icons/todolist-logo';
 import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
-import useGuestLoginHook from '@/hooks/login/guest-login/index.hook';
-import LayoutDefault from '@/layouts/default';
+import {AuthActions} from '@/states/auth';
+import {useDispatchAuth} from '@/states/auth/context';
+import LocalStorage from '@/utils/local-storage';
 
-import ModalSocial from '../modal-social';
+import TodoListLogo from '../common/icons/todolist-logo';
+import ModalThirdPartyLogin from '../modal/modal-third-party-login';
+import useGuestLoginHook from './hooks';
 import styles from './style.module.scss';
 
-export default function Login() {
-  const {formState, onSubmit, matches, register, handleSubmit, errors, handleSocial, socialOpen, setSocialOpen} =
-    useGuestLoginHook();
+const Login: FC = () => {
+  const {formState, modalOpen, onSubmit, register, setModalOpen} = useGuestLoginHook();
+  const {errors, isSubmitting} = formState;
+  const dispatchAuth = useDispatchAuth();
+  useEffect(() => {
+    dispatchAuth(AuthActions.login(undefined));
+    LocalStorage.accessToken.remove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <div className={cn(styles['com-quick-play'])}>
         <div className="container">
           <div className="inner">
             <div className="logo-wrapper">
-              <TodoListLogo width={matches ? 249 : 175} />
+              <TodoListLogo width={249} />
             </div>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={onSubmit}>
               <h2 className="text-center">Let&apos;s start!</h2>
-              <Input
-                placeholder="Enter your name"
-                className="name-input"
-                maxLength={33}
-                disabled={formState.isSubmitting}
-                error={errors.name?.message}
-                {...register('name')}
-              />
-              <Button
-                className="btn-submit"
-                variant="contained"
-                color="primary"
-                type="submit"
-                text="Enter"
-                loading={formState.isSubmitting}
-                disabled={formState.isSubmitting}
-              />
+              <Input placeholder="Enter your name" className="name-input" maxLength={33} error={errors.name?.message} {...register('name')} />
+              <Button className="btn-submit" variant="contained" color="primary" type="submit" text="Enter" loading={isSubmitting} disabled={isSubmitting} />
               <Button
                 className="btn-submit"
                 variant="contained"
                 color="primary"
                 type="button"
                 text="Login With Email"
-                onClick={() => handleSocial()}
-                loading={formState.isSubmitting}
-                disabled={formState.isSubmitting}
+                onClick={() => setModalOpen(true)}
+                loading={isSubmitting}
+                disabled={isSubmitting}
               />
             </form>
           </div>
         </div>
       </div>
-      <ModalSocial open={socialOpen} onClose={() => setSocialOpen(false)} />
+      <ModalThirdPartyLogin open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
-}
+};
 
-Login.Layout = LayoutDefault;
+export default Login;

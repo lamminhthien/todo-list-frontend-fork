@@ -1,9 +1,7 @@
-import {GetStaticProps} from 'next';
-import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 import React from 'react';
 
+import Seo from '@/components/common/seo/seo';
 import Login from '@/components/login';
-import Seo from '@/components/seo/seo';
 import LayoutDefault from '@/layouts/default';
 
 export default function PageLogin() {
@@ -16,11 +14,3 @@ export default function PageLogin() {
 }
 
 PageLogin.Layout = LayoutDefault;
-
-export const getStaticProps: GetStaticProps = async ({locale}) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale!, ['common']))
-    }
-  };
-};

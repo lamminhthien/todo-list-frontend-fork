@@ -1,28 +1,16 @@
-import {GetStaticProps} from 'next';
-import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 import React from 'react';
 
-import MyList from '@/components/my-list';
-import Seo from '@/components/seo/seo';
+import Seo from '@/components/common/seo/seo';
+import List from '@/components/list';
 import LayoutDefault from '@/layouts/default';
 
 export default function ListPage() {
   return (
     <>
       <Seo title="My List" />
-      <MyList />
+      <List />
     </>
   );
 }
 
 ListPage.Layout = LayoutDefault;
-
-export const getStaticProps: GetStaticProps = async ({locale}) => {
-  const translate = await serverSideTranslations(locale!, ['common']);
-
-  return {
-    props: {
-      ...translate
-    }
-  };
-};

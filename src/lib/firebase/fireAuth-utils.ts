@@ -1,7 +1,6 @@
 import {getAuth, GoogleAuthProvider, signInWithPopup, signOut} from 'firebase/auth';
 
-import API from '@/api/network/user';
-import {IEmail} from '@/api/types/email.type';
+import API from '@/data/api/index';
 import {initFirebase} from '@/lib/firebase/initFirebase';
 import LocalStorage from '@/utils/local-storage';
 
@@ -9,17 +8,15 @@ initFirebase(); // initialize firebase
 const auth = getAuth();
 
 export class FireAuthUtils {
-  attachEmailToUser = async (email: IEmail) => {
-    await API.attachEmail(email)
-      .then(() => {})
-      .catch(() => {});
-  };
-
   saveAuthProfile = () => {
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(async user => {
       LocalStorage.firebaseAuthData.set(JSON.stringify(user));
       if (user?.email) {
-        this.attachEmailToUser({email: user?.email});
+        const email = user.email;
+        await API.auth
+          .login({name: '', email: email})
+          .then(() => {})
+          .catch(() => {});
       }
     });
   };

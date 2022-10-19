@@ -1,62 +1,17 @@
-import {yupResolver} from '@hookform/resolvers/yup';
-import {useRouter} from 'next/router';
-import {useState} from 'react';
-import {SubmitHandler, useForm} from 'react-hook-form';
-import * as yup from 'yup';
+import {FC, useState} from 'react';
 
-import API from '@/api/network/todo';
-import ModalTodoAddEdit from '@/components/modal-todo-add-edit';
-import {ROUTES} from '@/configs/routes.config';
 import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
-import useToast from '@/core-ui/toast';
-import LayoutDefault from '@/layouts/default';
-import {IAction} from '@/types';
-import detectIdOrLink from '@/utils/detect-id-or-link';
 
-import LobbyTitle from '../lobby-title';
+import ModalCreateUpdateList from '../modal/modal-create-update-list';
+import useLobbyHook from './hook';
 import styles from './style.module.scss';
+import LobbyTitle from './title';
 
-interface IFormInputs {
-  todoId: string;
-}
-
-const Schema = yup.object().shape({
-  todoId: yup.string().required('Please enter Link or ID')
-});
-
-export default function Lobby() {
-  const router = useRouter();
-  const toast = useToast();
-  const [action, setAction] = useState<IAction>({type: '', payload: null});
-
-  const resetAction = () => setAction({type: '', payload: null});
-  const {register, handleSubmit, formState} = useForm<IFormInputs>({
-    resolver: yupResolver(Schema)
-  });
-  const {errors} = formState;
-
-  const reset = () => {
-    resetAction();
-  };
-
-  const onSubmit: SubmitHandler<IFormInputs> = data => {
-    const todoId = detectIdOrLink(data.todoId);
-    // Check if it contain space character only
-    if (todoId.trim().length == 0) {
-      toast.show({type: 'danger', title: 'Error!', content: 'List not found', lifeTime: 3000});
-    } else {
-      API.getTodo(todoId.trim())
-        .then(() => {
-          toast.show({type: 'success', title: 'Success', content: 'Join List Successfull', lifeTime: 3000});
-          router.push(`${ROUTES.LIST}/${todoId}`);
-        })
-        .catch(() => {
-          toast.show({type: 'danger', title: 'Error!', content: 'List not found', lifeTime: 3000});
-        });
-    }
-  };
-
+const Lobby: FC = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const {onSubmit, register, formState} = useLobbyHook();
+  const {errors, isSubmitting} = formState;
   return (
     <>
       <div className={styles['page-action']}>
@@ -65,40 +20,22 @@ export default function Lobby() {
             <LobbyTitle />
             <div className="actions">
               <div className="item">
-                <Button
-                  variant="contained"
-                  className="w-full font-medium"
-                  color="primary"
-                  onClick={() => setAction({type: 'add', payload: null})}
-                  text=" Create New List"
-                />
+                <Button variant="contained" className="w-full font-medium" color="primary" onClick={() => setModalOpen(true)} text=" Create New List" />
               </div>
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={onSubmit}>
                 <Input
-                  groupEnd={
-                    <Button
-                      className="px-5 font-medium "
-                      color="primary"
-                      variant="contained"
-                      text="Join"
-                      type="submit"
-                      disabled={formState.isSubmitting}
-                    />
-                  }
+                  groupEnd={<Button className="px-5 font-medium " color="primary" variant="contained" text="Join" type="submit" disabled={isSubmitting} />}
                   placeholder="Enter Link or ID"
-                  error={errors.todoId?.message}
-                  {...register('todoId')}
+                  error={errors.idOrLink?.message}
+                  {...register('idOrLink')}
                 />
               </form>
             </div>
           </div>
         </div>
       </div>
-      {['add'].includes(action.type) && (
-        <ModalTodoAddEdit data={action.payload} open={true} onSave={() => reset()} onCancel={resetAction} />
-      )}
+      {<ModalCreateUpdateList open={modalOpen} onClose={() => setModalOpen(true)} />}
     </>
   );
-}
-
-Lobby.Layout = LayoutDefault;
+};
+export default Lobby;
