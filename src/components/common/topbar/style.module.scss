@@ -7,7 +7,7 @@
   .authenticated {
     @apply flex w-full items-center justify-end;
     .h2 {
-      @apply flex items-center break-all text-h4 leading-none;
+      @apply flex items-center break-words text-h4 leading-none;
     }
   }
   .ico-user {
