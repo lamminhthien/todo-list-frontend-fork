@@ -22,7 +22,10 @@ export default function ToolbarDetail({nameTodo, onEdit, onDelete, onShare, onAd
           <div className="left">
             {/* List Title */}
             <div className="title">
-              <h2>{nameTodo}</h2>
+              <h2>
+                {nameTodo}
+                <Button startIcon={<Icon name="ico-star" className="text-yellow-400" />} />
+              </h2>
             </div>
           </div>
           <div className="right">
