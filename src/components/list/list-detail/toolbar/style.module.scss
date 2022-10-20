@@ -30,6 +30,9 @@
           @apply hidden lg:inline;
         }
       }
+      .abc-btn {
+        @apply gap-0;
+      }
       .btn-edit {
         @apply min-w-0 pr-0 lg:pr-3;
       }

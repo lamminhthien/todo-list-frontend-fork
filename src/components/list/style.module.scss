@@ -21,6 +21,9 @@
     }
     .right {
       @apply hidden md:flex;
+      .abc-btn {
+        @apply gap-0;
+      }
       button {
         @apply pr-0;
       }
