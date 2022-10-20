@@ -19,7 +19,13 @@ const ModalThirdPartyLogin: React.FC<IProps> = ({open, onClose}) => {
     <Modal variant="center" className={cls(styles['com-modal-social'], 'max-w-[378px]')} open={open} onClose={onClose}>
       <Modal.Header />
       <Modal.Body className="container">
-        <Button className=" bg-white text-black" onClick={() => openGooglePopUp()}>
+        <Button
+          className=" bg-white text-black"
+          onClick={() => {
+            openGooglePopUp();
+            onClose();
+          }}
+        >
           <Image src={'/google.png'} alt={'Login Google Logo'} width={24} height={24} />
           <span>Sign in with Google</span>
         </Button>
