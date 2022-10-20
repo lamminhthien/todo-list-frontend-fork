@@ -19,7 +19,7 @@ interface IFormInputs {
 
 export default function useModalCreateUpdateTask({onClose, onSuccess, listData, taskData}: IProps) {
   const toast = useToast();
-  const {handleSubmit, formState, setValue, setFocus, ...rest} = useForm<IFormInputs>({resolver: yupResolver(Schema), mode: 'onChange'});
+  const {handleSubmit, formState, setValue, reset, setFocus, ...rest} = useForm<IFormInputs>({resolver: yupResolver(Schema), mode: 'onChange'});
 
   const {errors, isSubmitting} = formState;
 
@@ -40,6 +40,7 @@ export default function useModalCreateUpdateTask({onClose, onSuccess, listData, 
       .catch(() => toast.show({type: 'danger', title: 'Error', content: 'An error occurred, please try again'}))
       .finally(() => {
         onClose();
+        reset();
       });
   };
 
