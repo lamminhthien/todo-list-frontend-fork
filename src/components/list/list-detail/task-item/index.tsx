@@ -1,42 +1,54 @@
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
+import {SelectChangeEvent} from '@mui/material';
 
 import Checkbox from '@/core-ui/checkbox';
 import IconButton from '@/core-ui/icon-button';
-import API from '@/data/api/index';
+import api from '@/data/api/index';
+import {IStatus} from '@/data/api/types/list.type';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
-import {useStateAuth} from '@/states/auth/context';
+
+import Status from '../status';
+
+// import style from './style.module.scss';
 
 interface IProp {
-  task?: ITaskResponse;
+  task: ITaskResponse;
   onEdit?: () => void;
   onDelete?: () => void;
-  listUserId?: string;
+  statusList?: IStatus[];
 }
 
-export default function TaskItem({task, onEdit, onDelete, listUserId}: IProp) {
-  const auth = useStateAuth();
+export default function TaskItem({task, onEdit, onDelete, statusList}: IProp) {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: task!.id!});
+  const items = statusList?.sort((a, b) => a.id - b.id).map(({name, id}) => ({name, value: id}));
+
   const setDone = (id: string, isDone: boolean) => {
     if (!id) return;
-    API.task
+    api.task
       .update({id, isDone: !isDone})
       .then(socketUpdateList)
       .catch(() => {});
   };
 
-  const style = {
+  const styleDnd = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1
+  };
+  const onChangeStatus = (event: SelectChangeEvent<unknown>) => {
+    api.task
+      .update({id: task.id, statusId: Number(event.target.value)})
+      .then(socketUpdateList)
+      .catch(() => {});
   };
 
   return (
     <div
       className="item"
       ref={setNodeRef}
-      style={style}
+      style={styleDnd}
       {...attributes}
       {...listeners}
       onClick={e => {
@@ -59,8 +71,9 @@ export default function TaskItem({task, onEdit, onDelete, listUserId}: IProp) {
       <div className="actions">
         {!isDragging && (
           <>
+            <Status items={items} defaultValue={task.statusId} onChange={e => onChangeStatus(e)} />
             <IconButton name="ico-edit" onClick={onEdit} />
-            {auth?.id === listUserId && <IconButton name="ico-trash-2" onClick={onDelete} />}
+            <IconButton name="ico-trash-2" onClick={onDelete} />
           </>
         )}
       </div>

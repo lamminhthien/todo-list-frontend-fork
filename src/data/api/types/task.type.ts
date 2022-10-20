@@ -8,6 +8,7 @@ export interface ITaskUpdate {
   name?: string;
   isDone?: boolean;
   isActive?: boolean;
+  statusId?: number;
 }
 
 export interface ITaskReIndex {
@@ -20,6 +21,7 @@ export interface ITaskResponse {
   id: string;
   name: string;
   todoListId: string;
+  statusId: number;
   userId: string;
   isDone: boolean;
   isActive: boolean;
