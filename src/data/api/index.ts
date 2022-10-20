@@ -14,7 +14,7 @@ const api = {
   list: {
     get: () => http.get<IListResponse[]>(API_ENDPOINTS.LIST),
     getOne: ({id}: IListGetOne) => http.get<IListResponse>(API_ENDPOINTS.LIST + '/' + id),
-    getByUser: () => http.get<IListResponse[]>(API_ENDPOINTS.LIST),
+    getByUser: () => http.get<IListResponse[]>(API_ENDPOINTS.LIST + '/user'),
     create: (data: IListCreate) => http.post<IListResponse>(API_ENDPOINTS.LIST, data),
     update: (data: IListUpdate) => http.patch<IListResponse>(API_ENDPOINTS.LIST, data)
   },
