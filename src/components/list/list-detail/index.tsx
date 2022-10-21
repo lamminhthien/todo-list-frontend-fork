@@ -100,11 +100,11 @@ const ListDetail: FC<Iprops> = ({id}) => {
                   {activeTasks &&
                     activeTasks.map(task => (
                       <TaskItem
-                        listUserId={todoList.userId}
                         key={task.id}
                         task={task}
                         onEdit={() => onCreateUpdateTask(task)}
                         onDelete={() => onDeleteTask(task)}
+                        statusList={todoList.status}
                       />
                     ))}
                 </SortableContext>

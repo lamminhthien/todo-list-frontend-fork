@@ -13,8 +13,15 @@ export interface IListUpdate extends IListGetOne {
   isActive?: boolean;
 }
 
+export interface IStatus {
+  id: number;
+  name: string;
+  color: string;
+  index: number;
+}
 export interface IListResponse extends IListGetOne, IListCreate {
   userId: string;
   isActive: boolean;
+  status: IStatus[];
   tasks: ITaskResponse[];
 }

@@ -1,0 +1,15 @@
+.status {
+  @apply flex h-full items-center;
+}
+.status-button :global {
+  @apply h-8 overflow-hidden px-3 py-1;
+  .MuiSelect-select {
+    @apply h-full py-1;
+  }
+  .MuiOutlinedInput-notchedOutline {
+    @apply border-0;
+  }
+  .MuiSelect-icon {
+    @apply fill-white;
+  }
+}
