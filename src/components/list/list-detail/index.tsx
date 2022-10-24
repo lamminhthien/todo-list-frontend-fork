@@ -3,7 +3,6 @@ import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import {FC, useState} from 'react';
 
-import ErrorInformation from '@/components/common/404';
 import TaskItem from '@/components/list/list-detail/task-item';
 import ToolbarDetail from '@/components/list/list-detail/toolbar';
 import ModalCreateUpdateList from '@/components/modal/modal-create-update-list';
@@ -69,7 +68,11 @@ const ListDetail: FC<Iprops> = ({id}) => {
 
   // As a private-list. Only list owner can view this list
   if (todoList.visibility === VisibilityTypes.PRIVATE && todoList.userId !== auth?.id) {
-    return <ErrorInformation />;
+    return (
+      <div className={styles['list-detail']}>
+        <h3 className="error-private-list">Error. This is private list</h3>
+      </div>
+    );
   }
   const activeTasks = todoList.tasks.filter(list => list.isActive);
 
