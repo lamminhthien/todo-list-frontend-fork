@@ -89,8 +89,13 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, 
       <div className="actions">
         <>
           {statusList && <Status items={statusList} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />}
-          <IconButton name="ico-edit" size={20} onClick={onEdit} />
-          <IconButton name="ico-trash-2" size={20} onClick={onDelete} />
+          {/* As a read-only list. Only list owner can edit or delete task */}
+          {!isReadOnly && (
+            <>
+              <IconButton name="ico-edit" size={20} onClick={onEdit} />
+              <IconButton name="ico-trash-2" size={20} onClick={onDelete} />
+            </>
+          )}
         </>
       </div>
     </div>
