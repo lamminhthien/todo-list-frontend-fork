@@ -1,3 +1,5 @@
+import {VisibilityTypes} from '@/utils/constant';
+
 import {ITaskResponse} from './task.type';
 
 export interface IListGetOne {
@@ -11,7 +13,7 @@ export interface IListCreate {
 export interface IListUpdate extends IListGetOne {
   name?: string;
   isActive?: boolean;
-  visibility?: string;
+  visibility?: keyof typeof VisibilityTypes;
 }
 
 export interface IStatus {
@@ -25,5 +27,5 @@ export interface IListResponse extends IListGetOne, IListCreate {
   isActive: boolean;
   status: IStatus[];
   tasks: ITaskResponse[];
-  visibility: string;
+  visibility: keyof typeof VisibilityTypes;
 }

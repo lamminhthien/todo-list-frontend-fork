@@ -7,13 +7,14 @@ import * as yup from 'yup';
 import {ROUTES} from '@/configs/routes.config';
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
+import {VisibilityTypes} from '@/utils/constant';
 import iosAutoFocus from '@/utils/ios-autofocus';
 
 import {IProps} from '.';
 
 interface IFormInputs {
   name: string;
-  visibility: boolean;
+  visibility: keyof typeof VisibilityTypes;
 }
 
 const Schema = yup.object().shape({
