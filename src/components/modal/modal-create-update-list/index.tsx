@@ -31,7 +31,12 @@ const ModalCreateUpdateList: FC<IProps> = prop => {
             </Modal.Header>
             <Modal.Body>
               <Input error={errors.name?.message} value={data?.name} autoFocus={true} placeholder={'Enter your list name'} {...register('name')} />
-              <DropdownBtn {...register('visibility')} className="input-type" defaultValue={'PUBLIC'} items={Object.keys(VisibilityTypes)} />
+              <DropdownBtn
+                {...register('visibility')}
+                className="input-type"
+                defaultValue={data?.visibility ? data.visibility : VisibilityTypes.PUBLIC}
+                items={Object.keys(VisibilityTypes)}
+              />
             </Modal.Body>
             <Modal.Footer>
               <div className="flex w-full gap-x-3 md:gap-x-4">
