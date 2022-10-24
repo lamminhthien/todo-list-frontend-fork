@@ -1,24 +1,37 @@
 .status {
   @apply flex h-full items-center;
 }
-.status-button :global {
-  @apply h-8 overflow-hidden lg:px-3 lg:py-1;
-  @media screen and (max-width: 1023px) {
-    border-radius: 100% !important;
+.status-button-desktop :global {
+  @media only screen and (max-width: 1023px) {
+    display: none !important;
   }
+  @apply h-8 overflow-hidden;
   .MuiSelect-select {
-    @apply h-full lg:py-1;
-  }
-  .MuiOutlinedInput-notchedOutline {
-    @apply border-0;
+    @apply px-3 py-0;
   }
   .MuiSelect-icon {
     @apply fill-white;
   }
-  .MuiSelect-outlined {
-    @apply pl-1 lg:pl-3 lg:pr-8;
+  .MuiOutlinedInput-notchedOutline {
+    @apply border-0;
   }
-  .MuiStatus-box {
-    @apply hidden w-fit font-semibold lg:block lg:rounded lg:px-2 lg:py-0.5;
+}
+.status-button-mobile :global {
+  border-radius: 100% !important;
+  @media only screen and (min-width: 1024px) {
+    display: none !important;
+  }
+  @apply h-5 w-5 overflow-hidden;
+  .MuiSelect-select {
+    @apply px-3 py-0;
+  }
+  .MuiSelect-icon {
+    @apply top-0 right-0 h-5 w-5 fill-white;
+  }
+  .status-name {
+    @apply hidden;
+  }
+  .MuiOutlinedInput-notchedOutline {
+    @apply border-0;
   }
 }
