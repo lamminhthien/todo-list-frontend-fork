@@ -1,8 +1,8 @@
+import {MenuItem, Select} from '@mui/material';
 import cls from 'classnames';
 import {FC} from 'react';
 
 import Button from '@/core-ui/button';
-import DropdownBtn from '@/core-ui/dropdownBtn';
 import Input from '@/core-ui/input';
 import {Modal} from '@/core-ui/modal';
 import {IListResponse} from '@/data/api/types/list.type';
@@ -21,6 +21,8 @@ export interface IProps {
 const ModalCreateUpdateList: FC<IProps> = prop => {
   const {open, onClose, data} = prop;
   const {onSubmit, register, errors, isSubmitting} = useModalCreateUpdateList(prop);
+  console.log(data?.visibility ? data.visibility : VisibilityTypes.PUBLIC);
+
   return (
     <>
       {open && (
@@ -32,12 +34,15 @@ const ModalCreateUpdateList: FC<IProps> = prop => {
             <Modal.Body>
               <Input error={errors.name?.message} value={data?.name} autoFocus={true} placeholder={'Enter your list name'} {...register('name')} />
               {data && (
-                <DropdownBtn
-                  {...register('visibility')}
-                  className="input-type"
-                  defaultValue={data?.visibility ? data.visibility : VisibilityTypes.PUBLIC}
-                  items={Object.keys(VisibilityTypes)}
-                />
+                <Select {...register('visibility')} className="input-type" defaultValue={data?.visibility ? data.visibility : VisibilityTypes.PUBLIC}>
+                  {Object.keys(VisibilityTypes).map((key, idx) => {
+                    return (
+                      <MenuItem key={key} value={key}>
+                        {Object.values(VisibilityTypes)[idx]}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
               )}
             </Modal.Body>
             <Modal.Footer>
