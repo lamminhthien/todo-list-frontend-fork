@@ -10,6 +10,7 @@ import {ITaskResponse} from '@/data/api/types/task.type';
 import socket, {socketUpdateList} from '@/data/socket';
 import {SOCKET_EVENTS} from '@/data/socket/type';
 import {useStateAuth} from '@/states/auth';
+import {VisibilityTypes} from '@/utils/constant';
 
 import {Iprops} from '.';
 
@@ -32,6 +33,8 @@ export default function useListDetail({id}: Iprops) {
   };
 
   function handleDragEnd({active, over}: DragEndEvent) {
+    //  As a read-only list . Only list owner can interaction with drag and drop function
+    if (todoList?.visibility === VisibilityTypes.READ_ONLY && auth?.id !== todoList.userId) return;
     setActiveId(null);
     if (!over) return;
     if (active.id !== over.id) {
@@ -51,9 +54,7 @@ export default function useListDetail({id}: Iprops) {
           api.task
             .reIndex({taskFirstId, taskReorderId, taskSecondId})
             .then(socketUpdateList)
-            .catch(() => {
-              updateList();
-            });
+            .catch(() => {});
         }
       });
     }
