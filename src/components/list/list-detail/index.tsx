@@ -88,7 +88,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
               onShare={() => onShareList()}
               onAddTask={() => onCreateUpdateTask()}
               userId={todoList.userId}
-              visibilityTodo={todoList.visibility}
+              visibility={todoList.visibility}
             />
           )}
           <DndContext
@@ -112,7 +112,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
                     activeTasks.map(task => (
                       <TaskItem
                         visibilityList={todoList.visibility}
-                        userId={auth?.id}
+                        userId={auth?.id || ''}
                         key={task.id}
                         task={task}
                         onEdit={() => onCreateUpdateTask(task)}
@@ -125,7 +125,16 @@ const ListDetail: FC<Iprops> = ({id}) => {
                 </SortableContext>
               )}
               <DragOverlay>
-                {activeId ? <TaskItem statusList={todoList.status} task={activeTasks.filter(e => e.id === activeId)[0]} isSelect={true} /> : null}
+                {activeId ? (
+                  <TaskItem
+                    userId={auth?.id || ''}
+                    userIdList={todoList.userId}
+                    statusList={todoList.status}
+                    task={activeTasks.filter(e => e.id === activeId)[0]}
+                    isSelect={true}
+                    visibilityList={todoList.visibility}
+                  />
+                ) : null}
               </DragOverlay>
             </div>
           </DndContext>

@@ -1,7 +1,6 @@
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {SelectChangeEvent} from '@mui/material';
-import {useEffect, useState} from 'react';
 
 import Checkbox from '@/core-ui/checkbox';
 import IconButton from '@/core-ui/icon-button';
@@ -19,18 +18,16 @@ interface IProp {
   task: ITaskResponse;
   onEdit?: () => void;
   onDelete?: () => void;
-  statusList?: IStatus[];
+  statusList: IStatus[];
   isSelect: boolean;
-  visibilityList?: string;
-  userId?: string;
-  userIdList?: string;
+  visibilityList: string;
+  userId: string;
+  userIdList: string;
 }
 
 export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, visibilityList, userId, userIdList}: IProp) {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: task!.id!});
   statusList?.sort((a, b) => a.id - b.id);
-
-  const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
 
   const setDone = (id: string, isDone: boolean) => {
     if (!id) return;
@@ -52,10 +49,10 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, 
       .catch(() => {});
   };
 
-  useEffect(() => {
-    if (visibilityList === VisibilityTypes.READ_ONLY && userId !== userIdList) setIsReadOnly(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const isReadOnly = () => {
+    if (visibilityList === VisibilityTypes.READ_ONLY && userId !== userIdList) return true;
+    return false;
+  };
 
   return (
     <div
@@ -81,16 +78,18 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, 
         checked={task?.isDone}
         onChange={() => setDone(task!.id!, task!.isDone)}
         // As a read-only list. Only list owner can interact with checkbox icon
-        disabled={isReadOnly}
+        disabled={isReadOnly()}
       />
       <p className={`h6 ${task!.isDone ? 'checked' : ''}`} onClick={() => setDone(task!.id!, task!.isDone)}>
         {`${task!.name}`}
       </p>
       <div className="actions">
         <>
-          {statusList && <Status items={statusList} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />}
+          {statusList && (
+            <Status disabled={isReadOnly()} items={statusList} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />
+          )}
           {/* As a read-only list. Only list owner can edit or delete task */}
-          {!isReadOnly && (
+          {!isReadOnly() && (
             <>
               <IconButton name="ico-edit" size={20} onClick={onEdit} />
               <IconButton name="ico-trash-2" size={20} onClick={onDelete} />

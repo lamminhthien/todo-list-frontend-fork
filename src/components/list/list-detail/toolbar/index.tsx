@@ -12,10 +12,10 @@ interface IProp {
   onShare: () => void;
   onAddTask: () => void;
   userId: string;
-  visibilityTodo: string;
+  visibility: string;
 }
 
-export default function ToolbarDetail({nameTodo, onEdit, onDelete, onShare, onAddTask, userId, visibilityTodo}: IProp) {
+export default function ToolbarDetail({nameTodo, onEdit, onDelete, onShare, onAddTask, userId, visibility}: IProp) {
   const auth = useStateAuth();
   return (
     <>
@@ -43,7 +43,7 @@ export default function ToolbarDetail({nameTodo, onEdit, onDelete, onShare, onAd
             </Button>
             {/* List Add Button */}
             {/* This add task button will only appear when visibility in this list = public */}
-            {(auth?.id === userId || visibilityTodo === VisibilityTypes.PUBLIC) && (
+            {(auth?.id === userId || visibility === VisibilityTypes.PUBLIC) && (
               <Button className="btn-add-todo" startIcon={<Icon name="ico-plus-circle" />} onClick={onAddTask}>
                 <span className="h5 font-medium">Add Task</span>
               </Button>
