@@ -71,9 +71,9 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect}:
       </p>
       <div className="actions">
         <>
-          {statusList && <Status items={statusList} defaultValue={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />}
-          <IconButton name="ico-edit" onClick={onEdit} />
-          <IconButton name="ico-trash-2" onClick={onDelete} />
+          {statusList && <Status items={statusList} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />}
+          <IconButton name="ico-edit" size={20} onClick={onEdit} />
+          <IconButton name="ico-trash-2" size={20} onClick={onDelete} />
         </>
       </div>
     </div>
