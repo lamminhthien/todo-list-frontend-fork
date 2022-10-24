@@ -1,7 +1,6 @@
 import Button from '@/core-ui/button';
 import Icon from '@/core-ui/icon';
 import {useStateAuth} from '@/states/auth/context';
-import {VisibilityTypes} from '@/utils/constant';
 
 import styles from './style.module.scss';
 

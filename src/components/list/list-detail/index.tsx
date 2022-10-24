@@ -13,7 +13,6 @@ import FloatIcon from '@/core-ui/float-icon';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
 import {useSensorGroup} from '@/lib/dnd-kit/sensor/sensor-group';
-import {VisibilityTypes} from '@/utils/constant';
 
 import useListDetail from './hook';
 import styles from './style.module.scss';
