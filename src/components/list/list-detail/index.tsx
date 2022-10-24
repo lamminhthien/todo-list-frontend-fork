@@ -56,7 +56,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
   };
 
   const isPrivate = () => {
-    if (todoList?.visibility === VisibilityTypes.PRIVATE && todoList.userId !== auth?.id) return true;
+    if (todoList?.visibility === 'PRIVATE' && todoList.userId !== auth?.id) return true;
     return false;
   };
 

@@ -21,7 +21,6 @@ export interface IProps {
 const ModalCreateUpdateList: FC<IProps> = prop => {
   const {open, onClose, data} = prop;
   const {onSubmit, register, errors, isSubmitting} = useModalCreateUpdateList(prop);
-  console.log(data?.visibility ? data.visibility : VisibilityTypes.PUBLIC);
 
   return (
     <>

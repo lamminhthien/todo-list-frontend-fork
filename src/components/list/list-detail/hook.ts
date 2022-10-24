@@ -10,7 +10,6 @@ import {ITaskResponse} from '@/data/api/types/task.type';
 import socket, {socketUpdateList} from '@/data/socket';
 import {SOCKET_EVENTS} from '@/data/socket/type';
 import {useStateAuth} from '@/states/auth';
-import {VisibilityTypes} from '@/utils/constant';
 
 import {Iprops} from '.';
 
@@ -33,7 +32,7 @@ export default function useListDetail({id}: Iprops) {
   };
 
   const isReadOnly = () => {
-    if (todoList?.visibility === VisibilityTypes.READ_ONLY && auth?.id !== todoList.userId) return true;
+    if (todoList?.visibility === 'READ_ONLY' && auth?.id !== todoList.userId) return true;
     return false;
   };
 

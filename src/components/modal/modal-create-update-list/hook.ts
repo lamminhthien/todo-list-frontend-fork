@@ -26,7 +26,6 @@ export default function useModalCreateUpdateList({onClose, onSuccess, data}: IPr
     resolver: yupResolver(Schema),
     mode: 'onChange'
   });
-  console.log(getValues());
 
   const {errors, isSubmitting} = formState;
   const toast = useToast();
