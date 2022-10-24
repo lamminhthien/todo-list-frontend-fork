@@ -25,5 +25,5 @@ export interface IListResponse extends IListGetOne, IListCreate {
   isActive: boolean;
   status: IStatus[];
   tasks: ITaskResponse[];
-  visibility: boolean;
+  visibility: string;
 }

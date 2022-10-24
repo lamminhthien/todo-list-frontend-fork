@@ -3,6 +3,7 @@ import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import {FC, useState} from 'react';
 
+import ErrorInformation from '@/components/common/404';
 import TaskItem from '@/components/list/list-detail/task-item';
 import ToolbarDetail from '@/components/list/list-detail/toolbar';
 import ModalCreateUpdateList from '@/components/modal/modal-create-update-list';
@@ -13,6 +14,7 @@ import FloatIcon from '@/core-ui/float-icon';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
 import {useSensorGroup} from '@/lib/dnd-kit/sensor/sensor-group';
+import {VisibilityTypes} from '@/utils/constant';
 
 import useListDetail from './hook';
 import styles from './style.module.scss';
@@ -21,7 +23,7 @@ export interface Iprops {
   id: string;
 }
 const ListDetail: FC<Iprops> = ({id}) => {
-  const {activeId, handleDragEnd, setActiveId, todoList} = useListDetail({id});
+  const {activeId, handleDragEnd, setActiveId, todoList, auth} = useListDetail({id});
   const sensor = useSensorGroup();
 
   const [createUpdateListModal, setCreateUpdateListModal] = useState(false);
@@ -64,6 +66,11 @@ const ListDetail: FC<Iprops> = ({id}) => {
   };
 
   if (!todoList || !id) return null;
+
+  // As a private-list. Only list owner can view this list
+  if (todoList.visibility === VisibilityTypes.PRIVATE && todoList.userId !== auth?.id) {
+    return <ErrorInformation />;
+  }
   const activeTasks = todoList.tasks.filter(list => list.isActive);
 
   return (
@@ -78,6 +85,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
               onShare={() => onShareList()}
               onAddTask={() => onCreateUpdateTask()}
               userId={todoList.userId}
+              visibilityTodo={todoList.visibility}
             />
           )}
           <DndContext

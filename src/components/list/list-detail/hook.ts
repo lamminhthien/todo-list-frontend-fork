@@ -51,7 +51,9 @@ export default function useListDetail({id}: Iprops) {
           api.task
             .reIndex({taskFirstId, taskReorderId, taskSecondId})
             .then(socketUpdateList)
-            .catch(() => {});
+            .catch(() => {
+              updateList();
+            });
         }
       });
     }
@@ -85,5 +87,5 @@ export default function useListDetail({id}: Iprops) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  return {activeId, todoList, handleDragEnd, setActiveId, updateList};
+  return {activeId, todoList, handleDragEnd, setActiveId, updateList, auth};
 }
