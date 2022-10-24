@@ -116,29 +116,20 @@ const ListDetail: FC<Iprops> = ({id}) => {
                   {activeTasks &&
                     activeTasks.map(task => (
                       <TaskItem
-                        visibilityList={todoList.visibility}
-                        userId={auth?.id || ''}
+                        readOnlyList={isReadOnly()}
                         key={task.id}
                         task={task}
                         onEdit={() => onCreateUpdateTask(task)}
                         onDelete={() => onDeleteTask(task)}
                         statusList={todoList.status}
                         isSelect={false}
-                        userIdList={todoList.userId}
                       />
                     ))}
                 </SortableContext>
               )}
               <DragOverlay>
                 {activeId ? (
-                  <TaskItem
-                    userId={auth?.id || ''}
-                    userIdList={todoList.userId}
-                    statusList={todoList.status}
-                    task={activeTasks.filter(e => e.id === activeId)[0]}
-                    isSelect={true}
-                    visibilityList={todoList.visibility}
-                  />
+                  <TaskItem readOnlyList={isReadOnly()} statusList={todoList.status} task={activeTasks.filter(e => e.id === activeId)[0]} isSelect={true} />
                 ) : null}
               </DragOverlay>
             </div>

@@ -8,7 +8,6 @@ import api from '@/data/api/index';
 import {IStatus} from '@/data/api/types/list.type';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
-import {VisibilityTypes} from '@/utils/constant';
 
 import Status from '../status';
 
@@ -20,12 +19,10 @@ interface IProp {
   onDelete?: () => void;
   statusList: IStatus[];
   isSelect: boolean;
-  visibilityList: string;
-  userId: string;
-  userIdList: string;
+  readOnlyList: boolean;
 }
 
-export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, visibilityList, userId, userIdList}: IProp) {
+export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, readOnlyList}: IProp) {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: task!.id!});
   statusList?.sort((a, b) => a.id - b.id);
 
@@ -47,11 +44,6 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, 
       .update({id: task.id, statusId: Number(event.target.value)})
       .then(socketUpdateList)
       .catch(() => {});
-  };
-
-  const isReadOnly = () => {
-    if (visibilityList === VisibilityTypes.READ_ONLY && userId !== userIdList) return true;
-    return false;
   };
 
   return (
@@ -78,7 +70,7 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, 
         checked={task?.isDone}
         onChange={() => setDone(task!.id!, task!.isDone)}
         // As a read-only list. Only list owner can interact with checkbox icon
-        disabled={isReadOnly()}
+        disabled={readOnlyList}
       />
       <p className={`h6 ${task!.isDone ? 'checked' : ''}`} onClick={() => setDone(task!.id!, task!.isDone)}>
         {`${task!.name}`}
@@ -86,10 +78,10 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, 
       <div className="actions">
         <>
           {statusList && (
-            <Status disabled={isReadOnly()} items={statusList} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />
+            <Status items={statusList} disabled={readOnlyList} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />
           )}
           {/* As a read-only list. Only list owner can edit or delete task */}
-          {!isReadOnly() && (
+          {!readOnlyList && (
             <>
               <IconButton name="ico-edit" size={20} onClick={onEdit} />
               <IconButton name="ico-trash-2" size={20} onClick={onDelete} />
