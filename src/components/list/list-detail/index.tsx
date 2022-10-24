@@ -55,6 +55,11 @@ const ListDetail: FC<Iprops> = ({id}) => {
     setDeleteTaskModal(true);
   };
 
+  const isPrivate = () => {
+    if (todoList?.visibility === VisibilityTypes.PRIVATE && todoList.userId !== auth?.id) return true;
+    return false;
+  };
+
   const onClose = () => {
     if (createUpdateListModal) setCreateUpdateListModal(false);
     if (createUpdateTaskModal) setCreateUpdateTaskModal(false);
@@ -67,7 +72,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
   if (!todoList || !id) return null;
 
   // As a private-list. Only list owner can view this list
-  if (todoList.visibility === VisibilityTypes.PRIVATE && todoList.userId !== auth?.id) {
+  if (isPrivate()) {
     return (
       <div className={styles['list-detail']}>
         <h3 className="error-private-list">Error. This is private list</h3>
