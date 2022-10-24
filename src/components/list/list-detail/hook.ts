@@ -32,9 +32,12 @@ export default function useListDetail({id}: Iprops) {
       .catch(() => router.push(ROUTES.LIST));
   };
 
+  const isReadOnly = () => {
+    if (todoList?.visibility === VisibilityTypes.READ_ONLY && auth?.id !== todoList.userId) return true;
+    return false;
+  };
+
   function handleDragEnd({active, over}: DragEndEvent) {
-    //  As a read-only list . Only list owner can interaction with drag and drop function
-    if (todoList?.visibility === VisibilityTypes.READ_ONLY && auth?.id !== todoList.userId) return;
     setActiveId(null);
     if (!over) return;
     if (active.id !== over.id) {
@@ -88,5 +91,5 @@ export default function useListDetail({id}: Iprops) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  return {activeId, todoList, handleDragEnd, setActiveId, updateList, auth};
+  return {activeId, todoList, handleDragEnd, setActiveId, updateList, auth, isReadOnly};
 }

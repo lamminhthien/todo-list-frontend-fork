@@ -22,7 +22,7 @@ export interface Iprops {
   id: string;
 }
 const ListDetail: FC<Iprops> = ({id}) => {
-  const {activeId, handleDragEnd, setActiveId, todoList, auth} = useListDetail({id});
+  const {activeId, handleDragEnd, setActiveId, todoList, auth, isReadOnly} = useListDetail({id});
   const sensor = useSensorGroup();
 
   const [createUpdateListModal, setCreateUpdateListModal] = useState(false);
@@ -107,7 +107,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
             <div className="tasks">
               {activeTasks.length === 0 && <span className="empty">Empty list</span>}
               {activeTasks.length > 0 && (
-                <SortableContext items={activeTasks.map(task => task.id!)} strategy={verticalListSortingStrategy}>
+                <SortableContext disabled={isReadOnly()} items={activeTasks.map(task => task.id!)} strategy={verticalListSortingStrategy}>
                   {activeTasks &&
                     activeTasks.map(task => (
                       <TaskItem
