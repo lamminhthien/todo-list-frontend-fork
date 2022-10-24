@@ -21,7 +21,7 @@ export interface Iprops {
   id: string;
 }
 const ListDetail: FC<Iprops> = ({id}) => {
-  const {activeId, handleDragEnd, setActiveId, todoList} = useListDetail({id});
+  const {activeId, handleDragEnd, setActiveId, todoList, auth, isReadOnly} = useListDetail({id});
   const sensor = useSensorGroup();
 
   const [createUpdateListModal, setCreateUpdateListModal] = useState(false);
@@ -54,6 +54,11 @@ const ListDetail: FC<Iprops> = ({id}) => {
     setDeleteTaskModal(true);
   };
 
+  const isPrivate = () => {
+    if (todoList?.visibility === 'PRIVATE' && todoList.userId !== auth?.id) return true;
+    return false;
+  };
+
   const onClose = () => {
     if (createUpdateListModal) setCreateUpdateListModal(false);
     if (createUpdateTaskModal) setCreateUpdateTaskModal(false);
@@ -64,6 +69,15 @@ const ListDetail: FC<Iprops> = ({id}) => {
   };
 
   if (!todoList || !id) return null;
+
+  // As a private-list. Only list owner can view this list
+  if (isPrivate()) {
+    return (
+      <div className={styles['list-detail']}>
+        <h3 className="error-private-list">Error. This is private list</h3>
+      </div>
+    );
+  }
   const activeTasks = todoList.tasks.filter(list => list.isActive);
 
   return (
@@ -78,6 +92,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
               onShare={() => onShareList()}
               onAddTask={() => onCreateUpdateTask()}
               userId={todoList.userId}
+              visibility={todoList.visibility}
             />
           )}
           <DndContext
@@ -96,10 +111,11 @@ const ListDetail: FC<Iprops> = ({id}) => {
             <div className="tasks">
               {activeTasks.length === 0 && <span className="empty">Empty list</span>}
               {activeTasks.length > 0 && (
-                <SortableContext items={activeTasks.map(task => task.id!)} strategy={verticalListSortingStrategy}>
+                <SortableContext disabled={isReadOnly()} items={activeTasks.map(task => task.id!)} strategy={verticalListSortingStrategy}>
                   {activeTasks &&
                     activeTasks.map(task => (
                       <TaskItem
+                        readOnlyList={isReadOnly()}
                         key={task.id}
                         task={task}
                         onEdit={() => onCreateUpdateTask(task)}
@@ -111,7 +127,9 @@ const ListDetail: FC<Iprops> = ({id}) => {
                 </SortableContext>
               )}
               <DragOverlay>
-                {activeId ? <TaskItem statusList={todoList.status} task={activeTasks.filter(e => e.id === activeId)[0]} isSelect={true} /> : null}
+                {activeId ? (
+                  <TaskItem readOnlyList={isReadOnly()} statusList={todoList.status} task={activeTasks.filter(e => e.id === activeId)[0]} isSelect={true} />
+                ) : null}
               </DragOverlay>
             </div>
           </DndContext>

@@ -7,12 +7,14 @@ import * as yup from 'yup';
 import {ROUTES} from '@/configs/routes.config';
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
+import {VisibilityTypes} from '@/utils/constant';
 import iosAutoFocus from '@/utils/ios-autofocus';
 
 import {IProps} from '.';
 
 interface IFormInputs {
   name: string;
+  visibility: keyof typeof VisibilityTypes;
 }
 
 const Schema = yup.object().shape({
@@ -20,18 +22,22 @@ const Schema = yup.object().shape({
 });
 
 export default function useModalCreateUpdateList({onClose, onSuccess, data}: IProps) {
-  const {handleSubmit, formState, reset, setValue, setFocus, ...rest} = useForm<IFormInputs>({resolver: yupResolver(Schema)});
+  const {handleSubmit, formState, reset, setValue, getValues, setFocus, ...rest} = useForm<IFormInputs>({
+    resolver: yupResolver(Schema),
+    mode: 'onChange'
+  });
+
   const {errors, isSubmitting} = formState;
   const toast = useToast();
   const router = useRouter();
 
   const submitHandler: SubmitHandler<IFormInputs> = async formData => {
     if (isSubmitting) return;
-    const {name} = formData;
+    const {name, visibility} = formData;
     let req;
     if (data?.id) {
       const {id} = data;
-      req = api.list.update({id, name}).then(() => {
+      req = api.list.update({id, name, visibility}).then(() => {
         toast.show({type: 'success', title: 'Update List', content: 'Successful!'});
       });
     } else

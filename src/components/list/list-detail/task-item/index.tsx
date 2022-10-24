@@ -17,11 +17,12 @@ interface IProp {
   task: ITaskResponse;
   onEdit?: () => void;
   onDelete?: () => void;
-  statusList?: IStatus[];
+  statusList: IStatus[];
   isSelect: boolean;
+  readOnlyList: boolean;
 }
 
-export default function TaskItem({task, onEdit, onDelete, statusList, isSelect}: IProp) {
+export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, readOnlyList}: IProp) {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: task!.id!});
   statusList?.sort((a, b) => a.id - b.id);
 
@@ -65,15 +66,27 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect}:
         }
       }}
     >
-      <Checkbox checked={task?.isDone} onChange={() => setDone(task!.id!, task!.isDone)} />
+      <Checkbox
+        checked={task?.isDone}
+        onChange={() => setDone(task!.id!, task!.isDone)}
+        // As a read-only list. Only list owner can interact with checkbox icon
+        disabled={readOnlyList}
+      />
       <p className={`h6 ${task!.isDone ? 'checked' : ''}`} onClick={() => setDone(task!.id!, task!.isDone)}>
         {`${task!.name}`}
       </p>
       <div className="actions">
         <>
-          {statusList && <Status items={statusList} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />}
-          <IconButton name="ico-edit" size={20} onClick={onEdit} />
-          <IconButton name="ico-trash-2" size={20} onClick={onDelete} />
+          {statusList && (
+            <Status items={statusList} disabled={readOnlyList} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />
+          )}
+          {/* As a read-only list. Only list owner can edit or delete task */}
+          {!readOnlyList && (
+            <>
+              <IconButton name="ico-edit" size={20} onClick={onEdit} />
+              <IconButton name="ico-trash-2" size={20} onClick={onDelete} />
+            </>
+          )}
         </>
       </div>
     </div>

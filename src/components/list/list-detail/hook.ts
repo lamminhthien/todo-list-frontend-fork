@@ -31,6 +31,11 @@ export default function useListDetail({id}: Iprops) {
       .catch(() => router.push(ROUTES.LIST));
   };
 
+  const isReadOnly = () => {
+    if (todoList?.visibility === 'READ_ONLY' && auth?.id !== todoList.userId) return true;
+    return false;
+  };
+
   function handleDragEnd({active, over}: DragEndEvent) {
     setActiveId(null);
     if (!over) return;
@@ -85,5 +90,5 @@ export default function useListDetail({id}: Iprops) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  return {activeId, todoList, handleDragEnd, setActiveId, updateList};
+  return {activeId, todoList, handleDragEnd, setActiveId, updateList, auth, isReadOnly};
 }

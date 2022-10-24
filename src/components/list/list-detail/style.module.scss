@@ -1,4 +1,7 @@
 .list-detail :global {
+  .error-private-list {
+    @apply mt-3 flex justify-center text-red-500;
+  }
   .container {
     @apply px-4 md:p-0;
   }
