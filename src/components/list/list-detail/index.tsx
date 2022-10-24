@@ -111,12 +111,15 @@ const ListDetail: FC<Iprops> = ({id}) => {
                   {activeTasks &&
                     activeTasks.map(task => (
                       <TaskItem
+                        visibilityList={todoList.visibility}
+                        userId={auth?.id}
                         key={task.id}
                         task={task}
                         onEdit={() => onCreateUpdateTask(task)}
                         onDelete={() => onDeleteTask(task)}
                         statusList={todoList.status}
                         isSelect={false}
+                        userIdList={todoList.userId}
                       />
                     ))}
                 </SortableContext>

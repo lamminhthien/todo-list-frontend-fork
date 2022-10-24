@@ -1,6 +1,7 @@
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {SelectChangeEvent} from '@mui/material';
+import {useEffect, useState} from 'react';
 
 import Checkbox from '@/core-ui/checkbox';
 import IconButton from '@/core-ui/icon-button';
@@ -8,6 +9,7 @@ import api from '@/data/api/index';
 import {IStatus} from '@/data/api/types/list.type';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
+import {VisibilityTypes} from '@/utils/constant';
 
 import Status from '../status';
 
@@ -19,11 +21,16 @@ interface IProp {
   onDelete?: () => void;
   statusList?: IStatus[];
   isSelect: boolean;
+  visibilityList?: string;
+  userId?: string;
+  userIdList?: string;
 }
 
-export default function TaskItem({task, onEdit, onDelete, statusList, isSelect}: IProp) {
+export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, visibilityList, userId, userIdList}: IProp) {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: task!.id!});
   statusList?.sort((a, b) => a.id - b.id);
+
+  const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
 
   const setDone = (id: string, isDone: boolean) => {
     if (!id) return;
@@ -45,6 +52,11 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect}:
       .catch(() => {});
   };
 
+  useEffect(() => {
+    if (visibilityList === VisibilityTypes.READ_ONLY && userId !== userIdList) setIsReadOnly(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div
       className={`item ${isSelect && 'select'}`}
@@ -65,7 +77,12 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect}:
         }
       }}
     >
-      <Checkbox checked={task?.isDone} onChange={() => setDone(task!.id!, task!.isDone)} />
+      <Checkbox
+        checked={task?.isDone}
+        onChange={() => setDone(task!.id!, task!.isDone)}
+        // As a read-only list. Only list owner can interact with checkbox icon
+        disabled={isReadOnly}
+      />
       <p className={`h6 ${task!.isDone ? 'checked' : ''}`} onClick={() => setDone(task!.id!, task!.isDone)}>
         {`${task!.name}`}
       </p>
