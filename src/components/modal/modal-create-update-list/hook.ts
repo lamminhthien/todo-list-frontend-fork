@@ -13,6 +13,7 @@ import {IProps} from '.';
 
 interface IFormInputs {
   name: string;
+  visibility: boolean;
 }
 
 const Schema = yup.object().shape({
@@ -27,11 +28,11 @@ export default function useModalCreateUpdateList({onClose, onSuccess, data}: IPr
 
   const submitHandler: SubmitHandler<IFormInputs> = async formData => {
     if (isSubmitting) return;
-    const {name} = formData;
+    const {name, visibility} = formData;
     let req;
     if (data?.id) {
       const {id} = data;
-      req = api.list.update({id, name}).then(() => {
+      req = api.list.update({id, name, visibility}).then(() => {
         toast.show({type: 'success', title: 'Update List', content: 'Successful!'});
       });
     } else

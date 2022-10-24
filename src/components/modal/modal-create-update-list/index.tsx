@@ -2,9 +2,11 @@ import cls from 'classnames';
 import {FC} from 'react';
 
 import Button from '@/core-ui/button';
+import DropdownBtn from '@/core-ui/dropdownBtn';
 import Input from '@/core-ui/input';
 import {Modal} from '@/core-ui/modal';
 import {IListResponse} from '@/data/api/types/list.type';
+import {VisibilityTypes} from '@/utils/constant';
 
 import useModalCreateUpdateList from './hook';
 import styles from './style.module.scss';
@@ -29,6 +31,7 @@ const ModalCreateUpdateList: FC<IProps> = prop => {
             </Modal.Header>
             <Modal.Body>
               <Input error={errors.name?.message} value={data?.name} autoFocus={true} placeholder={'Enter your list name'} {...register('name')} />
+              <DropdownBtn {...register('visibility')} className="input-type" defaultValue={'Fibonacci'} items={Object.keys(VisibilityTypes)} />
             </Modal.Body>
             <Modal.Footer>
               <div className="flex w-full gap-x-3 md:gap-x-4">

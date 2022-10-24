@@ -11,6 +11,7 @@ export interface IListCreate {
 export interface IListUpdate extends IListGetOne {
   name?: string;
   isActive?: boolean;
+  visibility?: boolean;
 }
 
 export interface IStatus {
