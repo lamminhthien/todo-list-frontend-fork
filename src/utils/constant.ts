@@ -1,5 +1,5 @@
 export const VisibilityTypes = {
-  READ_ONLY: 'read-only',
-  PRIVATE: 'private',
-  PUBLIC: 'public'
+  READ_ONLY: 'READ-ONLY',
+  PRIVATE: 'PRIVATE',
+  PUBLIC: 'PUBLIC'
 };
