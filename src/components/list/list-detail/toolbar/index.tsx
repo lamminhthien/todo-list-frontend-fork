@@ -2,34 +2,34 @@ import {MenuItem, Select} from '@mui/material';
 
 import Button from '@/core-ui/button';
 import Icon from '@/core-ui/icon';
-import {IListResponse} from '@/data/api/types/list.type';
+import {ITodolistResponse} from '@/data/api/types/list.type';
 import {useStateAuth} from '@/states/auth';
 
+import FavoriteButton from '../../favorite-button';
 import styles from './style.module.scss';
 
 interface IProp {
-  todolist: IListResponse;
+  todolist: ITodolistResponse;
   onEdit: () => void;
   onDelete: () => void;
   onShare: () => void;
   onAddTask: () => void;
   filterValue: number;
   onFilter: (value: number) => void;
+  onSuccessFavorite: () => void;
 }
-export default function ToolbarDetail({todolist, onEdit, onDelete, onShare, onAddTask, onFilter, filterValue}: IProp) {
+export default function ToolbarDetail({todolist, filterValue, onEdit, onDelete, onShare, onAddTask, onFilter, onSuccessFavorite}: IProp) {
   const statusFilters = todolist.status.sort((a, b) => a.index - b.index);
-
   const auth = useStateAuth();
   return (
     <>
       <div className={styles['toolbar-detail']}>
         <div className="toolbar">
           <div className="left">
-            {/* List Title */}
             <div className="title">
               <h2>
                 {todolist.name}
-                <Button startIcon={<Icon name="ico-star" className="text-yellow-400" />} />
+                <FavoriteButton onSuccess={onSuccessFavorite} todolist={todolist} />
               </h2>
             </div>
           </div>
