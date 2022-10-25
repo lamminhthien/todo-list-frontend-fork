@@ -90,5 +90,5 @@ export default function useListDetail({id}: Iprops) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  return {activeId, todoList, handleDragEnd, setActiveId, updateList, auth, isReadOnly};
+  return {activeId, todoList, handleDragEnd, setActiveId, updateList, isReadOnly, auth};
 }

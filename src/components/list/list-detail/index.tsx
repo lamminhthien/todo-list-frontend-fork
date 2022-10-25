@@ -22,6 +22,7 @@ export interface Iprops {
 }
 const ListDetail: FC<Iprops> = ({id}) => {
   const {activeId, handleDragEnd, setActiveId, todoList, auth, isReadOnly} = useListDetail({id});
+  const [filterValue, SetFilterValue] = useState(0);
   const sensor = useSensorGroup();
 
   const [createUpdateListModal, setCreateUpdateListModal] = useState(false);
@@ -68,9 +69,12 @@ const ListDetail: FC<Iprops> = ({id}) => {
     if (selectedTask) setSelectedTask(undefined);
   };
 
+  const onFilter = (e: number) => {
+    SetFilterValue(e);
+  };
+
   if (!todoList || !id) return null;
 
-  // As a private-list. Only list owner can view this list
   if (isPrivate()) {
     return (
       <div className={styles['list-detail']}>
@@ -78,7 +82,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
       </div>
     );
   }
-  const activeTasks = todoList.tasks.filter(list => list.isActive);
+  const activeTasks = todoList.tasks.filter(task => task.isActive && (!filterValue || task.statusId === filterValue));
 
   return (
     <>
@@ -86,13 +90,13 @@ const ListDetail: FC<Iprops> = ({id}) => {
         <div className="container">
           {todoList.name && (
             <ToolbarDetail
-              nameTodo={todoList.name || ''}
+              todolist={todoList}
               onEdit={() => onUpdateList()}
               onDelete={() => onDeleteList()}
               onShare={() => onShareList()}
               onAddTask={() => onCreateUpdateTask()}
-              userId={todoList.userId}
-              visibility={todoList.visibility}
+              filterValue={filterValue}
+              onFilter={onFilter}
             />
           )}
           <DndContext
@@ -104,7 +108,6 @@ const ListDetail: FC<Iprops> = ({id}) => {
               if (!active) {
                 return;
               }
-
               setActiveId(active.id);
             }}
           >
