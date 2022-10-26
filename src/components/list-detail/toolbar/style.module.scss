@@ -18,6 +18,9 @@
       }
     }
     .right {
+      & > *:not(.filter) {
+        @apply hidden sm:flex;
+      }
       @apply gap-4 lg:gap-6;
       button {
         p {
