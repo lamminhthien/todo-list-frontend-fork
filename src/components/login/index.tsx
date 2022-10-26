@@ -1,19 +1,20 @@
-import cn from 'classnames';
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-undef */
 import React, {FC, useEffect} from 'react';
 
+import ABC_Logo from '@/components/common/icons/abc-logo';
+import LoginDecor from '@/components/login-decor';
 import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
 import {AuthActions} from '@/states/auth';
 import {useDispatchAuth} from '@/states/auth/context';
 import LocalStorage from '@/utils/local-storage';
 
-import TodoListLogo from '../common/icons/todolist-logo';
-import ModalThirdPartyLogin from '../modal/modal-third-party-login';
 import useGuestLoginHook from './hooks';
 import styles from './style.module.scss';
 
 const Login: FC = () => {
-  const {formState, modalOpen, onSubmit, register, setModalOpen} = useGuestLoginHook();
+  const {formState, onSubmit, register, openGooglePopUp} = useGuestLoginHook();
   const {errors, isSubmitting} = formState;
   const dispatchAuth = useDispatchAuth();
   useEffect(() => {
@@ -24,31 +25,43 @@ const Login: FC = () => {
 
   return (
     <>
-      <div className={cn(styles['com-quick-play'])}>
-        <div className="container">
-          <div className="inner">
-            <div className="logo-wrapper">
-              <TodoListLogo width={249} />
-            </div>
-            <form onSubmit={onSubmit}>
-              <h2 className="text-center">Let&apos;s start!</h2>
-              <Input placeholder="Enter your name" className="name-input" maxLength={33} error={errors.name?.message} {...register('name')} />
-              <Button className="btn-submit" variant="contained" color="primary" type="submit" text="Enter" loading={isSubmitting} disabled={isSubmitting} />
+      <div className={styles['com-login']}>
+        <div className={styles.container}>
+          <div className={styles.inner}>
+            <form onSubmit={onSubmit} className={styles.form}>
+              <div className={styles['logo-wrapper']}>
+                <ABC_Logo />
+              </div>
+              <div className={styles.welcome}>
+                <h2>Welcome to To-do list 🖐️</h2>
+                <p>Please sign-in and start</p>
+              </div>
+              <Input placeholder="Enter your name" className={styles['name-input']} maxLength={33} error={errors.name?.message} {...register('name')} />
               <Button
-                className="btn-submit"
+                className={styles['btn-submit']}
                 variant="contained"
-                color="primary"
-                type="button"
-                text="Login With Email"
-                onClick={() => setModalOpen(true)}
+                color="info"
+                type="submit"
+                text="LOGIN"
                 loading={isSubmitting}
                 disabled={isSubmitting}
               />
+              <div className="third-party-login">
+                <hr className={styles.or} data-content="or" />
+                <div className={styles['login-buttons']}>
+                  <div className="github"></div>
+                  <div className="google">
+                    <Button onClick={openGooglePopUp}>
+                      <img src="/google.png" alt="Google Login" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </form>
           </div>
+          <LoginDecor />
         </div>
       </div>
-      <ModalThirdPartyLogin open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 };
