@@ -5,7 +5,7 @@ name: Deploy to Staging
 
 on:
   push:
-    branches: ["release"]
+    branches: ["main"]
 
 env:
   APP_ENV: ${{ secrets.STAGING }}
