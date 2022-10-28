@@ -1,0 +1,22 @@
+.tool-filter :global {
+  @apply relative flex items-center gap-1.5 lg:h-7;
+  svg {
+    @apply hidden;
+  }
+  .filter-icon {
+    @apply absolute h-6;
+    svg {
+      @apply hidden;
+    }
+  }
+  .MuiSelect-select {
+    @apply h-6 p-0 pl-5;
+    padding-right: 0 !important;
+    .dropdown-name {
+      @apply mt-2 h-auto py-0 px-1 align-middle text-brand;
+    }
+  }
+  .MuiOutlinedInput-notchedOutline {
+    @apply border-0 p-0;
+  }
+}

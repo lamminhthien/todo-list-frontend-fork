@@ -26,11 +26,4 @@
   .logout {
     @apply ml-1 cursor-pointer text-base text-red-500;
   }
-
-  #ToolBarMenu-button {
-    @apply sm:hidden;
-    svg {
-      @apply fill-[#334155];
-    }
-  }
 }

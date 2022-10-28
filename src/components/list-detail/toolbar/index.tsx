@@ -1,14 +1,14 @@
-import {Menu, MenuItem, Select, SxProps, Theme} from '@mui/material';
-import {useDispatch, useSelector} from 'react-redux';
+import classNames from 'classnames';
 
-import Button from '@/core-ui/button';
 import Icon from '@/core-ui/icon';
 import {ITodolistResponse} from '@/data/api/types/list.type';
 import {useStateAuth} from '@/states/auth';
-import {globalSlice, RootState} from '@/states/store';
 
 import FavoriteButton from '../../common/favorite-button';
-import styles from './style.module.scss';
+import style from './style.module.scss';
+import Tool, {IToolProps} from './tool';
+import ToolFilter from './tool-filter';
+import ToolMenu from './tool-menu';
 
 interface IProp {
   todolist: ITodolistResponse;
@@ -20,133 +20,54 @@ interface IProp {
   onFilter: (value: number) => void;
   onSuccessFavorite: () => void;
 }
+
 export default function ToolbarDetail({todolist, filterValue, onEdit, onDelete, onShare, onAddTask, onFilter, onSuccessFavorite}: IProp) {
-  const globalState = useSelector((state: RootState) => state.global);
-  const anchorEl = globalState.anchorElToolBarMenu;
-  const openMenu = Boolean(anchorEl);
-  const dispatch = useDispatch();
-
-  const handleClose = () => {
-    dispatch(globalSlice.actions.setAnchorElToolBarMenu(null));
-  };
-  const statusFilters = todolist.status.sort((a, b) => a.index - b.index);
+  const {name, status, visibility, userId} = todolist;
+  const filterList = status.sort((a, b) => a.index - b.index);
   const auth = useStateAuth();
+  const isInteractive = visibility === 'PUBLIC' || auth?.id === userId;
+  const deleteToolProps: IToolProps = {
+    icon: <Icon name="ico-trash-2" />,
+    text: 'Deletelist',
+    hidden: !isInteractive,
+    onClick: onDelete
+  };
+  const shareToolProps: IToolProps = {
+    icon: <Icon name="ico-share-2" />,
+    text: 'Share',
+    onClick: onShare
+  };
+  const addTaskToolProps: IToolProps = {
+    icon: <Icon name="ico-plus-circle" />,
+    text: 'Add Task',
+    hidden: !isInteractive,
+    onClick: onAddTask
+  };
+  const settingToolProps: IToolProps = {
+    icon: <Icon name="ico-settings" />,
+    text: 'Settings',
+    hidden: !isInteractive,
+    onClick: onEdit
+  };
 
-  const sxMenuItem: SxProps<Theme> = {justifyContent: 'end', fontFamily: 'inherit', padding: '4px 16px', height: 36, minHeight: 36, minWidth: 160};
+  const toolMenuItems = [deleteToolProps, shareToolProps, addTaskToolProps, settingToolProps]
+    .filter(item => !item.hidden)
+    .map((item, idx) => <Tool key={idx} {...{...item, className: 'flex-row-reverse'}} />);
+
   return (
-    <>
-      <div className={styles['toolbar-detail']}>
-        <div className="toolbar">
-          <div className="left">
-            <div className="title">{todolist.name}</div>
-            <FavoriteButton className="favorite" onSuccess={onSuccessFavorite} todolist={todolist} />
-          </div>
-          <div className="right">
-            {/* List Delete Button */}
-            {auth?.id === todolist.userId && (
-              <Button startIcon={<Icon name="ico-trash-2" />} onClick={onDelete}>
-                <span className="h5 font-medium">Delete List</span>
-              </Button>
-            )}
-            {/* List Share Button */}
-            <Button startIcon={<Icon name="ico-share-2" />} onClick={onShare}>
-              <span className="h5 font-medium">Share</span>
-            </Button>
-            {/* List Add Button */}
-            {/* This add task button will only appear when visibility in this list = public */}
-            {(auth?.id === todolist.userId || todolist.visibility === 'PUBLIC') && (
-              <Button className="btn-add-todo" startIcon={<Icon name="ico-plus-circle" />} onClick={onAddTask}>
-                <span className="h5 font-medium">Add Task</span>
-              </Button>
-            )}
-            {/* List All Button */}
-            <div className="filter">
-              <div className="filter-icon">
-                <Icon name="ico-filter" />
-              </div>
-              <Select value={filterValue} sx={{fontFamily: 'inherit'}} onChange={e => onFilter(e.target.value as number)}>
-                <MenuItem key={0} value={0} sx={{color: '#000000', ...sxMenuItem}}>
-                  <div className="dropdown-item">
-                    <span className="dropdown-name vertical-align inline-block h-7 rounded px-2 py-0 text-h6" style={{backgroundColor: '#F1F5F9'}}>
-                      All
-                    </span>
-                  </div>
-                </MenuItem>
-                {statusFilters.map(({id, name, color}) => {
-                  return (
-                    <MenuItem key={id} value={id} sx={{color, ...sxMenuItem}}>
-                      <div className="dropdown-item">
-                        <span
-                          className="dropdown-name vertical-align my-1 inline-block h-7 rounded px-2 py-0 text-h6"
-                          style={{color, backgroundColor: color + '32'}}
-                        >
-                          {name}
-                        </span>
-                      </div>
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </div>
-            {/* List Settings Button */}
-            {auth?.id === todolist.userId && (
-              <Button startIcon={<Icon name="ico-settings" />} onClick={onEdit}>
-                <span className="h5 font-medium">Settings</span>
-              </Button>
-            )}
-          </div>
-          <Menu
-            id="ToolBarMenu-menu"
-            anchorEl={anchorEl}
-            open={openMenu}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'ToolBarMenu-button'
-            }}
-          >
-            <MenuItem
-              onClick={() => {
-                onAddTask();
-                handleClose();
-              }}
-              sx={{justifyContent: 'end', fontFamily: 'inherit', alignItems: 'middle'}}
-            >
-              <span className="mr-1">Add Task</span>
-              <Icon name="ico-plus-circle" />
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                onDelete();
-                handleClose();
-              }}
-              sx={{justifyContent: 'end', fontFamily: 'inherit', alignItems: 'middle'}}
-            >
-              <span className="mr-1">Delete List</span>
-              <Icon name="ico-trash-2" />
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                onShare();
-                handleClose();
-              }}
-              sx={{justifyContent: 'end', fontFamily: 'inherit', alignItems: 'middle'}}
-            >
-              <span className="mr-1">Share</span>
-              <Icon name="ico-share-2" />
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                onEdit();
-                handleClose();
-              }}
-              sx={{justifyContent: 'end', fontFamily: 'inherit', alignItems: 'middle'}}
-            >
-              <span className="mr-1">Settings</span>
-              <Icon name="ico-settings" />
-            </MenuItem>
-          </Menu>
-        </div>
+    <div className={style.toolbar}>
+      <div className={classNames(style.tools, style.left)}>
+        <div className={style.title}>{name}</div>
+        <FavoriteButton onSuccess={onSuccessFavorite} todolist={todolist} />
       </div>
-    </>
+      <div className={classNames(style.tools, style.right)}>
+        <Tool {...deleteToolProps} className={style['tool-outer']} />
+        <Tool {...shareToolProps} className={style['tool-outer']} />
+        <Tool {...addTaskToolProps} className={style['tool-outer']} />
+        <ToolFilter {...{filterValue, filterList, onFilter}} />
+        <Tool {...settingToolProps} className={style['tool-outer']} />
+        <ToolMenu className="sm:hidden" items={toolMenuItems} />
+      </div>
+    </div>
   );
 }

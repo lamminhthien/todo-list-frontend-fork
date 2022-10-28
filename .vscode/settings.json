@@ -10,6 +10,8 @@
   "files.exclude": {
     "nginx/": true,
     ".swc/": true,
+    "node_modules/": true,
+    "dist/": true,
     "tsconfig.tsbuildinfo": true,
     ".yarnrc": true,
     ".editorconfig": true,
