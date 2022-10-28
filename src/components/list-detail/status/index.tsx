@@ -28,7 +28,7 @@ const Status: FC<IProps> = forwardRef(({items, className, status, ...rest}, ref)
           return (
             <MenuItem key={id} value={id} sx={{color, justifyContent: 'end', fontFamily: 'inherit', padding: '4px 16px'}}>
               <div className="relative">
-                <span className="status-name vertical-align inline-block h-7 rounded px-2 py-0 text-h6" style={{backgroundColor: color + '32'}}>
+                <span className="status-name inline-block h-7 rounded px-2 py-0 text-h6" style={{backgroundColor: color + '32'}}>
                   {name}
                 </span>
                 <div className="mobile-icon hidden">

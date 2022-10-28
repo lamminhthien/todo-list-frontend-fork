@@ -51,62 +51,64 @@ export default function List() {
     <>
       <div className={styles['page-list']}>
         <div className="container">
-          <div className="toolbar">
-            <div className="left">
-              <ListTitle tilte="MY LIST" />
+          <div className="my-list">
+            <div className="toolbar">
+              <div className="left">
+                <ListTitle tilte="MY LIST" />
+              </div>
+              <div className="right">
+                <Button className="btn-create-new" startIcon={<Icon name="ico-plus-circle" size={28} />} onClick={() => onCreateUpdate()}>
+                  <span className="h5 font-medium">New List</span>
+                </Button>
+              </div>
             </div>
-            <div className="right">
-              <Button className="btn-create-new" startIcon={<Icon name="ico-plus-circle" size={28} />} onClick={() => onCreateUpdate()}>
-                <span className="h5 font-medium">New List</span>
-              </Button>
-            </div>
-          </div>
-          <div className="list">
-            {!yourList.length && <span className="empty">Empty list</span>}
-            {yourList.map(todolist => {
-              return (
-                <div className="item" key={todolist.id}>
-                  <p className="title" onClick={() => onDetail(todolist.id)}>
-                    {todolist.name}
-                  </p>
-                  <div className="actions">
-                    <FavoriteButton todolist={todolist} onSuccess={onSuccessFavorite} />
-                    <IconButton name="ico-edit" onClick={() => onCreateUpdate(todolist)} />
-                    <IconButton name="ico-trash-2" onClick={() => onDelete(todolist)} />
-                    <IconButton name="ico-share-2 " onClick={() => onShare(todolist)} />
-                    <IconButton name="ico-chevron-right" onClick={() => onDetail(todolist.id)} />
+            <div className="list">
+              {!yourList.length && <span className="empty">Empty list</span>}
+              {yourList.map(todolist => {
+                return (
+                  <div className="item" key={todolist.id}>
+                    <p className="title" onClick={() => onDetail(todolist.id)}>
+                      {todolist.name}
+                    </p>
+                    <div className="actions">
+                      <FavoriteButton todolist={todolist} onSuccess={onSuccessFavorite} />
+                      <IconButton name="ico-edit" onClick={() => onCreateUpdate(todolist)} />
+                      <IconButton name="ico-trash-2" onClick={() => onDelete(todolist)} />
+                      <IconButton name="ico-share-2 " onClick={() => onShare(todolist)} />
+                      <IconButton name="ico-chevron-right" onClick={() => onDetail(todolist.id)} />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="toolbar">
-            <div className="left">
-              <ListTitle tilte="FAVORITE LIST" />
+                );
+              })}
             </div>
           </div>
-
-          <div className="list">
-            {!favoriteList.length && <span className="empty">Empty list</span>}
-            {favoriteList.map(todolist => {
-              return (
-                <div className="item" key={todolist.id}>
-                  <p className="title" onClick={() => onDetail(todolist.id)}>
-                    {todolist.name}
-                  </p>
-                  <div className="actions">
-                    <FavoriteButton todolist={todolist} onSuccess={onSuccessFavorite} />
-                    <IconButton name="ico-edit" onClick={() => onCreateUpdate(todolist)} />
-                    <IconButton name="ico-trash-2" onClick={() => onDelete(todolist)} />
-                    <IconButton name="ico-share-2 " onClick={() => onShare(todolist)} />
-                    <IconButton name="ico-chevron-right" onClick={() => onDetail(todolist.id)} />
+          <div className="favorite-list">
+            <div className="toolbar">
+              <div className="left">
+                <ListTitle tilte="FAVORITE LIST" />
+              </div>
+            </div>
+            <div className="list">
+              {!favoriteList.length && <span className="empty">Empty list</span>}
+              {favoriteList.map(todolist => {
+                return (
+                  <div className="item" key={todolist.id}>
+                    <p className="title" onClick={() => onDetail(todolist.id)}>
+                      {todolist.name}
+                    </p>
+                    <div className="actions">
+                      <FavoriteButton todolist={todolist} onSuccess={onSuccessFavorite} />
+                      <IconButton name="ico-edit" onClick={() => onCreateUpdate(todolist)} />
+                      <IconButton name="ico-trash-2" onClick={() => onDelete(todolist)} />
+                      <IconButton name="ico-share-2 " onClick={() => onShare(todolist)} />
+                      <IconButton name="ico-chevron-right" onClick={() => onDetail(todolist.id)} />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
-
         <FloatIcon className="float-icon" onClick={() => onCreateUpdate()} />
         <ModalCreateUpdateList open={createUpdateModel} onClose={onClose} data={selectedList} onSuccess={updateYourList} />
         {selectedList && (

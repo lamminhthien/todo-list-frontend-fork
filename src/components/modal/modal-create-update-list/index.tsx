@@ -28,15 +28,20 @@ const ModalCreateUpdateList: FC<IProps> = prop => {
         <Modal className={cls(styles['com-modal-todo-add-edit'], 'max-w-xl')} variant="center" open={open} onClose={onClose}>
           <form onSubmit={onSubmit}>
             <Modal.Header>
-              <h3 className="title">{data ? 'Setting' : 'Create New List'}</h3>
+              <h3 className="title">{data ? 'Settings' : 'Create New List'}</h3>
             </Modal.Header>
             <Modal.Body>
               <Input error={errors.name?.message} value={data?.name} autoFocus={true} placeholder={'Enter your list name'} {...register('name')} />
               {data && (
-                <Select {...register('visibility')} className="input-type" defaultValue={data?.visibility ? data.visibility : VisibilityTypes.PUBLIC}>
+                <Select
+                  {...register('visibility')}
+                  className="input-type"
+                  defaultValue={data?.visibility ? data.visibility : VisibilityTypes.PUBLIC}
+                  sx={{fontFamily: 'inherit'}}
+                >
                   {Object.keys(VisibilityTypes).map((key, idx) => {
                     return (
-                      <MenuItem key={key} value={key}>
+                      <MenuItem key={key} value={key} sx={{fontFamily: 'inherit'}}>
                         {Object.values(VisibilityTypes)[idx]}
                       </MenuItem>
                     );

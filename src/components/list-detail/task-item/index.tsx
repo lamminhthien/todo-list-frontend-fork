@@ -26,6 +26,7 @@ interface IProp {
 export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, readonly}: IProp) {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: task!.id!});
   statusList?.sort((a, b) => a.id - b.id);
+  const statusValue = statusList.filter(e => e.id === task.statusId)[0];
 
   const setDone = (id: string, isDone: boolean) => {
     if (!id) return;
@@ -57,7 +58,6 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, 
       onClick={e => {
         const elmCheckbox = e.currentTarget.querySelector('.form-checkbox') as HTMLInputElement | null;
         const elmText = e.currentTarget.querySelector('h6')?.classList;
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         if (task?.isDone) {
           elmText?.remove('checked');
           elmCheckbox?.removeAttribute('checked');
@@ -67,28 +67,18 @@ export default function TaskItem({task, onEdit, onDelete, statusList, isSelect, 
         }
       }}
     >
-      <Checkbox
-        checked={task?.isDone}
-        onChange={() => setDone(task!.id!, task!.isDone)}
-        // As a read-only list. Only list owner can interact with checkbox icon
-        disabled={readonly}
-      />
+      <Checkbox checked={task?.isDone} onChange={() => setDone(task!.id!, task!.isDone)} disabled={readonly} />
       <p className={`h6 ${task!.isDone ? 'checked' : ''}`} onClick={() => setDone(task!.id!, task!.isDone)}>
         {`${task!.name}`}
       </p>
       <div className="actions">
-        <>
-          {statusList && (
-            <Status items={statusList} disabled={readonly} status={statusList.filter(e => e.id === task.statusId)[0]} onChange={e => onChangeStatus(e)} />
-          )}
-          {/* As a read-only list. Only list owner can edit or delete task */}
-          {!readonly && (
-            <>
-              <IconButton name="ico-edit" size={20} onClick={onEdit} />
-              <IconButton name="ico-trash-2" size={20} onClick={onDelete} />
-            </>
-          )}
-        </>
+        {statusList && <Status items={statusList} readOnly={readonly} status={statusValue} onChange={e => onChangeStatus(e)} />}
+        {!readonly && (
+          <>
+            <IconButton name="ico-edit" size={20} onClick={onEdit} />
+            <IconButton name="ico-trash-2" size={20} onClick={onDelete} />
+          </>
+        )}
       </div>
     </div>
   );
