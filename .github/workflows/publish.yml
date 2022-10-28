@@ -4,8 +4,6 @@
 name: Publish
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       releaseTypes:
@@ -27,7 +25,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
@@ -64,7 +61,6 @@ jobs:
         run: RUNNER_TRACKING_ID="" && yarn build && pm2 start yarn -- start && pm2 restart yarn
 
   prod:
-    if: github.event.inputs.releaseTypes == 'prod'
     name: "Deploy to Production"
     environment:
       name: production
@@ -74,7 +70,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
