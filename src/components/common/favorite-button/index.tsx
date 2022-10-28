@@ -1,11 +1,13 @@
+import classNames from 'classnames';
 import {FC} from 'react';
 
-import Button from '@/core-ui/button';
-import Icon from '@/core-ui/icon';
+import IconButton from '@/core-ui/icon-button';
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
 import {ITodolistResponse} from '@/data/api/types/list.type';
 import {useStateAuth} from '@/states/auth';
+
+import style from './style.module.scss';
 
 interface IProps {
   className?: string;
@@ -27,14 +29,9 @@ const FavoriteButton: FC<IProps> = ({className, todolist, onSuccess}) => {
       .then(onSuccess)
       .catch(() => toast.show({type: 'warning', title: 'Favorite', content: 'An error occurred, please try again'}));
   };
+  const iconName = isFavorited ? 'ico-star-filled' : 'ico-star';
 
-  return (
-    <Button
-      className={className}
-      startIcon={isFavorited ? <Icon name="ico-star-filled" className="text-yellow-400" /> : <Icon name="ico-star" className="text-yellow-400" />}
-      onClick={onFavorite}
-    />
-  );
+  return <IconButton className={classNames(style.icon, className)} name={iconName} onClick={onFavorite} />;
 };
 
 export default FavoriteButton;
