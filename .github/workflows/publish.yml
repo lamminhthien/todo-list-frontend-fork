@@ -21,7 +21,7 @@ jobs:
   staging:
     name: "Deploy to Staging"
     environment:
-      name: Staging
+      name: staging
     runs-on: [self-hosted, staging]
 
     strategy:
@@ -67,7 +67,7 @@ jobs:
     if: github.event.inputs.releaseTypes == 'prod'
     name: "Deploy to Production"
     environment:
-      name: Production
+      name: production
     needs: [staging]
     runs-on: [self-hosted, production]
 
