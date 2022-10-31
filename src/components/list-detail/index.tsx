@@ -1,8 +1,9 @@
-import {DndContext, DragOverlay} from '@dnd-kit/core';
-import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
+import {DragOverlay} from '@dnd-kit/core';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import {FC, useState} from 'react';
 
+import ErrorInformation from '@/components/common/404';
+import DNDContext from '@/components/common/dnd-context';
 import TaskItem from '@/components/list-detail/task-item';
 import ToolbarDetail from '@/components/list-detail/toolbar';
 import ModalCreateUpdateList from '@/components/modal/modal-create-update-list';
@@ -12,9 +13,7 @@ import ModalShareList from '@/components/modal/modal-share-list';
 import FloatIcon from '@/core-ui/float-icon';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
-import {useSensorGroup} from '@/lib/dnd-kit/sensor/sensor-group';
 
-import ErrorInformation from '../common/404';
 import useListDetail from './hook';
 import styles from './style.module.scss';
 
@@ -22,9 +21,8 @@ export interface Iprops {
   id: string;
 }
 const ListDetail: FC<Iprops> = ({id}) => {
-  const {activeId, handleDragEnd, setActiveId, todoList, auth, isReadOnly, updateList} = useListDetail({id});
+  const {activeId, setTodoList, todoList, auth, isReadOnly, updateList} = useListDetail({id});
   const [filterValue, SetFilterValue] = useState(0);
-  const sensor = useSensorGroup();
   const readonly = isReadOnly();
 
   const [createUpdateListModal, setCreateUpdateListModal] = useState(false);
@@ -98,18 +96,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
           onFilter={onFilter}
           onSuccessFavorite={onSuccessFavorite}
         />
-        <DndContext
-          sensors={sensor}
-          onDragCancel={() => setActiveId(null)}
-          onDragEnd={handleDragEnd}
-          modifiers={[restrictToVerticalAxis]}
-          onDragStart={({active}) => {
-            if (!active) {
-              return;
-            }
-            setActiveId(active.id);
-          }}
-        >
+        <DNDContext list={todoList} setList={setTodoList}>
           <div className="tasks">
             {tasksData.length === 0 && <span className="empty">Empty list</span>}
             {tasksData.length > 0 && (
@@ -133,7 +120,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
               ) : null}
             </DragOverlay>
           </div>
-        </DndContext>
+        </DNDContext>
         <ModalCreateUpdateList open={createUpdateListModal} onClose={onClose} data={todoList} onSuccess={socketUpdateList} />
         <ModalDelete open={deleteListModal} onClose={onClose} data={selectedTask || todoList} onSuccess={socketUpdateList} />
         <ModalShareList open={shareListModal} onClose={onClose} data={todoList} />

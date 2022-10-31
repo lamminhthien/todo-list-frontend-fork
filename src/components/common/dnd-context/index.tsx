@@ -1,7 +1,7 @@
 import {DndContext, DragEndEvent, UniqueIdentifier} from '@dnd-kit/core';
 import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 import {arrayMove} from '@dnd-kit/sortable';
-import {useState} from 'react';
+import {ReactNode, useState} from 'react';
 
 import api from '@/data/api';
 import {ITodolistResponse} from '@/data/api/types/list.type';
@@ -12,9 +12,10 @@ import {useSensorGroup} from '@/lib/dnd-kit/sensor/sensor-group';
 interface IProp {
   list: ITodolistResponse;
   setList: (list: ITodolistResponse) => void;
+  children: ReactNode;
 }
 
-const DNDContext = ({list, setList}: IProp) => {
+const DNDContext = ({list, setList, children}: IProp) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   const sensor = useSensorGroup();
@@ -60,7 +61,9 @@ const DNDContext = ({list, setList}: IProp) => {
           setActiveId(active.id);
         }}
         onDragEnd={handleDragEnd}
-      ></DndContext>
+      >
+        {children}
+      </DndContext>
     </>
   );
 };
