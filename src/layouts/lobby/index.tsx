@@ -8,8 +8,7 @@ import styles from './style.module.scss';
 export default function LobbyLayout({children}: React.PropsWithChildren<Record<string, unknown>>) {
   useEffect(() => {
     if (window !== undefined) {
-      document.getElementsByTagName('body')[0].classList.add("bg-[url('/image/bg-lobby.png')]");
-      console.log('render background because scrollbar come from body');
+      document.getElementsByTagName('body')[0].classList.add("bg-[url('/image/bg-lobby.png')]", 'bg-cover', 'bg-center');
     }
   });
   return (
