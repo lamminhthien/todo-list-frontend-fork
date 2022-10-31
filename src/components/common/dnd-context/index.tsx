@@ -1,8 +1,9 @@
-import {DndContext, DragEndEvent, UniqueIdentifier} from '@dnd-kit/core';
+import {DndContext, DragEndEvent, DragOverlay, UniqueIdentifier} from '@dnd-kit/core';
 import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
-import {arrayMove} from '@dnd-kit/sortable';
-import {ReactNode, useState} from 'react';
+import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
+import {useState} from 'react';
 
+import TaskItem from '@/components/list-detail/task-item';
 import api from '@/data/api';
 import {ITodolistResponse} from '@/data/api/types/list.type';
 import {ITaskResponse} from '@/data/api/types/task.type';
@@ -12,12 +13,14 @@ import {useSensorGroup} from '@/lib/dnd-kit/sensor/sensor-group';
 interface IProp {
   list: ITodolistResponse;
   setList: (list: ITodolistResponse) => void;
-  children: ReactNode;
+  tasksData: ITaskResponse[];
+  readonly: boolean;
+  onCreateUpdateTask: (task: ITaskResponse) => void;
+  onDeleteTask: (task: ITaskResponse) => void;
 }
 
-const DNDContext = ({list, setList, children}: IProp) => {
+const DNDContext = ({list, setList, tasksData, readonly, onCreateUpdateTask, onDeleteTask}: IProp) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-
   const sensor = useSensorGroup();
 
   function handleDragEnd({active, over}: DragEndEvent) {
@@ -43,8 +46,6 @@ const DNDContext = ({list, setList, children}: IProp) => {
             .catch(() => {});
         }
       });
-
-      return {over_id: over.id, active_id: active.id, active: activeId};
     }
   }
 
@@ -62,7 +63,27 @@ const DNDContext = ({list, setList, children}: IProp) => {
         }}
         onDragEnd={handleDragEnd}
       >
-        {children}
+        <div className="tasks">
+          {tasksData.length === 0 && <span className="empty">Empty list</span>}
+          {tasksData.length > 0 && (
+            <SortableContext disabled={readonly} items={tasksData.map(task => task.id!)} strategy={verticalListSortingStrategy}>
+              {tasksData.map(task => (
+                <TaskItem
+                  readonly={readonly}
+                  key={task.id}
+                  task={task}
+                  onEdit={() => onCreateUpdateTask(task)}
+                  onDelete={() => onDeleteTask(task)}
+                  statusList={list.status}
+                  isSelect={false}
+                />
+              ))}
+            </SortableContext>
+          )}
+          <DragOverlay>
+            {activeId ? <TaskItem readonly={readonly} statusList={list.status} task={tasksData.filter(e => e.id === activeId)[0]} isSelect={true} /> : null}
+          </DragOverlay>
+        </div>
       </DndContext>
     </>
   );
