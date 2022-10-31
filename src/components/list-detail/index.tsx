@@ -1,7 +1,6 @@
 import {FC, useState} from 'react';
 
 import ErrorInformation from '@/components/common/404';
-import DNDContext from '@/components/common/dnd-context';
 import ToolbarDetail from '@/components/list-detail/toolbar';
 import ModalCreateUpdateList from '@/components/modal/modal-create-update-list';
 import ModalCreateUpdateTask from '@/components/modal/modal-create-update-task';
@@ -12,6 +11,7 @@ import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
 
 import useListDetail from './hook';
+import ListTask from './list-task';
 import styles from './style.module.scss';
 
 export interface Iprops {
@@ -93,7 +93,7 @@ const ListDetail: FC<Iprops> = ({id}) => {
           onFilter={onFilter}
           onSuccessFavorite={onSuccessFavorite}
         />
-        <DNDContext
+        <ListTask
           list={todoList}
           onCreateUpdateTask={onCreateUpdateTask}
           onDeleteTask={onDeleteTask}

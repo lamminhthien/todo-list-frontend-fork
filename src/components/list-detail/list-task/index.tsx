@@ -19,7 +19,7 @@ interface IProp {
   onDeleteTask: (task: ITaskResponse) => void;
 }
 
-const DNDContext = ({list, setList, tasksData, readonly, onCreateUpdateTask, onDeleteTask}: IProp) => {
+const ListTask = ({list, setList, tasksData, readonly, onCreateUpdateTask, onDeleteTask}: IProp) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const sensor = useSensorGroup();
 
@@ -89,4 +89,4 @@ const DNDContext = ({list, setList, tasksData, readonly, onCreateUpdateTask, onD
   );
 };
 
-export default DNDContext;
+export default ListTask;
