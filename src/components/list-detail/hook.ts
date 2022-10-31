@@ -1,13 +1,11 @@
-import {DragEndEvent, UniqueIdentifier} from '@dnd-kit/core';
-import {arrayMove} from '@dnd-kit/sortable';
+import {UniqueIdentifier} from '@dnd-kit/core';
 import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 
 import {ROUTES} from '@/configs/routes.config';
 import api from '@/data/api';
 import {ITodolistResponse} from '@/data/api/types/list.type';
-import {ITaskResponse} from '@/data/api/types/task.type';
-import socket, {socketUpdateList} from '@/data/socket';
+import socket from '@/data/socket';
 import {SOCKET_EVENTS} from '@/data/socket/type';
 import {useStateAuth} from '@/states/auth';
 
@@ -35,32 +33,6 @@ export default function useListDetail({id}: Iprops) {
     if (todoList?.visibility === 'READ_ONLY' && auth?.id !== todoList.userId) return true;
     return false;
   };
-
-  function handleDragEnd({active, over}: DragEndEvent) {
-    setActiveId(null);
-    if (!over) return;
-    if (active.id !== over.id) {
-      const taskList: ITaskResponse[] = todoList!.tasks;
-      const oldIndex = taskList?.findIndex(item => active.id === item.id);
-      const newIndex = taskList?.findIndex(item => over.id === item.id);
-      const arrangeTask = arrayMove(todoList!.tasks, oldIndex!, newIndex!);
-      const newTodoList = {...todoList};
-      newTodoList.tasks = arrangeTask;
-      setTodoList(newTodoList as ITodolistResponse);
-
-      arrangeTask.forEach((element, index) => {
-        if (element.id === active.id) {
-          const taskFirstId = arrangeTask[index - 1]?.id;
-          const taskReorderId = arrangeTask[index].id!;
-          const taskSecondId = arrangeTask[index + 1]?.id;
-          api.task
-            .reIndex({taskFirstId, taskReorderId, taskSecondId})
-            .then(socketUpdateList)
-            .catch(() => {});
-        }
-      });
-    }
-  }
 
   useEffect(() => {
     updateList();
@@ -90,5 +62,5 @@ export default function useListDetail({id}: Iprops) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  return {activeId, setTodoList, todoList, handleDragEnd, setActiveId, updateList, isReadOnly, auth};
+  return {activeId, setTodoList, todoList, setActiveId, updateList, isReadOnly, auth};
 }
