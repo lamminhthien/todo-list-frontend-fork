@@ -1,4 +1,3 @@
-import {UniqueIdentifier} from '@dnd-kit/core';
 import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 
@@ -19,8 +18,6 @@ export default function useListDetail({id}: Iprops) {
   const router = useRouter();
   const auth = useStateAuth();
   const [todoList, setTodoList] = useState<ITodolistResponse>();
-
-  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   const updateList = () => {
     api.list
@@ -62,5 +59,5 @@ export default function useListDetail({id}: Iprops) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  return {activeId, setTodoList, todoList, setActiveId, updateList, isReadOnly, auth};
+  return {setTodoList, todoList, updateList, isReadOnly, auth};
 }
