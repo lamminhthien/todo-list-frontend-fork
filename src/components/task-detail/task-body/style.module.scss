@@ -1,0 +1,23 @@
+.task-body :global {
+  @apply mt-8 bg-gray-50 p-8;
+  .title {
+    @apply mt-5 mb-3 flex items-center gap-2.5 first:mt-0;
+    i::before {
+      @apply text-[20px];
+    }
+    h4 {
+      @apply text-h4 font-medium text-slate-700;
+    }
+  }
+  .description {
+    &-text {
+      @apply break-words rounded-xl bg-gray-100 p-5 hover:bg-gray-200;
+    }
+    &-form {
+      @apply rounded-xl bg-gray-200 p-5;
+    }
+  }
+  .task-images {
+    @apply grid w-full grid-cols-2 gap-5 lg:grid-cols-3;
+  }
+}
