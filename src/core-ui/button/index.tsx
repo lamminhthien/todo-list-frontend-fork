@@ -32,10 +32,10 @@ const Button: FC<IButtonProps> = ({
   size,
   type = 'button',
   variant,
-  loadingPosition,
   onClick,
   disabled = false,
   loading = false,
+  loadingPosition = 'start',
   ...rest
 }) => {
   const props: IButtonProps = {};
@@ -53,11 +53,11 @@ const Button: FC<IButtonProps> = ({
 
   return (
     <Tag {...props} {...rest}>
-      {loading && loadingPosition === 'start' && <Loading className="loading mr-2" />}
-      {startIcon && <span className="icon mr-2">{startIcon}</span>}
-      {content}
-      {endIcon && <span className="icon ml-2">{endIcon}</span>}
-      {loading && loadingPosition === 'end' && <Loading className="loading ml-2" />}
+      {loading && loadingPosition === 'start' && <Loading className="loading" />}
+      {startIcon && <span className="icon">{startIcon}</span>}
+      {content && !loading && loadingPosition && <p>{content}</p>}
+      {endIcon && <span className="icon">{endIcon}</span>}
+      {loading && loadingPosition === 'end' && <Loading className="loading" />}
     </Tag>
   );
 };

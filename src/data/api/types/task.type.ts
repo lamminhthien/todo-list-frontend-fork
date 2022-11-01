@@ -1,6 +1,7 @@
 export interface IImageResponse {
   id: number;
   link: string;
+  name: string;
   isActive: boolean;
 }
 
@@ -24,7 +25,7 @@ export interface ITaskUpdate extends ITaskGet {
   name?: string;
   isDone?: boolean;
   images?: {
-    add?: string[];
+    add?: {name: string; link: string}[];
     remove?: number[];
   };
   description?: string;
