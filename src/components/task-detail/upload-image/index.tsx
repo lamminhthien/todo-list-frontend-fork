@@ -7,6 +7,7 @@ import {useForm} from 'react-hook-form';
 import Button from '@/core-ui/button';
 import api from '@/data/api';
 import {IImage, ITaskResponse} from '@/data/api/types/task.type';
+import {imageValid} from '@/utils/image-valid';
 
 import style from './style.module.scss';
 
@@ -28,9 +29,10 @@ export interface IUploadImage {
   previewImages: IImage[];
   onUpload: (e: ChangeEvent<HTMLInputElement>) => void;
   onSuccess: () => void;
+  onError: () => void;
 }
 
-const UploadImage: FC<IUploadImage> = ({taskData, onSuccess, onUpload, previewImages, className}) => {
+const UploadImage: FC<IUploadImage> = ({taskData, onSuccess, onUpload, previewImages, className, onError}) => {
   const {register, handleSubmit} = useForm<FormValues>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -47,6 +49,12 @@ const UploadImage: FC<IUploadImage> = ({taskData, onSuccess, onUpload, previewIm
     for (let i = 0; i < copyImages.length; i++) {
       const image = copyImages[i];
       const name = Date.now() + image.name;
+
+      if (!imageValid(image)) {
+        setIsSubmitting(false);
+        onError();
+        return;
+      }
       const s3ObjectRequest: PutObjectRequest = {
         Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
         Body: image,
