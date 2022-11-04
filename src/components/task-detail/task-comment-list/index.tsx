@@ -1,37 +1,43 @@
 import Link from 'next/link';
 
 import Icon from '@/core-ui/icon';
+import api from '@/data/api';
+import {ITaskResponse} from '@/data/api/types/task.type';
+import {getDate} from '@/utils/get-date';
 
-import {ITaskCommentProp} from '../task-body-left';
 import style from './style.module.scss';
 
 interface ITaskCommentList {
-  commentList: ITaskCommentProp[];
+  taskData: ITaskResponse;
+  onSuccess?: () => void;
 }
 
-export const TaskCommentList = ({commentList}: ITaskCommentList) => {
+export const TaskCommentList = ({taskData, onSuccess}: ITaskCommentList) => {
+  const onDelete = (id: number) => {
+    api.task.update({id: taskData.id, comment: {update: {id, isActive: false}}}).then(onSuccess);
+  };
   return (
     <div className={style['task-comment-list']}>
-      {commentList.map(item => {
-        return (
-          <>
-            {' '}
-            <div className="task-comment">
+      {taskData?.comments?.map((comment, idx) => {
+        if (comment.isActive)
+          return (
+            <div key={idx} className="task-comment">
               <div className="user">
                 <Icon name="ico-user" />
-                <p>{item.userName}</p>
-                <div className="time">{item.date}</div>
+                <p>{comment.user.name}</p>
+                <div className="time">{getDate(new Date(comment.createdDate))}</div>
               </div>
               <div className="content">
-                <p>{item.content}</p>
+                <p>{comment.comment}</p>
               </div>
               <div className="action">
                 <Link href={'#'}>Edit</Link>
-                <Link href={'#'}>Delete</Link>
+                <button className="text-blue-500 underline" onClick={() => onDelete(comment.id)}>
+                  Delete
+                </button>
               </div>
             </div>
-          </>
-        );
+          );
       })}
     </div>
   );

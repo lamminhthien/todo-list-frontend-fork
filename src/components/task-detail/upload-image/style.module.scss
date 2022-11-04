@@ -9,7 +9,7 @@
     .add {
       @apply relative bg-slate-100 text-slate-500;
     }
-    input[name='images'] {
+    input[name='attachments'] {
       @apply absolute bottom-0 h-96 w-full cursor-pointer opacity-0;
     }
   }

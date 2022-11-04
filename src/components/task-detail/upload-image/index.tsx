@@ -20,19 +20,19 @@ aws.config.update({
 const s3 = new aws.S3();
 
 type FormValues = {
-  images: File[];
+  attachments: File[];
 };
 
 export interface IUploadImage {
   className?: string;
   taskData: ITaskResponse;
-  previewImages: IAttachment[];
+  previewAttachments: IAttachment[];
   onUpload: (e: ChangeEvent<HTMLInputElement>) => void;
   onSuccess: () => void;
   onError: () => void;
 }
 
-const UploadImage: FC<IUploadImage> = ({taskData, onSuccess, onUpload, previewImages, className, onError}) => {
+const UploadImage: FC<IUploadImage> = ({taskData, onSuccess, onUpload, previewAttachments, className, onError}) => {
   const {register, handleSubmit} = useForm<FormValues>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -42,12 +42,11 @@ const UploadImage: FC<IUploadImage> = ({taskData, onSuccess, onUpload, previewIm
     }
   };
 
-  const onSubmit = handleSubmit(async ({images}) => {
+  const onSubmit = handleSubmit(async ({attachments}) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const copyImages = [...images];
-    for (let i = 0; i < copyImages.length; i++) {
-      const image = copyImages[i];
+    for (let i = 0; i < attachments.length; i++) {
+      const image = attachments[i];
       const name = Date.now() + image.name;
 
       if (!imageValid(image)) {
@@ -66,10 +65,10 @@ const UploadImage: FC<IUploadImage> = ({taskData, onSuccess, onUpload, previewIm
         if (response) {
           console.log(response);
           api.task
-            .update({id: taskData.id, attachments: {add: {name: image.name, link: response.Location}}})
+            .update({id: taskData.id, attachment: {create: {name: image.name, link: response.Location}}})
             .then(onSuccess)
             .catch(error => console.log(error))
-            .finally(() => onFinally(i + 1 === copyImages.length));
+            .finally(() => onFinally(i + 1 === attachments.length));
         }
       });
     }
@@ -80,9 +79,9 @@ const UploadImage: FC<IUploadImage> = ({taskData, onSuccess, onUpload, previewIm
       <div className="form-body">
         <Button type="button" className="add">
           <span>Add atachments</span>
-          <input {...register('images', {required: true})} type="file" onChange={onUpload} multiple />
+          <input {...register('attachments', {required: true})} type="file" onChange={onUpload} multiple />
         </Button>
-        {previewImages.length > 0 && (
+        {previewAttachments.length > 0 && (
           <Button type="submit" color="primary" variant="contained" disabled={isSubmitting} loading={isSubmitting}>
             Upload
           </Button>

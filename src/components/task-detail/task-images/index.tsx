@@ -47,15 +47,16 @@ const TaskImages: FC<ITaskImagesProps> = ({attachments, className, taskData, upd
   const submitHandler: SubmitHandler<IFormInputs> = ({name}) => {
     if (taskData && imageSelected)
       api.task
-        .update({id: taskData.id, attachments: {edit: {id: imageSelected, name}}})
+        .update({id: taskData.id, attachment: {update: {id: imageSelected, name}}})
         .then(updateTaskData)
         .catch(() => toast.show({type: 'danger', title: 'Edit Image', content: 'An error occurred, please try again'}));
     handleClose();
   };
+
   const onDelete = (imageId: number) => {
     if (taskData)
       api.task
-        .update({id: taskData.id, attachments: {remove: {id: imageId}}})
+        .update({id: taskData.id, attachment: {update: {id: imageId, isActive: false}}})
         .then(updateTaskData)
         .catch(() => toast.show({type: 'danger', title: 'Delete Image', content: 'An error occurred, please try again'}));
   };

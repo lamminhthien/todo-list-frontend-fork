@@ -32,4 +32,5 @@ const TaskBody: FC<ITaskBodyProps> = ({taskData, updateTaskData, className}) => 
     </div>
   );
 };
+
 export default TaskBody;

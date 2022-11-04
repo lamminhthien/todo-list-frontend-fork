@@ -1,16 +1,16 @@
 import {API_ENDPOINTS} from '@/configs/endpoint.config';
 import http from '@/utils/http';
 
-import {IAuthInfor, IAuthLogin, IAuthResponse, IAuthUpdate} from './types/auth.type';
+import {IAuthLogin, IAuthResponse, IAuthUpdate, IUserResponse} from './types/auth.type';
 import {IFavoriteCreate, IFavoriteResponse, IFavoriteUpdate} from './types/favorite.type';
 import {IListCreate, IListGetOne, IListUpdate, ITodolistResponse} from './types/list.type';
-import {ITaskCreate, ITaskGet, ITaskReIndex, ITaskResponse, ITaskUpdate} from './types/task.type';
+import {ITaskCreate, ITaskGet, ITaskReindex, ITaskResponse, ITaskUpdate} from './types/task.type';
 
 const api = {
   auth: {
-    login: (data: IAuthLogin) => http.post<IAuthResponse>(API_ENDPOINTS.AUTH + '/login', data),
-    verify: () => http.get<IAuthInfor>(API_ENDPOINTS.AUTH + '/verify'),
-    update: (data: IAuthUpdate) => http.patch<IAuthInfor>(API_ENDPOINTS.AUTH, data)
+    login: (data: IAuthLogin) => http.post<IAuthResponse>(API_ENDPOINTS.AUTH, data),
+    verify: () => http.get<IUserResponse>(API_ENDPOINTS.AUTH + '/verify'),
+    update: (data: IAuthUpdate) => http.patch<IUserResponse>(API_ENDPOINTS.AUTH, data)
   },
   list: {
     get: () => http.get<ITodolistResponse[]>(API_ENDPOINTS.LIST),
@@ -24,8 +24,8 @@ const api = {
     get: () => http.get<ITaskResponse[]>(API_ENDPOINTS.TASK),
     getOne: ({id}: ITaskGet) => http.get<ITaskResponse>(API_ENDPOINTS.TASK + '/' + id),
     create: (data: ITaskCreate) => http.post<ITaskResponse>(API_ENDPOINTS.TASK, data),
-    update: (data: ITaskUpdate) => http.patch<ITaskResponse>(API_ENDPOINTS.TASK + '/update', data),
-    reindex: (data: ITaskReIndex) => http.patch(API_ENDPOINTS.TASK + '/reindex', data)
+    update: (data: ITaskUpdate) => http.patch<ITaskResponse>(API_ENDPOINTS.TASK, data),
+    reindex: (data: ITaskReindex) => http.patch(API_ENDPOINTS.TASK + '/reindex', data)
   },
   favorite: {
     create: (data: IFavoriteCreate) => http.post<IFavoriteResponse>(API_ENDPOINTS.FAVORITE, data),
