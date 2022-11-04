@@ -22,46 +22,37 @@ export interface ITaskCommentProp {
   content: string;
 }
 
-const taskCommentList: ITaskCommentProp[] = [
-  {
-    userName: 'gjlasgnlasjk',
-    date: 'gfknglank',
-    content: '21/1/2000'
-  },
-  {userName: 'Huy', content: 'Task Comment 2', date: '21/1/2000'}
-];
-
 export const TaskBodyLeft = ({taskData, updateTaskData}: ITaskBodyLeftProp) => {
+  console.log('🚀 ~ file: index.tsx ~ line 35 ~ TaskBodyLeft ~ taskData', taskData);
   const toast = useToast();
 
-  const [previewImages, setPreviewImages] = useState<IAttachment[]>([]);
-
-  const taskImages = taskData.taskAttachments?.filter(e => e.isActive).map(e => e.attachment);
+  const [previewAttachments, setPreviewAttachments] = useState<IAttachment[]>([]);
 
   const onUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
-      const images = [];
+      const uploadAttachments = [];
       for (let i = 0; i < e.target.files.length; i++) {
         const element = e.target.files[i];
-        if (element.type.startsWith('image')) images.push({name: element.name, link: URL.createObjectURL(element)});
+        if (element.type.startsWith('image')) uploadAttachments.push({name: element.name, link: URL.createObjectURL(element)});
         else {
           toast.show({type: 'danger', title: 'Error', content: 'Warning, this is not image file'});
         }
       }
-      setPreviewImages(images);
+      setPreviewAttachments(uploadAttachments);
     }
   };
+  const attachments = taskData.attachments.filter(e => e.isActive);
 
   const onSuccess = () => {
     console.log('🚀 ~ file: index.tsx ~ line 62 ~ onSuccess ~ onSuccess');
     updateTaskData();
-    setPreviewImages([]);
+    setPreviewAttachments([]);
     toast.show({type: 'success', title: 'success', content: 'Update Image Successfull'});
   };
 
   const onError = () => {
     console.log('🚀 ~ file: index.tsx ~ line 67 ~ onError ~ onError', onError);
-    setPreviewImages([]);
+    setPreviewAttachments([]);
     toast.show({type: 'danger', title: 'Error', content: 'Warning your file must be image and maximum size is 5MB'});
   };
 
@@ -77,15 +68,15 @@ export const TaskBodyLeft = ({taskData, updateTaskData}: ITaskBodyLeftProp) => {
               <Icon name="ico-attachment" />
               <h4>Attachments</h4>
             </div>
-            <TaskImages className="task-images" attachments={taskImages} {...{taskData, updateTaskData}} />
-            <TaskImages className="task-images-upload" attachments={previewImages as IAttachmentResponse[]} />
-            <UploadImage {...{taskData, onUpload, previewImages, onSuccess, onError}} />
+            <TaskImages className="task-images" {...{attachments, taskData, updateTaskData}} />
+            <TaskImages className="task-images-upload" attachments={previewAttachments as IAttachmentResponse[]} />
+            <UploadImage {...{taskData, onUpload, onSuccess, onError, previewAttachments}} />
           </div>
           <div className="com-task-comment-form py-5">
-            <TaskCommentForm />
+            <TaskCommentForm taskData={taskData} onSuccess={updateTaskData} />
           </div>
           <div className="com-task-comment-list py-5">
-            <TaskCommentList commentList={taskCommentList} />
+            <TaskCommentList taskData={taskData} onSuccess={updateTaskData} />
           </div>
         </div>
       </div>

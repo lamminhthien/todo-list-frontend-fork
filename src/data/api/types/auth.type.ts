@@ -4,11 +4,11 @@ export interface IAuthLogin {
 }
 export type IAuthUpdate = IAuthLogin;
 
-export interface IAuthInfor extends IAuthLogin {
+export interface IUserResponse extends IAuthLogin {
   id: string;
 }
 
 export interface IAuthResponse {
   accessToken: string;
-  user: IAuthInfor;
+  user: IUserResponse;
 }
