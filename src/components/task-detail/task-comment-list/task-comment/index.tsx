@@ -1,5 +1,5 @@
-import {TextField} from '@mui/material';
-import {FC, useState} from 'react';
+import {ButtonBase, Popover, TextField} from '@mui/material';
+import {FC, MouseEvent, useState} from 'react';
 import {SubmitHandler, useForm} from 'react-hook-form';
 
 import Button from '@/core-ui/button';
@@ -19,14 +19,30 @@ interface ITaskCommentProps {
 }
 const TaskComment: FC<ITaskCommentProps> = ({commentData, onSuccess}) => {
   const {id, taskId, comment, user, createdDate, updatedDate} = commentData;
+  const toast = useToast();
   const {handleSubmit, reset, register} = useForm<IFormInputs>({mode: 'onChange'});
 
-  const toast = useToast();
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [editComment, setEditComment] = useState(false);
   const time = getDate(new Date(createdDate));
 
+  const open = Boolean(anchorEl);
+  const editButtonId = open ? 'simple-popover' : undefined;
+
+  const onDelete = () => {
+    api.task.update({id: taskId, comment: {update: {id, isActive: false}}}).then(onSuccess);
+  };
+
   const onEdit = () => {
     setEditComment(true);
+  };
+
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const submitHandler: SubmitHandler<IFormInputs> = formData => {
@@ -36,10 +52,6 @@ const TaskComment: FC<ITaskCommentProps> = ({commentData, onSuccess}) => {
       .then(onSuccess)
       .then(() => reset())
       .catch(() => toast.show({type: 'danger', title: 'Comment', content: 'An error occurred, please try again'}));
-  };
-
-  const onDelete = () => {
-    api.task.update({id: taskId, comment: {update: {id, isActive: false}}}).then(onSuccess);
   };
 
   return (
@@ -65,11 +77,37 @@ const TaskComment: FC<ITaskCommentProps> = ({commentData, onSuccess}) => {
             </form>
           )}
         </div>
-        <div className="actions">
-          <button onClick={onEdit}>Edit</button>
-          <span>-</span>
-          <button onClick={onDelete}>Delete</button>
-        </div>
+        {!editComment && (
+          <div className="actions">
+            <button onClick={onEdit}>Edit</button>
+            <span>-</span>
+            <ButtonBase aria-describedby={editButtonId} onClick={event => handleClick(event)}>
+              Delete
+            </ButtonBase>
+            <Popover
+              id={editButtonId}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+            >
+              <div className="p-5 text-center">
+                <p>Do you want to be sure to delete this comment</p>
+                <div className="mt-2 flex justify-center gap-5">
+                  <Button color="primary" variant="contained" className="w-[66px] py-1 px-2" type="submit" onClick={onDelete}>
+                    Yes
+                  </Button>
+                  <Button color="secondary" variant="outlined" className="py-1 px-2" type="submit" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </Popover>
+          </div>
+        )}
       </div>
     </div>
   );
