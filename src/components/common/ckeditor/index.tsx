@@ -17,6 +17,7 @@ const Editor: FC<IEditorProps> = ({onChange, name, value}) => {
     (async () => {
       const classic = await import(/* webpackChunkName: "vendor.ckclassic" */ '@ckeditor/ckeditor5-build-classic');
       const editor = await import(/* webpackChunkName: "vendor.ckeditor" */ '@ckeditor/ckeditor5-react');
+      const imageUpload = import(/* webpackChunkName: "vendor.ckeditor" */ '@ckeditor/ckeditor5-image/src/imageupload');
       editorRef.current = {CKEditor: editor.CKEditor, ClassicEditor: classic.default};
       setEditorLoaded(true);
     })();
