@@ -7,6 +7,7 @@ import Icon from '@/core-ui/icon';
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
 import {ICommentResponse} from '@/data/api/types/task.type';
+import {useStateAuth} from '@/states/auth';
 import {getDate} from '@/utils/get-date';
 
 interface IFormInputs {
@@ -20,6 +21,7 @@ interface ITaskCommentProps {
 const TaskComment: FC<ITaskCommentProps> = ({commentData, onSuccess}) => {
   const {id, taskId, comment, user, createdDate, updatedDate} = commentData;
   const toast = useToast();
+  const auth = useStateAuth();
   const {handleSubmit, reset, register} = useForm<IFormInputs>({mode: 'onChange'});
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -77,7 +79,7 @@ const TaskComment: FC<ITaskCommentProps> = ({commentData, onSuccess}) => {
             </form>
           )}
         </div>
-        {!editComment && (
+        {!editComment && auth?.id === user.id && (
           <div className="actions">
             <button onClick={onEdit}>Edit</button>
             <span>-</span>

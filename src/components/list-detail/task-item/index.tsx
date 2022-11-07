@@ -14,7 +14,7 @@ import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
 import {MUI_ICON} from '@/utils/mui-icon';
 
-import Status from '../status';
+import Status from '../../common/statusSelect';
 import Tool, {IToolProps} from '../toolbar/tool';
 import ToolMenu from '../toolbar/tool-menu';
 // import style from './style.module.scss';

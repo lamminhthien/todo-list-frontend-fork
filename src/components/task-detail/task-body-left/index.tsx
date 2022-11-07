@@ -1,4 +1,4 @@
-import {ChangeEvent, useState} from 'react';
+import {ChangeEvent, FC, useState} from 'react';
 
 import UploadImage from '@/components/task-detail/upload-image';
 import Icon from '@/core-ui/icon';
@@ -22,10 +22,8 @@ export interface ITaskCommentProp {
   content: string;
 }
 
-export const TaskBodyLeft = ({taskData, updateTaskData}: ITaskBodyLeftProp) => {
-  console.log('🚀 ~ file: index.tsx ~ line 35 ~ TaskBodyLeft ~ taskData', taskData);
+const TaskBodyLeft: FC<ITaskBodyLeftProp> = ({taskData, updateTaskData}) => {
   const toast = useToast();
-
   const [previewAttachments, setPreviewAttachments] = useState<IAttachment[]>([]);
 
   const onUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,14 +42,12 @@ export const TaskBodyLeft = ({taskData, updateTaskData}: ITaskBodyLeftProp) => {
   const attachments = taskData.attachments.filter(e => e.isActive);
 
   const onSuccess = () => {
-    console.log('🚀 ~ file: index.tsx ~ line 62 ~ onSuccess ~ onSuccess');
     updateTaskData();
     setPreviewAttachments([]);
     toast.show({type: 'success', title: 'success', content: 'Update Image Successfull'});
   };
 
   const onError = () => {
-    console.log('🚀 ~ file: index.tsx ~ line 67 ~ onError ~ onError', onError);
     setPreviewAttachments([]);
     toast.show({type: 'danger', title: 'Error', content: 'Warning your file must be image and maximum size is 5MB'});
   };
@@ -65,7 +61,7 @@ export const TaskBodyLeft = ({taskData, updateTaskData}: ITaskBodyLeftProp) => {
           </div>
           <div className="com-task-attachment py-5">
             <div className="title">
-              <Icon name="ico-attachment" />
+              <Icon name="ico-paperclip" />
               <h4>Attachments</h4>
             </div>
             <TaskImages className="task-images" {...{attachments, taskData, onSuccess: updateTaskData}} />
@@ -81,3 +77,5 @@ export const TaskBodyLeft = ({taskData, updateTaskData}: ITaskBodyLeftProp) => {
     </div>
   );
 };
+
+export default TaskBodyLeft;

@@ -1,3 +1,5 @@
+import {IBaseResponse} from '@/types';
+
 import {IUserResponse} from './auth.type';
 import {IStatus, ITodolistResponse} from './list.type';
 
@@ -39,15 +41,13 @@ export interface ICommentUpdate {
   attachmentId?: number;
 }
 
-export interface ICommentResponse extends ICommentCreate {
+export interface ICommentResponse extends ICommentCreate, IBaseResponse {
   id: number;
   attachmentId?: number;
   attachments: IAttachmentResponse;
   user: IUserResponse;
   taskId: string;
   isActive: boolean;
-  createdDate: string;
-  updatedDate: string;
 }
 
 //------------------------------
@@ -83,7 +83,7 @@ export interface ITaskReindex {
   taskSecondId?: string;
 }
 
-export interface ITaskResponse extends ITaskGet {
+export interface ITaskResponse extends ITaskGet, IBaseResponse {
   name: string;
   description: string;
   todolistId: string;
