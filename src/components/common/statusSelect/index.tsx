@@ -6,17 +6,15 @@ import {FC, forwardRef} from 'react';
 
 import {IStatus} from '@/data/api/types/list.type';
 
-import style from './style.module.scss';
-
 interface IProps extends SelectProps {
   className?: string;
   items: IStatus[];
   status: IStatus;
 }
 
-const Status: FC<IProps> = forwardRef(({items, className, status, ...rest}, ref) => {
+const StatusSelect: FC<IProps> = forwardRef(({items, className, status, ...rest}, ref) => {
   return (
-    <div className={classNames(style.status, className, 'text-h6')}>
+    <div className={classNames(className, 'text-h6')}>
       <Select
         ref={ref}
         {...rest}
@@ -42,6 +40,6 @@ const Status: FC<IProps> = forwardRef(({items, className, status, ...rest}, ref)
     </div>
   );
 });
-Status.displayName = 'Status';
+StatusSelect.displayName = 'StatusSelect';
 
-export default Status;
+export default StatusSelect;

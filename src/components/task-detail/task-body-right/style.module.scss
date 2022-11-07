@@ -8,38 +8,7 @@
     @apply py-3 text-h5 font-semibold;
   }
 
-  .status {
-    @apply relative  h-full items-center;
-    .MuiOutlinedInput-root {
-      @apply h-8 w-auto rounded;
-    }
-
-    .MuiSelect-select {
-      @apply h-full w-full;
-      padding: 0 !important;
-      .mobile-icon {
-        @apply absolute flex h-[23px] w-full items-center justify-center lg:hidden;
-      }
-    }
-
-    .MuiSelect-select[aria-expanded='true'] {
-      .mobile-icon {
-        transform: rotate(180deg) !important;
-      }
-    }
-    .status-name {
-      @apply pl-3 pr-8;
-    }
-    .MuiOutlinedInput-notchedOutline {
-      @apply border-0;
-    }
-
-    .MuiSelect-icon {
-      @apply fill-white;
-    }
-  }
-
-  .assigne {
+  .assignee {
     .user {
       @apply flex gap-x-3;
     }
@@ -51,10 +20,7 @@
     }
   }
 
-  .date {
-    @apply space-y-5 divide-y;
-    .create-update {
-      @apply space-y-2 py-2;
-    }
+  .time-state {
+    @apply space-y-2 py-2;
   }
 }
