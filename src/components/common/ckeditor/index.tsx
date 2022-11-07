@@ -30,7 +30,7 @@ const Editor: FC<IEditorProps> = ({onChange, name, value}) => {
           id={'editor'}
           config={{
             ckfinder: {
-              uploadUrl: '/uploads'
+              uploadUrl: '/api/upload-image'
             }
           }}
           editor={ClassicEditor}

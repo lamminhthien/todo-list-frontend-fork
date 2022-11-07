@@ -6,7 +6,9 @@ export default function userHandler(req: NextApiRequest, res: NextApiResponse) {
   switch (method) {
     case 'POST':
       // Update or create data in your database
-      res.status(200).send(JSON.stringify(body));
+      res
+        .status(200)
+        .send({url: 'https://ckeditor.com/apps/ckfinder/userfiles/files/Screenshot_20221107_022039.png', fileName: 'filename', uploaded: 'uploaded'});
       break;
     default:
       res.setHeader('Allow', ['POST']);
