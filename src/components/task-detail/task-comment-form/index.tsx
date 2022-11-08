@@ -1,7 +1,7 @@
-import {TextField} from '@mui/material';
 import {useState} from 'react';
-import {SubmitHandler, useForm} from 'react-hook-form';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 
+import Editor from '@/components/common/ckeditor';
 import Button from '@/core-ui/button';
 import Icon from '@/core-ui/icon';
 import Input from '@/core-ui/input';
@@ -25,7 +25,7 @@ interface IFormInputs {
 }
 
 export const TaskCommentForm = ({taskData, onSuccess}: ITaskCommentFormProp) => {
-  const {handleSubmit, setFocus, reset, register} = useForm<IFormInputs>({mode: 'onChange', defaultValues: {comment: ''}});
+  const {handleSubmit, setFocus, reset, register, control} = useForm<IFormInputs>({mode: 'onChange', defaultValues: {comment: ''}});
   const [editComment, setEditComment] = useState(false);
   const toast = useToast();
 
@@ -58,7 +58,12 @@ export const TaskCommentForm = ({taskData, onSuccess}: ITaskCommentFormProp) => 
           <Input className="comment-text" onClick={onClick} placeholder="Write a comment..." readOnly={true} {...commentInput} />
         ) : (
           <form className="decsription-form" onSubmit={handleSubmit(submitHandler)}>
-            <TextField className="w-full bg-white" multiline rows={2} {...commentInput} autoFocus={true} />
+            <Controller
+              name="comment"
+              rules={{required: true}}
+              control={control}
+              render={({field}) => <Editor name="example" value="" onChange={text => field.onChange(text)} />}
+            />
             <div className="mt-4 flex gap-4">
               <Button className="w-24" variant="contained" color="primary" text="Comment" type="submit" disabled={!editComment} />
               <Button className="w-24" variant="outlined" color="white" text="Cancel" onClick={() => setEditComment(false)} type="button" />

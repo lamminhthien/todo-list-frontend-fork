@@ -67,7 +67,7 @@ const Editor: FC<IEditorProps> = ({onChange, name, value}) => {
   }, []);
 
   return (
-    <div className={style.ckeditor}>
+    <div className="prose">
       {editorLoaded ? (
         <CKEditor
           name={name}
