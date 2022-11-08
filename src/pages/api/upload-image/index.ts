@@ -4,7 +4,10 @@ import {ManagedUpload, PutObjectRequest} from 'aws-sdk/clients/s3';
 import type {NextApiRequest, NextApiResponse} from 'next';
 
 export default function userHandler(req: NextApiRequest, res: NextApiResponse) {
-  const {body, method} = req;
+  req.setEncoding('binary');
+
+  const {body, method, headers} = req;
+  console.log(headers);
 
   aws.config.update({
     accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,

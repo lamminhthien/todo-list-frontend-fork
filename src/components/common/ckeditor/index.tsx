@@ -9,6 +9,29 @@ interface IEditorProps {
 }
 
 const Editor: FC<IEditorProps> = ({onChange, name, value}) => {
+  // const API_URL = '/api';
+  // const UPLOAD_ENDPOINT = '/upload-image';
+
+  const uploadAdapter = (loader: any) => {
+    return {
+      upload: () => {
+        return new Promise((resolve: any, reject: any) => {
+          const body = new FormData();
+          loader.file.then((file: any) => {
+            body.append('uploading', file);
+            console.log(body);
+          });
+        });
+      }
+    };
+  };
+
+  const uploadPlugin = (editor: any) => {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
+      return uploadAdapter(loader);
+    };
+  };
+
   const editorRef = useRef<any>();
   const [editorLoaded, setEditorLoaded] = useState(false);
   const {CKEditor, ClassicEditor} = editorRef.current || {};
@@ -29,9 +52,10 @@ const Editor: FC<IEditorProps> = ({onChange, name, value}) => {
           name={name}
           id={'editor'}
           config={{
-            ckfinder: {
-              uploadUrl: '/api/upload-image'
-            }
+            extraPlugins: [uploadPlugin]
+            // ckfinder: {
+            //   uploadUrl: 'http://localhost:3333/api/uploadImage'
+            // }
           }}
           editor={ClassicEditor}
           data={value}
