@@ -1,7 +1,7 @@
-import {TextField} from '@mui/material';
 import {useState} from 'react';
-import {SubmitHandler, useForm} from 'react-hook-form';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 
+import Editor from '@/components/common/ckeditor';
 import Button from '@/core-ui/button';
 import Icon from '@/core-ui/icon';
 import useToast from '@/core-ui/toast';
@@ -24,7 +24,7 @@ interface IFormInputs {
 }
 
 export const TaskDescription = ({taskData, onSuccess}: ITaskDescriptionProp) => {
-  const {handleSubmit, formState, register} = useForm<IFormInputs>({mode: 'onChange'});
+  const {handleSubmit, formState, control} = useForm<IFormInputs>({mode: 'onChange'});
   const {isSubmitting} = formState;
   const [editDescription, setEditDescription] = useState(false);
   const toast = useToast();
@@ -56,7 +56,14 @@ export const TaskDescription = ({taskData, onSuccess}: ITaskDescriptionProp) => 
           </div>
         ) : (
           <form className="decsription-form" onSubmit={handleSubmit(submitHandler)}>
-            <TextField className="w-full bg-white" multiline rows={4} {...register('description')} defaultValue={taskData.description} />
+            {/* <TextField className="w-full bg-white" multiline rows={4} {...register('description')} defaultValue={taskData.description} /> */}
+            <Controller
+              name="description"
+              rules={{required: true}}
+              control={control}
+              defaultValue={taskData.description}
+              render={({field}) => <Editor name="example" value={taskData.description} onChange={text => field.onChange(text)} />}
+            />
             <div className="mt-4 flex gap-4">
               <Button className="w-24" variant="contained" color="primary" text="Save" type="submit" loading={isSubmitting} disabled={isSubmitting} />
               <Button className="w-24" variant="outlined" color="white" text="Cancel" onClick={() => setEditDescription(false)} type="button" />
