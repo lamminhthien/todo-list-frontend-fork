@@ -13,7 +13,7 @@ export default function CKEditorPage() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="px-8">
-      <h1>asdf</h1>
+      <h1>Upload Image</h1>
       <Controller
         name="example"
         rules={{required: true}}

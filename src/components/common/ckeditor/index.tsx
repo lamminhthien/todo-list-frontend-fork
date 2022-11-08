@@ -1,5 +1,5 @@
 import aws from 'aws-sdk';
-import {ManagedUpload, PutObjectRequest} from 'aws-sdk/clients/s3';
+import {PutObjectRequest} from 'aws-sdk/clients/s3';
 import React, {FC, useEffect, useRef, useState} from 'react';
 
 import style from './style.module.scss';
@@ -11,9 +11,6 @@ interface IEditorProps {
 }
 
 const Editor: FC<IEditorProps> = ({onChange, name, value}) => {
-  // const API_URL = '/api';
-  // const UPLOAD_ENDPOINT = '/upload-image';
-
   aws.config.update({
     accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
