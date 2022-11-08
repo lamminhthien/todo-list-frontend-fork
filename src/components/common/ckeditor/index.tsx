@@ -2,8 +2,6 @@ import aws from 'aws-sdk';
 import {PutObjectRequest} from 'aws-sdk/clients/s3';
 import React, {FC, useEffect, useRef, useState} from 'react';
 
-import style from './style.module.scss';
-
 interface IEditorProps {
   name: string;
   value: string;

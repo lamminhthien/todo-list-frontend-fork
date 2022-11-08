@@ -1,4 +1,4 @@
-import {ButtonBase, Popover, TextField} from '@mui/material';
+import {ButtonBase, Popover} from '@mui/material';
 import {FC, MouseEvent, useState} from 'react';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 
@@ -73,7 +73,6 @@ const TaskComment: FC<ITaskCommentProps> = ({commentData, onSuccess}) => {
             <div dangerouslySetInnerHTML={{__html: comment}}></div>
           ) : (
             <form className="decsription-form" onSubmit={handleSubmit(submitHandler)}>
-              {/* <TextField className="w-full bg-white" multiline rows={2} {...register('comment')} autoFocus={true} defaultValue={comment} /> */}
               <Controller
                 name="comment"
                 rules={{required: true}}
