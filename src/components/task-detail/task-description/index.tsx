@@ -51,7 +51,7 @@ export const TaskDescription = ({taskData, onSuccess}: ITaskDescriptionProp) => 
           {!editDescription && <Button text="Edit" className="edit-btn" onClick={onClick} />}
         </div>
         {!editDescription ? (
-          <div className="description-text" onClick={onClick} dangerouslySetInnerHTML={{__html: taskData.description}}></div>
+          <div className="description-text prose" onClick={onClick} dangerouslySetInnerHTML={{__html: taskData.description}}></div>
         ) : (
           <form className="decsription-form" onSubmit={handleSubmit(submitHandler)}>
             {/* <TextField className="w-full bg-white" multiline rows={4} {...register('description')} defaultValue={taskData.description} /> */}
