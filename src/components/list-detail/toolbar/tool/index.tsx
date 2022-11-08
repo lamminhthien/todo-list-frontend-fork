@@ -8,7 +8,7 @@ import style from './style.module.scss';
 export interface IToolProps {
   className?: string;
   icon: ReactNode;
-  text: string;
+  text?: string;
   hidden?: boolean;
   onClick?: () => void;
 }
@@ -18,7 +18,7 @@ const Tool: FC<IToolProps> = ({className, icon, text, hidden, onClick}) => {
   return (
     <Button onClick={onClick} className={classNames(className, style.tool)}>
       {icon}
-      <span>{text}</span>
+      {text && <span>{text}</span>}
     </Button>
   );
 };

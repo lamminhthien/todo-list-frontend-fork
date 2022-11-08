@@ -29,12 +29,12 @@ export default function ToolbarDetail({todolist, filterValue, onEdit, onDelete, 
   const isInteractive = visibility === 'PUBLIC' || auth?.id === userId;
   const deleteToolProps: IToolProps = {
     icon: <Icon name="ico-trash-2" />,
-    text: 'Delete list',
+    text: 'Delete',
     hidden: !isInteractive,
     onClick: onDelete
   };
   const shareToolProps: IToolProps = {
-    icon: <Icon name="ico-share-2" />,
+    icon: <Icon name="ico-share-3" />,
     text: 'Share',
     onClick: onShare
   };

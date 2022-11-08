@@ -1,70 +1,36 @@
-import {SelectChangeEvent} from '@mui/material';
+import {FC} from 'react';
 
-import Status from '@/components/list-detail/status';
-import Icon from '@/core-ui/icon';
 import {ITaskResponse} from '@/data/api/types/task.type';
 
+import Assignee from './assignee';
+import DueDate from './due-date';
+import Point from './point';
+import Priority from './priority';
+import StartDate from './start-date';
+import Status from './status';
 import style from './style.module.scss';
+import TimeState from './time-state';
 
-interface IBodyRightProp {
-  onChange: (event: SelectChangeEvent<unknown>) => void;
+interface IBodyRightProps {
   taskData: ITaskResponse;
+  onSuccess?: () => void;
 }
 
-export const TaskBodyRight = ({onChange, taskData}: IBodyRightProp) => {
+const TaskBodyRight: FC<IBodyRightProps> = props => {
+  const {taskData} = props;
   return (
-    <>
-      <div className={style['task-body-right']}>
-        <div className="container">
-          <div className="status">
-            <p className="title">Status</p>
-            <Status className={style.status} status={taskData.status} items={taskData.todolist.status} onChange={onChange} />
-          </div>
-          <div className="assigne">
-            <p className="title">Assignee</p>
-            <div className="user">
-              <Icon name="ico-user" />
-              <p>Thien</p>
-            </div>
-          </div>
-          <div className="piority">
-            <p className="title">Piority</p>
-            <div className="piority-type">
-              <Icon name="ico-arrow-up" className="text-green-500" />
-              <p>Medium</p>
-            </div>
-          </div>
-          <div className="point">
-            <p className="title">Point</p>
-            <select name="point-num" id="cars">
-              <option value="8">8</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </div>
-          <div className="date">
-            <div className="start-due">
-              <div className="date-start">
-                <p className="title">Start date</p>
-                <p>3/11/2022</p>
-              </div>
-              <div className="date-due">
-                <p className="title">Due date</p>
-                <p>4/11/2022</p>
-              </div>
-            </div>
-            <div className="create-update">
-              <div className="date-create">
-                <p>Created November 1, 2022, 9:33 AM</p>
-              </div>
-              <div className="date-update">
-                <p>Updated November 2, 2022, 1:33 PM</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className={style['task-body-right']}>
+      <div className="container">
+        <Status {...props} />
+        <Assignee />
+        <Priority {...props} />
+        <Point />
+        <StartDate />
+        <DueDate />
+        <TimeState taskData={taskData} />
       </div>
-    </>
+    </div>
   );
 };
+
+export default TaskBodyRight;
