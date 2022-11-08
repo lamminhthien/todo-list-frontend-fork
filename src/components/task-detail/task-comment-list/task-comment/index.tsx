@@ -1,7 +1,8 @@
-import {ButtonBase, Popover, TextField} from '@mui/material';
+import {ButtonBase, Popover} from '@mui/material';
 import {FC, MouseEvent, useState} from 'react';
-import {SubmitHandler, useForm} from 'react-hook-form';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 
+import Editor from '@/components/common/ckeditor';
 import Button from '@/core-ui/button';
 import Icon from '@/core-ui/icon';
 import useToast from '@/core-ui/toast';
@@ -23,7 +24,7 @@ const TaskComment: FC<ITaskCommentProps> = ({commentData, onSuccess}) => {
   const {id, taskId, comment, user, createdDate, updatedDate} = commentData;
   const toast = useToast();
   const auth = useStateAuth();
-  const {handleSubmit, reset, register} = useForm<IFormInputs>({mode: 'onChange'});
+  const {handleSubmit, reset, control} = useForm<IFormInputs>({mode: 'onChange'});
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [editComment, setEditComment] = useState(false);
@@ -67,12 +68,17 @@ const TaskComment: FC<ITaskCommentProps> = ({commentData, onSuccess}) => {
           <p>{user.name}</p>
           <div className="time">{createdDate !== updatedDate ? time + ' (edited)' : time}</div>
         </div>
-        <div className="content">
+        <div className="content prose">
           {!editComment ? (
-            <p>{comment}</p>
+            <div dangerouslySetInnerHTML={{__html: comment}}></div>
           ) : (
             <form className="decsription-form" onSubmit={handleSubmit(submitHandler)}>
-              <TextField className="w-full bg-white" multiline rows={2} {...register('comment')} autoFocus={true} defaultValue={comment} />
+              <Controller
+                name="comment"
+                rules={{required: true}}
+                control={control}
+                render={({field}) => <Editor name="example" value={comment} onChange={text => field.onChange(text)} />}
+              />
               <div className="mt-4 flex gap-4">
                 <Button className="w-24" variant="contained" color="primary" text="Comment" type="submit" />
                 <Button className="w-24" variant="outlined" color="white" text="Cancel" onClick={() => setEditComment(false)} type="button" />
