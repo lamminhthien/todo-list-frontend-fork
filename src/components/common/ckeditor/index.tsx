@@ -25,26 +25,26 @@ const Editor: FC<IEditorProps> = ({onChange, name, value}) => {
   const uploadAdapter = (loader: any) => {
     return {
       upload: () => {
-        return loader.file.then((file: any) => {
+        return new Promise((resolve: any, reject: any) => {
           const fileName = Date.now();
 
-          const s3ObjectRequest: PutObjectRequest = {
-            Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
-            Body: file,
-            Key: `data1/${fileName}.png`,
-            ACL: 'public-read'
-          };
-
-          let link = ``;
-
-          s3.upload(s3ObjectRequest, (err: Error, response: ManagedUpload.SendData) => {
-            if (err) return 'ERR';
-            if (response) {
-              link = response.Location;
-            }
+          loader.file.then((file: any) => {
+            const s3ObjectRequest: PutObjectRequest = {
+              Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
+              Body: file,
+              Key: `data1/${fileName}.png`,
+              ACL: 'public-read'
+            };
+            s3.upload(s3ObjectRequest)
+              .promise()
+              .then(res => {
+                console.log('here');
+                resolve({default: `${res.Location}`});
+              })
+              .catch(err => {
+                reject(err);
+              });
           });
-          console.log(link);
-          return {default: link};
         });
       }
     };
@@ -77,9 +77,6 @@ const Editor: FC<IEditorProps> = ({onChange, name, value}) => {
           id={'editor'}
           config={{
             extraPlugins: [uploadPlugin]
-            // ckfinder: {
-            //   uploadUrl: 'http://localhost:3333/api/uploadImage'
-            // }
           }}
           editor={ClassicEditor}
           data={value}
