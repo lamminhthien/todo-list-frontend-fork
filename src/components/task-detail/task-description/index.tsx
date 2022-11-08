@@ -48,7 +48,7 @@ export const TaskDescription = ({taskData, onSuccess}: ITaskDescriptionProp) => 
         <div className="title">
           <Icon name="ico-description" />
           <h4>Describe</h4>
-          <Button text="Edit" className="edit-btn" onClick={onClick} />
+          {!editDescription && <Button text="Edit" className="edit-btn" onClick={onClick} />}
         </div>
         {!editDescription ? (
           <div className="description-text" onClick={onClick}>
