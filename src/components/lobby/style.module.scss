@@ -10,8 +10,9 @@
 
 .container {
   @apply relative flex h-full flex-col-reverse items-center xl:flex-row;
-  @apply space-x-28 px-10 xl:px-40;
+  @apply space-x-28 px-3 xl:px-40;
   @apply py-10;
+
   form {
     @apply relative;
     p {
@@ -34,6 +35,6 @@
   @apply flex basis-1/2 justify-end;
   // background: aqua;
   svg {
-    @apply h-auto w-96 sm:w-[80%] xl:w-full xl:max-w-full;
+    @apply h-auto w-80 sm:w-[80%] xl:w-full xl:max-w-full;
   }
 }
