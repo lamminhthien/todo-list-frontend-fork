@@ -11,9 +11,10 @@ interface Iprops {
   form: UseFormReturn<IFormInputs, any>;
   onClose: () => void;
   onSubmit: (e?: BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
+  value?: string;
 }
 
-const CommentForm: FC<Iprops> = ({form, onSubmit, onClose}) => {
+const CommentForm: FC<Iprops> = ({form, onSubmit, onClose, value}) => {
   const {control} = form;
 
   return (
@@ -22,7 +23,7 @@ const CommentForm: FC<Iprops> = ({form, onSubmit, onClose}) => {
         name="comment"
         rules={{required: true}}
         control={control}
-        render={({field}) => <Editor name="example" value="" onChange={text => field.onChange(text)} />}
+        render={({field}) => <Editor name="example" value={value || ''} onChange={text => field.onChange(text)} />}
       />
       <div className="mt-4 flex gap-4">
         <Button className="h-8 w-20" variant="contained" color="primary" text="Comment" type="submit" />
