@@ -19,13 +19,12 @@ const Item: FC<IItemProps> = props => {
 
   const auth = useStateAuth();
 
-  const [isEditting, setIsEditting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const onEdit = () => setIsEditting(true);
-  const onClose = () => setIsEditting(false);
+  const onEdit = () => setIsEditing(true);
+  const onClose = () => setIsEditing(false);
 
-  const showActions = !isEditting && auth?.id === user.id;
-  const showContent = !showActions;
+  const showActions = !isEditing && auth?.id === user.id && auth?.id !== undefined;
 
   return (
     <div className="task-comment">
@@ -34,7 +33,7 @@ const Item: FC<IItemProps> = props => {
       </div>
       <div className="right">
         <Header {...props} />
-        <Content {...{...props, show: showContent, onClose}} />
+        <Content {...{...props, isEditing, onClose}} />
         <Actions {...{commentData, onSuccess, onEdit, show: showActions}} />
       </div>
     </div>

@@ -13,11 +13,11 @@ interface IFormInputs {
 }
 
 interface Iprops extends IItemProps {
-  show: boolean;
+  isEditing: boolean;
   onClose: () => void;
 }
 
-const Content: FC<Iprops> = ({commentData, onSuccess, show, onClose}) => {
+const Content: FC<Iprops> = ({commentData, onSuccess, isEditing, onClose}) => {
   const {id, taskId, comment} = commentData;
   const toast = useToast();
   const form = useForm<IFormInputs>({mode: 'onChange'});
@@ -33,7 +33,9 @@ const Content: FC<Iprops> = ({commentData, onSuccess, show, onClose}) => {
 
   const onSubmit = handleSubmit(submitHandler);
   return (
-    <div className="content prose">{!show ? <PopUpImageDangerous rawHTML={comment} /> : <CommentForm {...{form, onSubmit, onClose, value: comment}} />}</div>
+    <div className="content prose">
+      {!isEditing ? <PopUpImageDangerous rawHTML={comment} /> : <CommentForm {...{form, onSubmit, onClose, value: comment}} />}
+    </div>
   );
 };
 export default Content;
