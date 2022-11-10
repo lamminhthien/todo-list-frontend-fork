@@ -5,9 +5,9 @@
       @apply relative h-20 w-28 min-w-[112px] overflow-hidden rounded border bg-white;
     }
     .info {
-      @apply w-[calc(100%-120px)];
+      @apply w-[calc(100%-120px)] text-h7;
       &-name {
-        @apply truncate text-slate-700;
+        @apply relative truncate font-semibold text-slate-700;
         // &:hover {
         //   @apply break-all;
         // }
@@ -15,14 +15,17 @@
         //   @apply truncate;
         // }
         span {
-          @apply text-h6 font-medium;
+          @apply font-medium;
+        }
+        i {
+          @apply absolute;
         }
       }
       &-date {
         @apply my-1 text-slate-600;
       }
       &-actions {
-        @apply flex gap-2.5 text-h7 text-slate-500 underline;
+        @apply flex gap-2.5  text-slate-500 underline;
       }
     }
   }

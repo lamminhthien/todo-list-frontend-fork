@@ -13,3 +13,7 @@ export function getDate(date: Date) {
   if (deviantHours < 24) return deviantHours + ' hours ago';
   return dateFormat(date, 'dddd, mmmm dS, h:MM TT');
 }
+
+export function getDateFormat(date: Date) {
+  return dateFormat(date, 'mmmm dS, h:MM TT');
+}

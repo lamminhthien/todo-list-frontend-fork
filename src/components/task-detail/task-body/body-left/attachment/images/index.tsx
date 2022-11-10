@@ -77,7 +77,7 @@ const TaskImages: FC<ITaskImagesProps> = ({attachments, className, taskData, onS
             <div className="info">
               <div className="info-name">
                 <span>{e.name}</span>
-                <Icon name="ico-arrow-up-right" />
+                <Icon name="ico-arrow-up-right" size={20} />
               </div>
               <div className="info-date"> {'Added ' + getDate(new Date(e.createdDate))}</div>
               <div className="info-actions">
