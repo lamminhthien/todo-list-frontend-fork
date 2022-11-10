@@ -54,7 +54,7 @@ const Description: FC<IBaseProps> = ({className}) => {
     <div className={classNames('description', className)}>
       <Title
         icon={<Icon name="ico-description" />}
-        text="Describe"
+        text="Description"
         rightBtn={!isEditing && write && <Button text="Edit" className="edit-btn" onClick={onClick} />}
       />
       {!isEditing ? (
@@ -69,8 +69,16 @@ const Description: FC<IBaseProps> = ({className}) => {
             render={({field}) => <Editor name="example" value={description} onChange={text => field.onChange(text)} />}
           />
           <div className="mt-4 flex gap-4">
-            <Button className="h-8 w-20" variant="contained" color="primary" text="Save" type="submit" loading={isSubmitting} disabled={isSubmitting} />
-            <Button className="h-8 w-20" variant="outlined" color="white" text="Cancel" onClick={() => setIsEditing(false)} type="button" />
+            <Button
+              className="max-w-20 h-8 px-2 text-sm"
+              variant="contained"
+              color="primary"
+              text="Save"
+              type="submit"
+              loading={isSubmitting}
+              disabled={isSubmitting}
+            />
+            <Button className="max-w-20 h-8 px-2 text-sm" variant="outlined" color="white" text="Cancel" onClick={() => setIsEditing(false)} type="button" />
           </div>
         </form>
       )}

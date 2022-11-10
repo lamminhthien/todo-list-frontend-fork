@@ -55,18 +55,17 @@ const TaskToolbar: FC<IBaseProps> = ({className}) => {
     <div className={classNames(style.toolbar, className)}>
       <div className="header">
         <div className="left">
-          <Icon name="ico-task" size={32} />
           <h2 className="text-h2"> {task.name}</h2>
         </div>
         {write && (
           <div className="right">
             <div className="toolbar-desktop">
               <Button onClick={onDelete}>
-                <Icon name="ico-trash-2" />
+                <Icon name="ico-trash-2" size={20} />
                 <span> Delete</span>
               </Button>
               <Button onClick={onShare}>
-                <Icon name="ico-share-3" />
+                <Icon name="ico-share-3" size={20} />
                 <span> Share </span>
               </Button>
             </div>
