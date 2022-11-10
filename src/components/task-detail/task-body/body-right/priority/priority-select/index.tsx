@@ -28,12 +28,12 @@ const PrioritySelect: FC<IProps> = ({taskData, onSuccess}) => {
   };
 
   return (
-    <Select onChange={onChange} value={value} IconComponent={KeyboardArrowDownIcon} sx={{color: '#000000', fontFamily: 'inherit'}}>
+    <Select onChange={onChange} value={value} IconComponent={KeyboardArrowDownIcon} sx={{fontFamily: 'inherit'}}>
       {list.map((priority, index) => (
         <MenuItem key={index} value={priority} sx={{fontFamily: 'inherit', padding: '4px 20px'}}>
           <div className="relative flex items-center">
             <Icon name={icons[index]} className="mr-3" style={{color: colors[index]}} />
-            <span className="priority-name rounded text-h6 font-medium">{priority}</span>
+            <span className="priority-name text-h6 font-medium text-slate-700">{priority}</span>
           </div>
         </MenuItem>
       ))}

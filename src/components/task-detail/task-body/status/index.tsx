@@ -7,6 +7,7 @@ import api from '@/data/api';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {socketUpdateList} from '@/data/socket';
 
+import Title from '../title';
 import style from './style.module.scss';
 
 interface StatusProps {
@@ -27,7 +28,7 @@ const Status: FC<StatusProps> = ({taskData, onSuccess, className, noTitle}) => {
 
   return (
     <div className={classNames('status', className)}>
-      {!noTitle && <p className="title">Status</p>}
+      {!noTitle && <Title text="Status" />}
       <StatusSelect className={style.status} status={taskData.status} items={taskData.todolist.status} onChange={onChange} />
     </div>
   );
