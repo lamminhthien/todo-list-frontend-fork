@@ -1,14 +1,17 @@
 import classNames from 'classnames';
 import {FC, HTMLAttributes} from 'react';
 
+import useTask from '@/components/task-detail/hooks/use-task';
+
 import DueDate from './due-date';
 import StartDate from './start-date';
 
 const TaskDate: FC<HTMLAttributes<HTMLDivElement>> = ({className}) => {
+  const {task} = useTask();
   return (
     <div className={classNames('date', className)}>
-      <StartDate startDate={new Date(2012, 0, 1)} className="mobile" />
-      <DueDate dueDate={new Date(Date.now())} className="mobile" />
+      <StartDate startDate={task.startDate} className="mobile" />
+      <DueDate dueDate={task.dueDate} className="mobile" />
     </div>
   );
 };
