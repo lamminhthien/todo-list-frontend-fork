@@ -60,7 +60,7 @@ const InputAutosize: FC<IProps> = ({
 
   return (
     <TextareaAutosize
-      className={classNames(className, style['input-autosize'], role === 'point' ? '' : style.center)}
+      className={classNames(className, style['input-autosize'], role === 'title' ? style.title : '')}
       {...register('text', {value})}
       placeholder={placeholder}
       onClick={onClick}
