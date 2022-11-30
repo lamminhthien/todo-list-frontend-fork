@@ -75,9 +75,7 @@ const Actions: FC<ITaskItemProps> = ({task}) => {
       </div>
       {write && (
         <>
-          <Tool {...editToolProps} className="tool-desktop" />
-          <Tool {...deleteToolProps} className="tool-desktop" />
-          <ToolMenu icon={<MUI_ICON.MORE_VERT />} items={toolMenuItems} margin={-1} />
+          <ToolMenu isTaskDetail={false} icon={<MUI_ICON.MORE_VERT />} items={toolMenuItems} margin={-1} />
         </>
       )}
     </div>
