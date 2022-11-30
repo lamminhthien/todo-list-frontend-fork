@@ -73,11 +73,7 @@ const Actions: FC<ITaskItemProps> = ({task}) => {
       <div className="piority">
         <TaskPiority task={task} readOnly={!write} onChange={onChangePriority} hideTitle={true} />
       </div>
-      {write && (
-        <>
-          <ToolMenu isTaskDetail={false} icon={<MUI_ICON.MORE_VERT />} items={toolMenuItems} margin={-1} />
-        </>
-      )}
+      {write && <ToolMenu display="mobile" icon={<MUI_ICON.MORE_VERT />} items={toolMenuItems} margin={-1} />}
     </div>
   );
 };
