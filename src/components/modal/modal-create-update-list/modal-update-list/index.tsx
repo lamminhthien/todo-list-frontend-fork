@@ -20,13 +20,16 @@ const ModalUpdateList: FC<IProps> = props => {
   const [options, setOptions] = useState<IUserResponse[]>([]);
   const defaultMemberIds = data?.members?.map(e => e.id) || [];
   const memberDefaultValue = options.filter(e => defaultMemberIds.includes(e.id));
-  const visibilityDefaultValue = hiddenVisibility ? undefined : data?.visibility ? data.visibility : Visibilities.PUBLIC;
+  const visibilityDefaultValue = hiddenVisibility
+    ? undefined
+    : data?.visibility
+    ? data.visibility
+    : Visibilities.PUBLIC;
 
   useEffect(() => {
     api.user.getIndentify().then(res => {
       if (res && res.status == 200) {
         setOptions(res.data);
-        console.log('aa');
       }
     });
   }, []);
@@ -34,15 +37,31 @@ const ModalUpdateList: FC<IProps> = props => {
   return (
     <>
       {open && (
-        <Modal className={cls(styles['com-modal-todo-add-edit'], 'max-w-xl')} variant="center" open={open} onClose={onClose}>
+        <Modal
+          className={cls(styles['com-modal-todo-add-edit'], 'max-w-xl')}
+          variant="center"
+          open={open}
+          onClose={onClose}
+        >
           <form onSubmit={onSubmit}>
             <Modal.Header>
               <h3 className="title">Settings</h3>
             </Modal.Header>
             <Modal.Body>
-              <Input error={errors.name?.message} value={data?.name} autoFocus={true} placeholder={'Enter your list name'} {...register('name')} />
+              <Input
+                error={errors.name?.message}
+                value={data?.name}
+                autoFocus={true}
+                placeholder={'Enter your list name'}
+                {...register('name')}
+              />
               {data && !hiddenVisibility && (
-                <Select {...register('visibility')} className="input-type" defaultValue={visibilityDefaultValue} sx={{color: '#334155'}}>
+                <Select
+                  {...register('visibility')}
+                  className="input-type"
+                  defaultValue={visibilityDefaultValue}
+                  sx={{color: '#334155'}}
+                >
                   {Object.keys(Visibilities).map((key, idx) => {
                     return (
                       <MenuItem key={key} value={key}>
@@ -73,13 +92,22 @@ const ModalUpdateList: FC<IProps> = props => {
                         </li>
                       );
                   }}
-                  renderInput={params => <TextField {...params} className="members-textfield" label="member" placeholder="Add members..." />}
+                  renderInput={params => (
+                    <TextField {...params} className="members-textfield" label="member" placeholder="Add members..." />
+                  )}
                 />
               )}
             </Modal.Body>
             <Modal.Footer>
               <div className="content">
-                <Button className="w-full" variant="outlined" color="primary" text="Cancel" onClick={onClose} type="button" />
+                <Button
+                  className="w-full"
+                  variant="outlined"
+                  color="primary"
+                  text="Cancel"
+                  onClick={onClose}
+                  type="button"
+                />
                 <Button className="w-full" variant="contained" color="primary" text="Save" type="submit" />
               </div>
             </Modal.Footer>
