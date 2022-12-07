@@ -2,7 +2,7 @@ import {FC} from 'react';
 
 import Button from '@/core-ui/button';
 import Icon from '@/core-ui/icon';
-import useLists from '@/states/lists/use-lists';
+import useModals from '@/states/modals/use-modals';
 import {IBaseProps} from '@/types';
 
 import Title from '../title';
@@ -12,10 +12,10 @@ interface IToolbarProps extends IBaseProps {
   showActions?: boolean;
 }
 const Toolbar: FC<IToolbarProps> = ({className, title, showActions = false}) => {
-  const {setIsOpenModal, setSelectedTodolist} = useLists();
+  const {setIsOpenModal, setSelectedTodolist} = useModals();
 
   const onNew = () => {
-    setIsOpenModal('edit');
+    setIsOpenModal('list');
     setSelectedTodolist();
   };
 

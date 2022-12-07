@@ -7,28 +7,20 @@ import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
 import {Modal} from '@/core-ui/modal';
 import api from '@/data/api';
-import {ITodolistResponse} from '@/data/api/types/todolist.type';
 import {IUserResponse} from '@/data/api/types/user.type';
 import {Visibilities} from '@/utils/constant';
 
-import useModalCreateUpdateList from './hook';
-import styles from './style.module.scss';
+import styles from '../style.module.scss';
+import {IProps} from '../types';
+import useModalUpdateList from './hook';
 
-export interface IProps {
-  open: boolean;
-  onClose: () => void;
-  onSuccess?: () => void;
-  hiddenVisibility?: boolean;
-  data?: ITodolistResponse;
-}
-
-const ModalCreateUpdateList: FC<IProps> = props => {
-  const {open, onClose, data, hiddenVisibility} = props;
-  const visibilityDefaultValue = hiddenVisibility ? undefined : data?.visibility ? data.visibility : Visibilities.PUBLIC;
-  const {onSubmit, register, errors, isSubmitting, setValue} = useModalCreateUpdateList(props);
+const ModalUpdateList: FC<IProps> = props => {
+  const {data, open, hiddenVisibility, onClose} = props;
+  const {errors, onSubmit, register, setValue} = useModalUpdateList(props);
   const [options, setOptions] = useState<IUserResponse[]>([]);
   const defaultMemberIds = data?.members?.map(e => e.id) || [];
   const memberDefaultValue = options.filter(e => defaultMemberIds.includes(e.id));
+  const visibilityDefaultValue = hiddenVisibility ? undefined : data?.visibility ? data.visibility : Visibilities.PUBLIC;
 
   useEffect(() => {
     api.user.getIndentify().then(res => {
@@ -44,23 +36,12 @@ const ModalCreateUpdateList: FC<IProps> = props => {
         <Modal className={cls(styles['com-modal-todo-add-edit'], 'max-w-xl')} variant="center" open={open} onClose={onClose}>
           <form onSubmit={onSubmit}>
             <Modal.Header>
-              <h3 className="title">{data ? 'Settings' : 'Create New List'}</h3>
+              <h3 className="title">{'Settings'}</h3>
             </Modal.Header>
             <Modal.Body>
-              <Input
-                error={errors.name?.message}
-                value={data?.name}
-                autoFocus={true}
-                placeholder={'Enter your list name'}
-                {...register('name')}
-              />
+              <Input error={errors.name?.message} value={data?.name} autoFocus={true} placeholder={'Enter your list name'} {...register('name')} />
               {data && !hiddenVisibility && (
-                <Select
-                  {...register('visibility')}
-                  className="input-type"
-                  defaultValue={visibilityDefaultValue}
-                  sx={{color: '#334155'}}
-                >
+                <Select {...register('visibility')} className="input-type" defaultValue={visibilityDefaultValue} sx={{color: '#334155'}}>
                   {Object.keys(Visibilities).map((key, idx) => {
                     return (
                       <MenuItem key={key} value={key}>
@@ -91,24 +72,14 @@ const ModalCreateUpdateList: FC<IProps> = props => {
                         </li>
                       );
                   }}
-                  renderInput={params => (
-                    <TextField {...params} className="members-textfield" label="member" placeholder="Add members..." />
-                  )}
+                  renderInput={params => <TextField {...params} className="members-textfield" label="member" placeholder="Add members..." />}
                 />
               )}
             </Modal.Body>
             <Modal.Footer>
               <div className="content">
                 <Button className="w-full" variant="outlined" color="primary" text="Cancel" onClick={onClose} type="button" />
-                <Button
-                  className="w-full"
-                  variant="contained"
-                  color="primary"
-                  text={data?.id ? 'Save' : 'Create'}
-                  type="submit"
-                  loading={isSubmitting}
-                  disabled={isSubmitting}
-                />
+                <Button className="w-full" variant="contained" color="primary" text="Save" type="submit" />
               </div>
             </Modal.Footer>
           </form>
@@ -118,4 +89,4 @@ const ModalCreateUpdateList: FC<IProps> = props => {
   );
 };
 
-export default ModalCreateUpdateList;
+export default ModalUpdateList;

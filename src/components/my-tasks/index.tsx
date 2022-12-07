@@ -1,27 +1,19 @@
 import React, {useEffect} from 'react';
 
 import {ROUTES} from '@/configs/routes.config';
-import socket, {socketUpdateList} from '@/data/socket';
+import socket from '@/data/socket';
 import {SOCKET_EVENTS} from '@/data/socket/type';
 import {useStateAuth} from '@/states/auth';
 import useTasks from '@/states/tasks/use-tasks';
-import useTodolist from '@/states/todolist/use-todolist';
 import LocalStorage from '@/utils/local-storage';
 
 import Title from '../lists/title';
-import ModalCreateUpdateTask from '../modal/modal-create-update-task';
-import ModalDelete from '../modal/modal-delete';
 import ListTask from './list-task';
 import styles from './style.module.scss';
 
 const MyTasks = () => {
-  const {selectedTask, isOpenModal, setIsOpenModal} = useTodolist();
   const {myTasks, getMyTasks} = useTasks();
   const auth = useStateAuth();
-
-  const onClose = () => {
-    setIsOpenModal(null);
-  };
 
   useEffect(() => {
     LocalStorage.checkPage.set(ROUTES.TASK);
@@ -57,17 +49,6 @@ const MyTasks = () => {
           <Title tilte={'My Tasks'} />
           {myTasks?.filter(x => x !== null).length == 0 && <span className="empty">Empty task</span>}
           {myTasks && <ListTask myTask={myTasks} />}
-          {selectedTask && (
-            <ModalDelete open={isOpenModal.delete} onClose={onClose} data={selectedTask} onSuccess={socketUpdateList} />
-          )}
-          {selectedTask && (
-            <ModalCreateUpdateTask
-              open={isOpenModal.task}
-              onClose={onClose}
-              taskData={selectedTask}
-              onSuccess={socketUpdateList}
-            />
-          )}
         </div>
       </div>
     </>

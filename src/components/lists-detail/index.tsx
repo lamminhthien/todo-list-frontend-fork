@@ -2,14 +2,11 @@ import {useRouter} from 'next/router';
 import {FC, useEffect} from 'react';
 
 import ToolbarDetail from '@/components/lists-detail/toolbar';
-import ModalCreateUpdateList from '@/components/modal/modal-create-update-list';
-import ModalCreateUpdateTask from '@/components/modal/modal-create-update-task';
-import ModalDelete from '@/components/modal/modal-delete';
-import ModalShare from '@/components/modal/modal-share';
 import FloatIcon from '@/core-ui/float-icon';
-import socket, {socketUpdateList} from '@/data/socket';
+import socket from '@/data/socket';
 import {SOCKET_EVENTS} from '@/data/socket/type';
 import {useStateAuth} from '@/states/auth';
+import useModals from '@/states/modals/use-modals';
 import useTodolist from '@/states/todolist/use-todolist';
 
 import Seo from '../common/seo/seo';
@@ -21,16 +18,14 @@ export interface Iprops {
 }
 
 const ListDetail: FC<Iprops> = ({id}) => {
-  const {todolist, selectedTask, isOpenModal, write, assest, owner, initial, setIsOpenModal} = useTodolist();
   const auth = useStateAuth();
   const router = useRouter();
 
+  const {todolist, write, assest, initial} = useTodolist();
+  const {setIsOpenModal} = useModals();
+
   const onClickFloatIcon = () => {
     setIsOpenModal('task');
-  };
-
-  const onClose = () => {
-    setIsOpenModal(null);
   };
 
   useEffect(() => {
@@ -66,27 +61,6 @@ const ListDetail: FC<Iprops> = ({id}) => {
               <ToolbarDetail />
               <ListTask />
               <FloatIcon className="float-icon" onClick={onClickFloatIcon} hidden={!write} />
-              <ModalCreateUpdateList
-                open={isOpenModal.settings}
-                onClose={onClose}
-                data={todolist}
-                onSuccess={socketUpdateList}
-                hiddenVisibility={!owner}
-              />
-              <ModalDelete
-                open={isOpenModal.delete}
-                onClose={onClose}
-                data={selectedTask || todolist}
-                onSuccess={socketUpdateList}
-              />
-              <ModalShare open={isOpenModal.share} onClose={onClose} data={todolist} />
-              <ModalCreateUpdateTask
-                open={isOpenModal.task}
-                onClose={onClose}
-                todolistData={todolist}
-                taskData={selectedTask}
-                onSuccess={socketUpdateList}
-              />
             </div>
           </div>
         </>

@@ -12,7 +12,7 @@ import useTodolist from '@/states/todolist/use-todolist';
 import {Visibilities} from '@/utils/constant';
 import {ToastContents} from '@/utils/toast-content';
 
-import {IProps} from '.';
+import {IProps} from '../types';
 
 interface IFormInputs {
   name: string;
@@ -24,30 +24,25 @@ const Schema = yup.object().shape({
   name: yup.string().required('Please enter your list name.')
 });
 
-export default function useModalCreateUpdateList({onClose, onSuccess, data}: IProps) {
+export default function useModalUpdateList({onClose, onSuccess, data}: IProps) {
   const router = useRouter();
+  const toast = useToast();
   const {setTodolist} = useTodolist();
-  const {handleSubmit, formState, reset, setValue, getValues, setFocus, ...rest} = useForm<IFormInputs>({
+
+  const {formState, handleSubmit, reset, setValue, ...rest} = useForm<IFormInputs>({
     resolver: yupResolver(Schema),
     mode: 'onChange'
   });
 
   const {errors, isSubmitting} = formState;
-  const toast = useToast();
 
   const submitHandler: SubmitHandler<IFormInputs> = async formData => {
     if (isSubmitting) return;
     const {name, visibility, member} = formData;
-    let req;
 
-    if (!data) {
-      req = api.todolist.create({name}).then(res => {
-        toast.show({type: 'success', title: 'Create List', content: ToastContents.SUCCESS});
-        router.push(ROUTES.LIST + '/' + res.data.id);
-      });
-    } else {
+    if (data) {
       const {id} = data;
-      req = api.todolist.update({id, name, visibility, member}).then(res => {
+      const req = api.todolist.update({id, name, visibility, member}).then(res => {
         if (router.asPath.includes(ROUTES.LIST)) {
           const newTodolist: ITodolistResponse = res.data;
           newTodolist.name = name;
@@ -55,15 +50,16 @@ export default function useModalCreateUpdateList({onClose, onSuccess, data}: IPr
         }
         toast.show({type: 'success', title: 'Update List', content: ToastContents.SUCCESS});
       });
+
+      req
+        .then(onSuccess)
+        .catch(e => {
+          console.log(e);
+          toast.show({type: 'danger', title: 'Error', content: ToastContents.ERROR});
+        })
+        .finally(() => reset());
     }
 
-    req
-      .then(onSuccess)
-      .catch(e => {
-        console.log(e);
-        toast.show({type: 'danger', title: 'Error', content: ToastContents.ERROR});
-      })
-      .finally(() => reset());
     onClose();
   };
 
@@ -72,5 +68,5 @@ export default function useModalCreateUpdateList({onClose, onSuccess, data}: IPr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  return {onSubmit: handleSubmit(submitHandler), errors, isSubmitting, setValue, ...rest};
+  return {errors, isSubmitting, setValue, onSubmit: handleSubmit(submitHandler), ...rest};
 }

@@ -8,6 +8,7 @@ import {ROUTES} from '@/configs/routes.config';
 import Icon from '@/core-ui/icon';
 import {ITodolistResponse} from '@/data/api/types/todolist.type';
 import useLists from '@/states/lists/use-lists';
+import useModals from '@/states/modals/use-modals';
 import {MUI_ICON} from '@/utils/mui-icon';
 
 interface IItemProps {
@@ -23,15 +24,16 @@ const Item: FC<IItemProps> = ({todolist, ...props}) => {
   const {hiddenDelete, hiddenEdit, hiddenFavorite, hiddenShare} = props;
   const router = useRouter();
 
-  const {setSelectedTodolist, setIsOpenModal, get: onSuccess} = useLists();
+  const {get: onSuccess} = useLists();
+  const {setIsOpenModal, setSelectedTodolist} = useModals();
 
   const onEdit = () => {
-    setIsOpenModal('edit');
+    setIsOpenModal('settings');
     setSelectedTodolist(todolist);
   };
 
   const onDelete = () => {
-    setIsOpenModal('delete');
+    setIsOpenModal('deleteList');
     setSelectedTodolist(todolist);
   };
 
