@@ -26,6 +26,7 @@ const ModalUpdateList: FC<IProps> = props => {
     api.user.getIndentify().then(res => {
       if (res && res.status == 200) {
         setOptions(res.data);
+        console.log('aa');
       }
     });
   }, []);
