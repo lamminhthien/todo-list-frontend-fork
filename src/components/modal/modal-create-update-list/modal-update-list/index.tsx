@@ -36,7 +36,7 @@ const ModalUpdateList: FC<IProps> = props => {
         <Modal className={cls(styles['com-modal-todo-add-edit'], 'max-w-xl')} variant="center" open={open} onClose={onClose}>
           <form onSubmit={onSubmit}>
             <Modal.Header>
-              <h3 className="title">{'Settings'}</h3>
+              <h3 className="title">Settings</h3>
             </Modal.Header>
             <Modal.Body>
               <Input error={errors.name?.message} value={data?.name} autoFocus={true} placeholder={'Enter your list name'} {...register('name')} />
