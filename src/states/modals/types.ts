@@ -9,12 +9,12 @@ export interface IInitialState {
   selectedTask?: ITaskResponse;
   selectedTodolist?: ITodolistResponse;
   isOpenModal: {
+    createList: boolean;
+    createTask: boolean;
     deleteTask: boolean;
     deleteList: boolean;
-    edit: boolean;
-    list: boolean;
     settings: boolean;
-    share: boolean;
-    task: boolean;
+    shareList: boolean;
+    updateTask: boolean;
   };
 }

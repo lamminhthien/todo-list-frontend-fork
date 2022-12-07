@@ -22,10 +22,11 @@ const ListDetail: FC<Iprops> = ({id}) => {
   const router = useRouter();
 
   const {todolist, write, assest, initial} = useTodolist();
-  const {setIsOpenModal} = useModals();
+  const {setIsOpenModal, setSelectedTodolist} = useModals();
 
   const onClickFloatIcon = () => {
-    setIsOpenModal('task');
+    setSelectedTodolist(todolist);
+    setIsOpenModal('createTask');
   };
 
   useEffect(() => {

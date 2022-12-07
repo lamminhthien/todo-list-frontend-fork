@@ -15,7 +15,7 @@ const Lists: FC = () => {
   const {setIsOpenModal, setSelectedTodolist} = useModals();
 
   const onNew = () => {
-    setIsOpenModal('list');
+    setIsOpenModal('createList');
     setSelectedTodolist();
   };
 

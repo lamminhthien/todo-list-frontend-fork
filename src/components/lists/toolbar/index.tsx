@@ -15,7 +15,7 @@ const Toolbar: FC<IToolbarProps> = ({className, title, showActions = false}) => 
   const {setIsOpenModal, setSelectedTodolist} = useModals();
 
   const onNew = () => {
-    setIsOpenModal('list');
+    setIsOpenModal('createList');
     setSelectedTodolist();
   };
 

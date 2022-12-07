@@ -12,7 +12,7 @@ import useTodolist from '@/states/todolist/use-todolist';
 import {Visibilities} from '@/utils/constant';
 import {ToastContents} from '@/utils/toast-content';
 
-import {IProps} from '../types';
+import {IProps} from '../types-create-update';
 
 interface IFormInputs {
   name: string;

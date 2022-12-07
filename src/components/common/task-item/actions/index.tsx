@@ -40,7 +40,7 @@ const Actions: FC<IActionsProps> = ({task, todolist, write = false}) => {
 
   const onEdit = () => {
     setSelectedTask(task);
-    setIsOpenModal('task');
+    setIsOpenModal('updateTask');
   };
 
   const onChange = (event: SelectChangeEvent<number>) => {
@@ -68,7 +68,9 @@ const Actions: FC<IActionsProps> = ({task, todolist, write = false}) => {
     onClick: onEdit
   };
 
-  const toolMenuItems = [deleteToolProps, editToolProps].filter(item => !item.hidden).map((item, idx) => <Tool key={idx} {...{...item, className: 'flex-row-reverse'}} />);
+  const toolMenuItems = [deleteToolProps, editToolProps]
+    .filter(item => !item.hidden)
+    .map((item, idx) => <Tool key={idx} {...{...item, className: 'flex-row-reverse'}} />);
 
   return (
     <div className={classNames('actions', style.actions)}>

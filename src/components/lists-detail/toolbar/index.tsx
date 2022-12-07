@@ -27,7 +27,7 @@ const ToolbarDetail: FC = () => {
   const onAddTask = () => {
     setSelectedTask();
     setSelectedTodolist(todolist);
-    setIsOpenModal('task');
+    setIsOpenModal('createTask');
   };
   const onDelete = () => {
     setSelectedTodolist(todolist);
@@ -35,7 +35,7 @@ const ToolbarDetail: FC = () => {
   };
   const onShare = () => {
     setSelectedTodolist(todolist);
-    setIsOpenModal('share');
+    setIsOpenModal('shareList');
   };
   const onSetting = () => {
     setSelectedTodolist(todolist);
@@ -66,7 +66,9 @@ const ToolbarDetail: FC = () => {
     onClick: onSetting
   };
 
-  const toolMenuItems = [deleteToolProps, shareToolProps, addTaskToolProps, settingToolProps].filter(item => !item.hidden).map((item, idx) => <Tool key={idx} {...{...item, className: 'flex-row-reverse'}} />);
+  const toolMenuItems = [deleteToolProps, shareToolProps, addTaskToolProps, settingToolProps]
+    .filter(item => !item.hidden)
+    .map((item, idx) => <Tool key={idx} {...{...item, className: 'flex-row-reverse'}} />);
 
   return (
     <div className={style.toolbar}>

@@ -1,13 +1,13 @@
 import {IInitialState} from './types';
 
 export const isOpenModal = {
+  createList: false,
+  createTask: false,
   deleteTask: false,
   deleteList: false,
-  edit: false,
-  list: false,
   settings: false,
-  share: false,
-  task: false
+  shareList: false,
+  updateTask: false
 };
 
 const initialState: IInitialState = {

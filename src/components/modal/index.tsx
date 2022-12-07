@@ -6,11 +6,13 @@ import {useStateAuth} from '@/states/auth';
 import useLists from '@/states/lists/use-lists';
 import useModals from '@/states/modals/use-modals';
 
-import ModalCreateList from './modal-create-update-list/modal-create-list';
-import ModalUpdateList from './modal-create-update-list/modal-update-list';
-import ModalCreateUpdateTask from './modal-create-update-task';
-import ModalDelete from './modal-delete';
-import ModalShare from './modal-share';
+import ModalCreateList from './list/modal-create';
+import ModalDeleteList from './list/modal-delete';
+import ModalShare from './list/modal-share';
+import ModalUpdateList from './list/modal-update';
+import ModalCreateTask from './task/modal-create';
+import ModalDeleteTask from './task/modal-delete';
+import ModalUpdateTask from './task/modal-update';
 
 const Modal = () => {
   const auth = useStateAuth();
@@ -44,10 +46,11 @@ const Modal = () => {
 
   return (
     <>
-      <ModalCreateUpdateTask open={isOpenModal.task} onClose={onClose} taskData={selectedTask} todolistData={selectedTodolist} onSuccess={socketUpdateList} />
-      <ModalCreateList open={isOpenModal.list} onClose={onClose} />
-      {selectedTask && <ModalDelete open={isOpenModal.deleteTask} onClose={onClose} data={selectedTask} />}
-      {selectedTodolist && <ModalDelete open={isOpenModal.deleteList} onClose={onClose} data={selectedTodolist} onSuccess={get} />}
+      {/* Modal list */}
+      <ModalCreateList open={isOpenModal.createList} onClose={onClose} />
+      {selectedTodolist && (
+        <ModalDeleteList open={isOpenModal.deleteList} onClose={onClose} data={selectedTodolist} onSuccess={get} />
+      )}
       {selectedTodolist && (
         <ModalUpdateList
           open={isOpenModal.settings}
@@ -59,7 +62,24 @@ const Modal = () => {
           }}
         />
       )}
-      {selectedTodolist && <ModalShare open={isOpenModal.share} onClose={onClose} data={selectedTodolist} />}
+      {selectedTodolist && <ModalShare open={isOpenModal.shareList} onClose={onClose} data={selectedTodolist} />}
+
+      {/* Modal task */}
+      <ModalCreateTask
+        open={isOpenModal.createTask}
+        onClose={onClose}
+        onSuccess={socketUpdateList}
+        todolistData={selectedTodolist}
+      />
+      {selectedTask && (
+        <ModalUpdateTask
+          open={isOpenModal.updateTask}
+          onClose={onClose}
+          taskData={selectedTask}
+          onSuccess={socketUpdateList}
+        />
+      )}
+      {selectedTask && <ModalDeleteTask open={isOpenModal.deleteTask} onClose={onClose} data={selectedTask} />}
     </>
   );
 };

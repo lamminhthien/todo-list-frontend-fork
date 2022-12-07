@@ -10,8 +10,8 @@ import api from '@/data/api';
 import {IUserResponse} from '@/data/api/types/user.type';
 import {Visibilities} from '@/utils/constant';
 
-import styles from '../style.module.scss';
-import {IProps} from '../types';
+import styles from '../style-create-upate.module.scss';
+import {IProps} from '../types-create-update';
 import useModalUpdateList from './hook';
 
 const ModalUpdateList: FC<IProps> = props => {

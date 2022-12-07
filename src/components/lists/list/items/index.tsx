@@ -38,7 +38,7 @@ const Item: FC<IItemProps> = ({todolist, ...props}) => {
   };
 
   const onShare = () => {
-    setIsOpenModal('share');
+    setIsOpenModal('shareList');
     setSelectedTodolist(todolist);
   };
 

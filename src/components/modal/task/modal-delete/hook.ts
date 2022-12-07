@@ -17,7 +17,7 @@ export default function useModalDelete({onClose, onSuccess, data}: IProps) {
 
   const onClick = () => {
     let req;
-    if ((data as any).statusId)
+    if (data.statusId) {
       req = api.task.update({id, isActive: false}).then(() => {
         if (router.asPath.includes(ROUTES.LIST)) {
           const newTodolist: ITodolistResponse = JSON.parse(JSON.stringify(todolist));
@@ -26,20 +26,16 @@ export default function useModalDelete({onClose, onSuccess, data}: IProps) {
         }
         toast.show({type: 'success', title: 'Delete ', content: ToastContents.SUCCESS});
       });
-    else
-      req = api.todolist.update({id, isActive: false}).then(() => {
-        toast.show({type: 'success', title: 'Delete list', content: ToastContents.SUCCESS});
-        if (router.asPath.includes(ROUTES.LIST + '/' + id)) {
-          router.push(ROUTES.LIST);
-        }
-      });
-    req.then(onSuccess).catch(() =>
-      toast.show({
-        type: 'danger',
-        title: 'Error',
-        content: ToastContents.ERROR
-      })
-    );
+
+      req.then(onSuccess).catch(() =>
+        toast.show({
+          type: 'danger',
+          title: 'Error',
+          content: ToastContents.ERROR
+        })
+      );
+    }
+
     onClose();
   };
   return {onClick};

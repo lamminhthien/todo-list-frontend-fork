@@ -5,8 +5,8 @@ import Button from '@/core-ui/button';
 import Input from '@/core-ui/input';
 import {Modal} from '@/core-ui/modal';
 
-import styles from '../style.module.scss';
-import {IProps} from '../types';
+import styles from '../style-create-upate.module.scss';
+import {IProps} from '../types-create-update';
 import useModalCreateList from './hook';
 
 const ModalCreateList: FC<IProps> = props => {
@@ -16,7 +16,12 @@ const ModalCreateList: FC<IProps> = props => {
   return (
     <>
       {open && (
-        <Modal className={cls(styles['com-modal-todo-add-edit'], 'max-w-xl')} variant="center" open={open} onClose={onClose}>
+        <Modal
+          className={cls(styles['com-modal-todo-add-edit'], 'max-w-xl')}
+          variant="center"
+          open={open}
+          onClose={onClose}
+        >
           <form onSubmit={onSubmit}>
             <Modal.Header>
               <h3 className="title">Create New List</h3>
@@ -26,8 +31,23 @@ const ModalCreateList: FC<IProps> = props => {
             </Modal.Body>
             <Modal.Footer>
               <div className="content">
-                <Button className="w-full" variant="outlined" color="primary" text="Cancel" onClick={onClose} type="button" />
-                <Button className="w-full" variant="contained" color="primary" text="Create" type="submit" loading={isSubmitting} disabled={isSubmitting} />
+                <Button
+                  className="w-full"
+                  variant="outlined"
+                  color="primary"
+                  text="Cancel"
+                  onClick={onClose}
+                  type="button"
+                />
+                <Button
+                  className="w-full"
+                  variant="contained"
+                  color="primary"
+                  text="Create"
+                  type="submit"
+                  loading={isSubmitting}
+                  disabled={isSubmitting}
+                />
               </div>
             </Modal.Footer>
           </form>

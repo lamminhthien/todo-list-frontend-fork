@@ -16,7 +16,7 @@ const Lobby: FC = () => {
   const {setIsOpenModal, setSelectedTodolist} = useModals();
 
   const onNew = () => {
-    setIsOpenModal('list');
+    setIsOpenModal('createList');
     setSelectedTodolist();
   };
 
@@ -28,9 +28,21 @@ const Lobby: FC = () => {
             <LobbyTitle />
             <div className={styles.actions}>
               <div className="item">
-                <Button variant="contained" className={styles.button} color="info" onClick={onNew} text={LobbyTexts.CREATE} />
+                <Button
+                  variant="contained"
+                  className={styles.button}
+                  color="info"
+                  onClick={onNew}
+                  text={LobbyTexts.CREATE}
+                />
               </div>
-              <Button variant="contained" className={styles.button} color="info" onClick={() => router.push(ROUTES.LIST)} text={LobbyTexts.MY_LISTS} />
+              <Button
+                variant="contained"
+                className={styles.button}
+                color="info"
+                onClick={() => router.push(ROUTES.LIST)}
+                text={LobbyTexts.MY_LISTS}
+              />
             </div>
           </div>
           <div className={styles.decor}>

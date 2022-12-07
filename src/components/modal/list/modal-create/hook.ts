@@ -8,7 +8,7 @@ import useToast from '@/core-ui/toast';
 import api from '@/data/api';
 import {ToastContents} from '@/utils/toast-content';
 
-import {IProps} from '../types';
+import {IProps} from '../types-create-update';
 
 interface IFormInputs {
   name: string;
