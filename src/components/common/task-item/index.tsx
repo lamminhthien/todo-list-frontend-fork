@@ -38,7 +38,6 @@ export default function TaskItem(props: ITaskItemProps) {
     api.task
       .update({id, isDone: !isDone})
       .then(() => {
-        console.log('socketUpdateList');
         socketUpdateList();
       })
       .then(getMyTasks)
