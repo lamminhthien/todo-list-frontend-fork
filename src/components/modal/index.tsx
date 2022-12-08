@@ -8,10 +8,11 @@ import useModals from '@/states/modals/use-modals';
 
 import ModalCreateList from './list/modal-create';
 import ModalDeleteList from './list/modal-delete';
-import ModalShare from './list/modal-share';
+import ModalShareList from './list/modal-share';
 import ModalUpdateList from './list/modal-update';
 import ModalCreateTask from './task/modal-create';
 import ModalDeleteTask from './task/modal-delete';
+import ModalShareTask from './task/modal-share';
 import ModalUpdateTask from './task/modal-update';
 
 const Modal = () => {
@@ -62,7 +63,7 @@ const Modal = () => {
           }}
         />
       )}
-      {selectedTodolist && <ModalShare open={isOpenModal.shareList} onClose={onClose} data={selectedTodolist} />}
+      {selectedTodolist && <ModalShareList open={isOpenModal.shareList} onClose={onClose} data={selectedTodolist} />}
 
       {/* Modal task */}
       <ModalCreateTask
@@ -79,7 +80,15 @@ const Modal = () => {
           onSuccess={socketUpdateList}
         />
       )}
-      {selectedTask && <ModalDeleteTask open={isOpenModal.deleteTask} onClose={onClose} data={selectedTask} />}
+      {selectedTask && (
+        <ModalDeleteTask
+          open={isOpenModal.deleteTask}
+          onClose={onClose}
+          data={selectedTask}
+          onSuccess={socketUpdateList}
+        />
+      )}
+      {selectedTask && <ModalShareTask open={isOpenModal.shareTask} onClose={onClose} data={selectedTask} />}
     </>
   );
 };
