@@ -1,39 +1,26 @@
-import {useRouter} from 'next/router';
-import {FC, useState} from 'react';
+import {FC} from 'react';
 
 import Tool, {IToolProps} from '@/components/lists-detail/toolbar/tool';
 import ToolMenu from '@/components/lists-detail/toolbar/tool-menu';
-import ModalShare from '@/components/modal/list/modal-share';
-import ModalDelete from '@/components/modal/modal-delete';
 import Icon from '@/core-ui/icon';
-import {socketUpdateList} from '@/data/socket';
+import useModals from '@/states/modals/use-modals';
 import {IBaseProps} from '@/types';
 import {MUI_ICON} from '@/utils/mui-icon';
 
 import useTask from '../../../../states/task/use-task';
 
 const Right: FC<IBaseProps> = ({className}) => {
-  const router = useRouter();
   const {task, write} = useTask();
-  const [deleteModal, setDeleteModel] = useState(false);
-  const [shareModal, setShareModel] = useState(false);
+  const {setIsOpenModal, setSelectedTask} = useModals();
 
   const onDelete = () => {
-    setDeleteModel(true);
+    setIsOpenModal('deleteTask');
+    setSelectedTask(task);
   };
 
   const onShare = () => {
-    setShareModel(true);
-  };
-
-  const onClose = () => {
-    setShareModel(false);
-    setDeleteModel(false);
-  };
-
-  const onDeleteSuccess = () => {
-    socketUpdateList();
-    router.back();
+    setIsOpenModal('shareTask');
+    setSelectedTask(task);
   };
 
   const deleteToolProps: IToolProps = {
@@ -62,8 +49,6 @@ const Right: FC<IBaseProps> = ({className}) => {
       <div className="toolbar-mobile">
         <ToolMenu display="mobile" items={toolMenuItems} icon={<MUI_ICON.MORE_VERT />} />
       </div>
-      <ModalDelete open={deleteModal} onClose={onClose} data={task} onSuccess={onDeleteSuccess} />
-      <ModalShare open={shareModal} onClose={onClose} data={task} />
     </div>
   );
 };

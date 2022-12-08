@@ -23,6 +23,8 @@ export default function useModalDelete({onClose, onSuccess, data}: IProps) {
           const newTodolist: ITodolistResponse = JSON.parse(JSON.stringify(todolist));
           newTodolist.tasks = newTodolist.tasks.filter(e => e.id !== id);
           setTodolist(newTodolist);
+        } else {
+          router.back();
         }
         toast.show({type: 'success', title: 'Delete ', content: ToastContents.SUCCESS});
       });

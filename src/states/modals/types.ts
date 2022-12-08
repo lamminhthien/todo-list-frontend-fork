@@ -15,6 +15,7 @@ export interface IInitialState {
     deleteList: boolean;
     settings: boolean;
     shareList: boolean;
+    shareTask: boolean;
     updateTask: boolean;
   };
 }

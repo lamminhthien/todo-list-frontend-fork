@@ -17,7 +17,7 @@ export default function useModalShare({data}: IProps) {
   };
 
   useEffect(() => {
-    setLink(window.location.origin + `${ROUTES.LIST}/${id}`);
+    setLink(window.location.origin + `${ROUTES.TASK}/${id}`);
   }, [id]);
 
   return {id, copy, link};

@@ -6,7 +6,6 @@ import Icon from '@/core-ui/icon';
 import Input from '@/core-ui/input';
 import {Modal} from '@/core-ui/modal';
 import {ITaskResponse} from '@/data/api/types/task.type';
-import {ITodolistResponse} from '@/data/api/types/todolist.type';
 
 import useModalShare from './hook';
 import styles from './style.module.scss';
@@ -14,9 +13,9 @@ import styles from './style.module.scss';
 export interface IProps {
   open: boolean;
   onClose: () => void;
-  data: ITodolistResponse | ITaskResponse;
+  data: ITaskResponse;
 }
-const ModalShareList: FC<IProps> = props => {
+const ModalShareTask: FC<IProps> = props => {
   const {id, link, copy} = useModalShare(props);
   const {open, onClose} = props;
 
@@ -24,7 +23,7 @@ const ModalShareList: FC<IProps> = props => {
     <>
       {open && (
         <Modal variant="center" className={cls(styles['com-modal-share'], 'max-w-xl')} open={open} onClose={onClose}>
-          <Modal.Header text={`Share this list to a teammate`} />
+          <Modal.Header text={`Share this task to a teammate`} />
           <Modal.Body className="inputs">
             <div className="item">
               <Input
@@ -67,4 +66,4 @@ const ModalShareList: FC<IProps> = props => {
   );
 };
 
-export default ModalShareList;
+export default ModalShareTask;
