@@ -27,9 +27,9 @@ const Lists: FC = () => {
   return (
     <div className={styles['page-list']}>
       <div className="container">
-        <Toolbar title="My List" showActions={true} />
+        <Toolbar title="My Lists" showActions={true} />
         <List list={myList} />
-        <Toolbar title="Favorite List" className="mt-8" />
+        <Toolbar title="Favorite Lists" className="mt-8" />
         <List list={favoriteList} hiddenDelete={true} hiddenEdit={true} />
       </div>
       <FloatIcon className="float-icon" onClick={onNew} />
