@@ -1,0 +1,19 @@
+import {IInitialState} from './types';
+
+export const isOpenModal = {
+  createList: false,
+  createTask: false,
+  deleteTask: false,
+  deleteList: false,
+  settings: false,
+  shareList: false,
+  updateTask: false
+};
+
+const initialState: IInitialState = {
+  selectedTask: undefined,
+  selectedTodolist: undefined,
+  isOpenModal
+};
+
+export default initialState;

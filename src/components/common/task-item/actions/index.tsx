@@ -11,7 +11,7 @@ import Icon from '@/core-ui/icon';
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
 import {socketUpdateList} from '@/data/socket';
-import useTodolist from '@/states/todolist/use-todolist';
+import useModals from '@/states/modals/use-modals';
 import {MUI_ICON} from '@/utils/mui-icon';
 import {ToastContents} from '@/utils/toast-content';
 
@@ -23,7 +23,7 @@ interface IActionsProps extends ITaskItemProps {
 }
 
 const Actions: FC<IActionsProps> = ({task, todolist, write = false}) => {
-  const {setIsOpenModal, setSelectedTask} = useTodolist();
+  const {setIsOpenModal, setSelectedTask} = useModals();
 
   const toast = useToast();
   const [statusId, setStatusId] = useState(task.statusId);
@@ -35,12 +35,12 @@ const Actions: FC<IActionsProps> = ({task, todolist, write = false}) => {
 
   const onDelete = () => {
     setSelectedTask(task);
-    setIsOpenModal('delete');
+    setIsOpenModal('deleteTask');
   };
 
   const onEdit = () => {
     setSelectedTask(task);
-    setIsOpenModal('task');
+    setIsOpenModal('updateTask');
   };
 
   const onChange = (event: SelectChangeEvent<number>) => {

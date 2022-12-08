@@ -4,6 +4,7 @@ import {FC} from 'react';
 import InputAutosize from '@/components/common/input-autosize';
 import Icon from '@/core-ui/icon';
 import api from '@/data/api';
+import useModals from '@/states/modals/use-modals';
 import useTodolist from '@/states/todolist/use-todolist';
 import {MUI_ICON} from '@/utils/mui-icon';
 
@@ -14,7 +15,8 @@ import ToolFilter from './tool-filter';
 import ToolMenu from './tool-menu';
 
 const ToolbarDetail: FC = () => {
-  const {todolist, write, owner, setIsOpenModal, setSelectedTask} = useTodolist();
+  const {todolist, write, owner} = useTodolist();
+  const {setIsOpenModal, setSelectedTask, setSelectedTodolist} = useModals();
 
   const {id, name, favorite} = todolist;
 
@@ -24,11 +26,21 @@ const ToolbarDetail: FC = () => {
 
   const onAddTask = () => {
     setSelectedTask();
-    setIsOpenModal('task');
+    setSelectedTodolist(todolist);
+    setIsOpenModal('createTask');
   };
-  const onDelete = () => setIsOpenModal('delete');
-  const onShare = () => setIsOpenModal('share');
-  const onSetting = () => setIsOpenModal('settings');
+  const onDelete = () => {
+    setSelectedTodolist(todolist);
+    setIsOpenModal('deleteList');
+  };
+  const onShare = () => {
+    setSelectedTodolist(todolist);
+    setIsOpenModal('shareList');
+  };
+  const onSetting = () => {
+    setSelectedTodolist(todolist);
+    setIsOpenModal('settings');
+  };
 
   const deleteToolProps: IToolProps = {
     icon: <Icon name="ico-trash-2" />,

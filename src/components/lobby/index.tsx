@@ -1,18 +1,25 @@
 import {useRouter} from 'next/router';
-import {FC, useState} from 'react';
+import {FC} from 'react';
 
 import LobbyDecor from '@/components/common/vector/lobby-decor';
-import ModalCreateUpdateList from '@/components/modal/modal-create-update-list';
 import {ROUTES} from '@/configs/routes.config';
 import Button from '@/core-ui/button';
+import useModals from '@/states/modals/use-modals';
 import {LobbyTexts} from '@/utils/constant';
 
 import styles from './style.module.scss';
 import LobbyTitle from './title';
 
 const Lobby: FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
+
+  const {setIsOpenModal, setSelectedTodolist} = useModals();
+
+  const onNew = () => {
+    setIsOpenModal('createList');
+    setSelectedTodolist();
+  };
+
   return (
     <>
       <div className={styles['page-lobby']}>
@@ -21,9 +28,21 @@ const Lobby: FC = () => {
             <LobbyTitle />
             <div className={styles.actions}>
               <div className="item">
-                <Button variant="contained" className={styles.button} color="info" onClick={() => setModalOpen(true)} text={LobbyTexts.CREATE} />
+                <Button
+                  variant="contained"
+                  className={styles.button}
+                  color="info"
+                  onClick={onNew}
+                  text={LobbyTexts.CREATE}
+                />
               </div>
-              <Button variant="contained" className={styles.button} color="info" onClick={() => router.push(ROUTES.LIST)} text={LobbyTexts.MY_LISTS} />
+              <Button
+                variant="contained"
+                className={styles.button}
+                color="info"
+                onClick={() => router.push(ROUTES.LIST)}
+                text={LobbyTexts.MY_LISTS}
+              />
             </div>
           </div>
           <div className={styles.decor}>
@@ -31,7 +50,6 @@ const Lobby: FC = () => {
           </div>
         </div>
       </div>
-      {<ModalCreateUpdateList open={modalOpen} onClose={() => setModalOpen(false)} />}
     </>
   );
 };

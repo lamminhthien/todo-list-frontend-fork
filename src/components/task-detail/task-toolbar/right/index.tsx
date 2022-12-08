@@ -3,8 +3,8 @@ import {FC, useState} from 'react';
 
 import Tool, {IToolProps} from '@/components/lists-detail/toolbar/tool';
 import ToolMenu from '@/components/lists-detail/toolbar/tool-menu';
+import ModalShare from '@/components/modal/list/modal-share';
 import ModalDelete from '@/components/modal/modal-delete';
-import ModalShare from '@/components/modal/modal-share';
 import Icon from '@/core-ui/icon';
 import {socketUpdateList} from '@/data/socket';
 import {IBaseProps} from '@/types';
