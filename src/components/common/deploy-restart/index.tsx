@@ -1,23 +1,28 @@
 import {useRouter} from 'next/router';
-import {ReactNode, useEffect} from 'react';
-
-import LocalStorage from '@/utils/local-storage';
+import {ReactNode} from 'react';
+import useSWR from 'swr';
 
 interface IDeployRestartProp {
   children: ReactNode;
 }
 
-export default function DeployRestart({children}: IDeployRestartProp) {
-  const router = useRouter();
-  const serverBuildID = process.env.NEXT_PUBLIC_GIT_COMMIT_SHA || 'serverID';
-  const clientBuildID = (typeof window !== 'undefined' && LocalStorage.buildID.get()) || 'clientID';
+const fetcher = (url: RequestInfo | URL) => fetch(url).then(res => res.json());
+const apiRoute = `${process.env.NEXT_PUBLIC_SITE_URL}/api/server-build-id`;
 
-  useEffect(() => {
-    if (clientBuildID !== serverBuildID) {
-      LocalStorage.buildID.set(serverBuildID);
-      router.reload();
-    }
-  }, [clientBuildID, serverBuildID]);
+export default function DeployRestart({children}: IDeployRestartProp) {
+  const {data, error} = useSWR(`${apiRoute}`, fetcher);
+  const router = useRouter();
+
+  if (error) return <p>Sorry, Todooy is inprogress of update or caught error.</p>;
+  if (!data) return <></>;
+
+  const serverBuildID = data.serverBuildID;
+  const clientBuildID = process.env.NEXT_PUBLIC_GIT_COMMIT_SHA || 'clientID';
+
+  if (serverBuildID !== clientBuildID) {
+    router.reload();
+    return <></>;
+  }
 
   return <>{children}</>;
 }
