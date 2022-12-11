@@ -10,7 +10,6 @@ import type {AppProps} from 'next/app';
 import {useRouter} from 'next/router';
 import {Provider} from 'react-redux';
 
-import ErrorBoundary from '@/components/common/error-boundary';
 import MuiThemeProvider from '@/components/common/mui-theme-provider';
 import NProgres from '@/components/common/nprogress';
 import DefaultSeo from '@/components/common/seo/default-seo';
@@ -26,23 +25,21 @@ const CustomApp = ({Component, pageProps: {session, ...pageProps}}: AppProps) =>
   const Layout = (Component as any).Layout || Noop;
 
   return (
-    <ErrorBoundary>
-      <NProgres>
-        <DefaultSeo />
-        <AuthProvider>
-          <Provider store={store}>
-            <MuiThemeProvider>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Layout pageProps={pageProps}>
-                  <Component {...pageProps} key={router.route} />
-                  <Modal />
-                </Layout>
-              </LocalizationProvider>
-            </MuiThemeProvider>
-          </Provider>
-        </AuthProvider>
-      </NProgres>
-    </ErrorBoundary>
+    <NProgres>
+      <DefaultSeo />
+      <AuthProvider>
+        <Provider store={store}>
+          <MuiThemeProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Layout pageProps={pageProps}>
+                <Component {...pageProps} key={router.route} />
+                <Modal />
+              </Layout>
+            </LocalizationProvider>
+          </MuiThemeProvider>
+        </Provider>
+      </AuthProvider>
+    </NProgres>
   );
 };
 
