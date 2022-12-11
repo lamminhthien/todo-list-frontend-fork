@@ -4,7 +4,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abc-software-solutions-company/abc-website.git"
+    "url": "git+https://github.com/abc-software-solutions-company/todo-list-website.git"
   },
   "scripts": {
     "dev": "next dev",
