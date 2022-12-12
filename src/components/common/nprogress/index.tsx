@@ -24,7 +24,9 @@ const NProgres = ({children}: INProgresProps) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const serverBuildID = data?.serverBuildID || 'serverID';
+    console.log('🚀 ~ file: index.tsx:27 ~ useEffect ~ serverBuildID', serverBuildID);
     const clientBuildID = process.env.NEXT_PUBLIC_GIT_COMMIT_SHA || 'clientID';
+    console.log('🚀 ~ file: index.tsx:29 ~ useEffect ~ clientBuildID', clientBuildID);
 
     const progress = () => {
       nProgress.start();
