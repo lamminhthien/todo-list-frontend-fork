@@ -48,7 +48,7 @@ const MyTasks = () => {
         <div className="container">
           <Title tilte={'My Tasks'} />
           {myTasks?.filter(x => x !== null).length == 0 && (
-            <span className="empty">🐛 Currently No Task Assign To You</span>
+            <span className="empty">Currently No Task Assign To You</span>
           )}
           {myTasks && <ListTask myTask={myTasks} />}
         </div>
