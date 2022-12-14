@@ -36,7 +36,7 @@ const Account: FC<IAccountProps> = props => {
               <hr className="pb-3" />
               <div className="info">
                 <div className="left">
-                  <AssigneeIcon name={user.name} onClick={onUpdate} />
+                  <AssigneeIcon name={user.name} onClick={onUpdate} bg="bg-sky-500" />
                 </div>
                 <div className="right">
                   <div className="flex items-center gap-x-1">
@@ -47,7 +47,7 @@ const Account: FC<IAccountProps> = props => {
                 </div>
               </div>
               <div className="action">
-                <p className="cursor-pointer">Change Account</p>
+                {/* <p className="cursor-pointer">Change Account</p> */}
                 <p
                   className="cursor-pointer"
                   onClick={() => {
