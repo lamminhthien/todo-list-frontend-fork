@@ -1,22 +1,43 @@
 import Link from 'next/link';
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 
 import TaskItem from '@/components/common/task-item';
 import {ROUTES} from '@/configs/routes.config';
-import {ITodolistResponse} from '@/data/api/types/todolist.type';
 import {useStateAuth} from '@/states/auth';
+import useFilter from '@/states/filter/use-filter';
+import useTasks from '@/states/tasks/use-tasks';
 
-interface IListTaskProps {
-  myTask: ITodolistResponse[];
-}
-
-const ListTask: FC<IListTaskProps> = ({myTask}) => {
+const ListTask: FC = () => {
   const auth = useStateAuth();
+  const {myTasks} = useTasks();
+  const {statusFilterInMytask, setStatusFilterInMyTask} = useFilter();
+
+  const filterMyTasks = () => {
+    if (myTasks && myTasks.length > 0) {
+      return myTasks.map((todolist, index) => {
+        return {
+          ...todolist,
+          tasks:
+            statusFilterInMytask.length != 0
+              ? todolist.tasks.filter(e => !statusFilterInMytask[index] || e.statusId == statusFilterInMytask[index])
+              : todolist.tasks.filter(e => !e.isDone)
+        };
+      });
+    }
+  };
+
+  const temp = filterMyTasks();
+
+  useEffect(() => {
+    setStatusFilterInMyTask([]);
+  }, []);
+
   return (
     <>
-      {myTask
-        .filter(x => x !== null)
-        .map(todolist => {
+      {myTasks?.filter(x => x !== null).length == 0 && <span className="empty">Empty Tasks</span>}
+      {temp &&
+        temp.length > 0 &&
+        temp.map(todolist => {
           const write = Boolean(todolist)
             ? todolist.visibility === 'PUBLIC' || Boolean(auth && auth.id === todolist.userId)
             : false;

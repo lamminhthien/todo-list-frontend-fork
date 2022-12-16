@@ -9,9 +9,9 @@ import useTodolist from '@/states/todolist/use-todolist';
 import {MUI_ICON} from '@/utils/mui-icon';
 
 import TodolistFavorite from '../../common/todolist-favorite';
+import ToolFilter from '../../common/tool-filter';
 import style from './style.module.scss';
 import Tool, {IToolProps} from './tool';
-import ToolFilter from './tool-filter';
 import ToolMenu from './tool-menu';
 
 const ToolbarDetail: FC = () => {
@@ -80,7 +80,7 @@ const ToolbarDetail: FC = () => {
         <Tool {...addTaskToolProps} className={style['tool-outer']} />
         <Tool {...deleteToolProps} className={style['tool-outer']} />
         <Tool {...shareToolProps} className={style['tool-outer']} />
-        <ToolFilter />
+        <ToolFilter todolist={todolist} />
         <Tool {...settingToolProps} className={style['tool-outer']} />
 
         <ToolMenu className="sm:hidden" items={toolMenuItems} icon={<MUI_ICON.MENU />} />

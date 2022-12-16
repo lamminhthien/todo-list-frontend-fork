@@ -7,13 +7,14 @@ import {useStateAuth} from '@/states/auth';
 import useTasks from '@/states/tasks/use-tasks';
 import LocalStorage from '@/utils/local-storage';
 
+import ToolFilter from '../common/tool-filter';
 import Title from '../lists/title';
 import ListTask from './list-task';
 import styles from './style.module.scss';
 
 const MyTasks = () => {
-  const {myTasks, getMyTasks} = useTasks();
   const auth = useStateAuth();
+  const {myTasks, getMyTasks} = useTasks();
 
   useEffect(() => {
     LocalStorage.checkPage.set(ROUTES.TASK);
@@ -46,9 +47,11 @@ const MyTasks = () => {
       <div className={styles['list-task']}>
         <div className="h-[12px]"></div>
         <div className="container">
-          <Title tilte={'My Tasks'} />
-          {myTasks?.filter(x => x !== null).length == 0 && <span className="empty">Empty Tasks</span>}
-          {myTasks && <ListTask myTask={myTasks} />}
+          <div className="flex items-center justify-between">
+            <Title tilte={'My Tasks'} />
+            <ToolFilter myTasks={myTasks} />
+          </div>
+          <ListTask />
         </div>
       </div>
     </>
