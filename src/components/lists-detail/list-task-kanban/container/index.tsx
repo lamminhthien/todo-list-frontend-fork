@@ -1,18 +1,15 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 
-import useTodolistKanban from '@/states/todolist-kanban/use-kanban';
+import style from './style.module.scss';
 
-import KanbanColumn from '../column';
+interface IKanbanContainer {
+  children: ReactNode;
+}
 
-const KanbanContainer = () => {
-  const {todolistKanban} = useTodolistKanban();
+const KanbanContainer = ({children}: IKanbanContainer) => {
   return (
     <>
-      <div className="kanban-container grid grid-cols-6 gap-x-4 pt-6">
-        {todolistKanban.status.map(column => (
-          <KanbanColumn statusId={column.id} key={column.id} name={column.name} />
-        ))}
-      </div>
+      <div className={style['kanban-container']}>{children}</div>
     </>
   );
 };

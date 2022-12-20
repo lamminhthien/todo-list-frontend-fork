@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {DndContext, DragEndEvent, DragOverlay, DragStartEvent, UniqueIdentifier} from '@dnd-kit/core';
-import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
-import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
+import {arrayMove, SortableContext} from '@dnd-kit/sortable';
+import {rest} from 'lodash-es';
 import React, {useState} from 'react';
 
-import TaskItem from '@/components/common/task-item';
 import api from '@/data/api';
+import {ITaskResponse} from '@/data/api/types/task.type';
 import {ITodolistResponse} from '@/data/api/types/todolist.type';
 import {socketUpdateList} from '@/data/socket';
 import {useSensorGroup} from '@/lib/dnd-kit/sensor/sensor-group';
@@ -12,24 +13,25 @@ import useTodolist from '@/states/todolist/use-todolist';
 import useTodolistKanban from '@/states/todolist-kanban/use-kanban';
 import {IndexStep} from '@/utils/constant';
 
+import KanbanTaskItem from './item';
+
 interface IKanbanColumnBody {
-  statusId: number;
+  tasks: ITaskResponse[];
 }
 
-export default function KanbanColumnBody({statusId}: IKanbanColumnBody) {
-  const {todolistKanban, write} = useTodolistKanban();
-  const {setTodolist, todolist} = useTodolist();
-  const tasks = todolistKanban.status.filter(x => x.id == statusId)[0].tasks;
+export default function KanbanColumnBody({tasks}: IKanbanColumnBody) {
+  const {initial, todolistKanban, setTodolistKanban} = useTodolistKanban();
+  const {todolist, write, setTodolist} = useTodolist();
+  const [taskList, setTaskList] = useState<ITaskResponse[]>(tasks);
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  const modifiers = [restrictToVerticalAxis];
-  const onDragCancel = () => setActiveId(null);
+  const sensors = useSensorGroup();
 
   const onDragStart = ({active}: DragStartEvent) => {
     if (active) setActiveId(active.id);
   };
 
-  function onDragEnd({active, over}: DragEndEvent) {
+  const onDragEnd = ({active, over}: DragEndEvent) => {
     setActiveId(null);
     if (!over) return;
     if (active.id !== over.id) {
@@ -39,13 +41,20 @@ export default function KanbanColumnBody({statusId}: IKanbanColumnBody) {
       const newTodoList = {...todolist};
       newTodoList.tasks = arrangeTask;
       setTodolist(newTodoList as ITodolistResponse);
+      setTaskList(
+        arrayMove(
+          taskList,
+          taskList.findIndex(item => active.id == item.id),
+          taskList.findIndex(item => over.id == item.id)
+        )
+      );
 
       arrangeTask.forEach((element, index) => {
         if (element.id === active.id) {
           let newTaskIndex: number | undefined;
           let reindexAll = false;
           const limitDifferenceIndex = 32;
-          const listIndex = todolist.tasks.map(e => e.index);
+          const listIndex = tasks.map(e => e.index);
           const maxIndex = Math.max(...listIndex);
           const minIndex = Math.min(...listIndex);
           const taskBefore = arrangeTask[index - 1];
@@ -72,34 +81,36 @@ export default function KanbanColumnBody({statusId}: IKanbanColumnBody) {
         }
       });
     }
-  }
-
-  const sensors = useSensorGroup();
+  };
 
   return (
     <div className="kanban-column">
-      <DndContext {...{sensors, modifiers, onDragCancel, onDragEnd, onDragStart}}>
+      <DndContext {...{sensors, onDragEnd, onDragStart}}>
         <div className="tasks">
-          {tasks && tasks.length === 0 && <span className="empty">Empty list</span>}
-          {tasks && tasks.length > 0 && (
-            <SortableContext
-              disabled={!write}
-              items={tasks.map(task => task.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              {tasks.map(task => (
-                <TaskItem key={task.id} task={task} todolist={todolist} write={write} kanban={true} />
+          {taskList && taskList.length > 0 && (
+            <SortableContext disabled={!write} items={taskList.map(task => task.id)}>
+              {taskList.map(task => (
+                <KanbanTaskItem
+                  priority={task.priority}
+                  thumbnail={'https://www.w3schools.com/html/pic_trulli.jpg'}
+                  dueDate={task.dueDate || new Date('2022-03-25')}
+                  key={task.id}
+                  columnId={task.statusId}
+                  name={task.name}
+                  id={task.id}
+                />
               ))}
             </SortableContext>
           )}
           <DragOverlay>
             {activeId ? (
-              <TaskItem
-                key={tasks?.filter(e => e.id === activeId)[0].id}
-                task={tasks!.filter(e => e.id === activeId)[0]}
-                isSelect={true}
-                todolist={todolist}
-                kanban={true}
+              <KanbanTaskItem
+                priority={taskList!.filter(e => e.id === activeId)[0].priority}
+                dueDate={taskList!.filter(e => e.id === activeId)[0].dueDate || new Date('2022-03-25')}
+                thumbnail={'https://www.w3schools.com/html/pic_trulli.jpg'}
+                name={taskList!.filter(e => e.id === activeId)[0].name}
+                id={taskList!.filter(e => e.id === activeId)[0].id}
+                columnId={taskList!.filter(e => e.id === activeId)[0].statusId}
               />
             ) : null}
           </DragOverlay>

@@ -1,18 +1,12 @@
-import React from 'react';
-
-import KanbanColumnBody from './body';
-import KanbanColumnHeader from './header';
+import React, {ReactNode} from 'react';
 
 interface IKanbanColumn {
-  statusId: number;
-  name: string;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
+  onDragOver?: () => void;
+  children: ReactNode;
 }
 
-export default function KanbanColumn({statusId, name}: IKanbanColumn) {
-  return (
-    <div className="kanban-column">
-      <KanbanColumnHeader name={name} statusId={statusId} />
-      <KanbanColumnBody statusId={statusId} />
-    </div>
-  );
+export default function KanbanColumn({children}: IKanbanColumn) {
+  return <div className="kanban-column">{children}</div>;
 }

@@ -29,7 +29,10 @@ const StatusSelect: FC<IProps> = ({id: statusId, list, className, onChange, read
           return (
             <MenuItem key={id} value={id} sx={{color, justifyContent: 'end', padding: '4px 16px'}}>
               <div className="relative">
-                <span className="status-name inline-block rounded px-2 py-0.5 text-h6" style={{backgroundColor: color + '32'}}>
+                <span
+                  className="status-name inline-block rounded px-2 py-0.5 text-h6"
+                  style={{backgroundColor: color + '32'}}
+                >
                   {name}
                 </span>
                 <div className="mobile-icon hidden">
