@@ -4,17 +4,19 @@ import Icon from '@/core-ui/icon';
 
 import style from './style.module.scss';
 
-interface IKanbanTaskDueDate {
+interface IKanbanTaskCreatedDate {
   onChange?: () => void;
   date: Date;
 }
 
-export default function KanbanTaskDueDate({onChange, date}: IKanbanTaskDueDate) {
+export default function KanbanTaskCreatedDate({onChange, date}: IKanbanTaskCreatedDate) {
+  console.log(date);
+
   const month = date.toLocaleString('default', {month: 'long'});
   const day = date.getDay().toString();
   return (
-    <div className={style['kanban-task-due-date']}>
-      <Icon name="ico-clock" className="btn-due-date" onClick={onChange} />
+    <div className={style['kanban-task-created-date']}>
+      <Icon name="ico-clock" className="btn-created-date" onClick={onChange} />
       <div className="date">{`${month} ${day}`}</div>
     </div>
   );
