@@ -3,7 +3,6 @@ import {arrayMove} from '@dnd-kit/sortable';
 import React, {ReactNode, useState} from 'react';
 
 import api from '@/data/api';
-import {ITodolistResponse} from '@/data/api/types/todolist.type';
 import {socketUpdateList} from '@/data/socket';
 import {useSensorGroup} from '@/lib/dnd-kit/sensor/sensor-group';
 import useTodolist from '@/states/todolist/use-todolist';
@@ -19,8 +18,8 @@ interface IKanbanContainer {
 
 const KanbanContainer = ({children}: IKanbanContainer) => {
   const sensors = useSensorGroup();
-  const {todolist, setTodolist} = useTodolist();
-  const {todolistKanban, initial} = useTodolistKanban();
+  const {todolistKanban, setTodolistKanban, statusActive, initial} = useTodolistKanban();
+  const {todolist} = useTodolist();
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const onDragStart = ({active}: DragStartEvent) => {
@@ -29,25 +28,26 @@ const KanbanContainer = ({children}: IKanbanContainer) => {
 
   const onDragEnd = ({active, over}: DragEndEvent) => {
     setActiveId(null);
-    console.log(over?.id);
     if (!over) return;
     if (active.id !== over.id) {
-      const oldIndex = todolist.tasks?.findIndex(item => active.id === item.id);
-      const newIndex = todolist.tasks?.findIndex(item => over.id === item.id);
-      console.log(todolist.tasks[newIndex]?.name);
-      const newStatusId = todolist.tasks[newIndex]?.statusId || over.id;
+      const tasks = todolistKanban.status.filter(e => e.id == statusActive)[0].tasks;
+      const oldIndex = tasks?.findIndex(item => active.id === item.id);
+      const newIndex = tasks?.findIndex(item => over.id === item.id) || 0;
+      const newStatusId = tasks![newIndex]?.statusId || over.id;
 
-      const arrangeTask = arrayMove(todolist.tasks, oldIndex, newIndex);
-      const newTodoList = {...todolist};
-      newTodoList.tasks = arrangeTask;
-      setTodolist(newTodoList as ITodolistResponse);
+      const arrangeTask = arrayMove(tasks!, oldIndex!, newIndex);
+      const newKanbanState = {...todolistKanban};
+      // newKanbanState.status.filter(e => e.id == statusActive)[0].tasks = arrangeTask;
+      newKanbanState.name = 'aaaaa';
+
+      setTodolistKanban(newKanbanState);
 
       arrangeTask.forEach((element, index) => {
         if (element.id === active.id) {
           let newTaskIndex: number | undefined;
           let reindexAll = false;
           const limitDifferenceIndex = 32;
-          const listIndex = todolist.tasks.map(e => e.index);
+          const listIndex = tasks!.map(e => e.index);
           const maxIndex = Math.max(...listIndex);
           const minIndex = Math.min(...listIndex);
           const taskBefore = arrangeTask[index - 1];
@@ -67,14 +67,14 @@ const KanbanContainer = ({children}: IKanbanContainer) => {
           }
 
           const resetIndex = () => {
-            if (reindexAll) api.task.reindexAll({todolistId: todolist.id});
+            if (reindexAll) api.task.reindexAll({todolistId: todolistKanban.id});
           };
 
           api.task
             .update({id: task.id, index: newTaskIndex, statusId: parseInt(newStatusId.toString())})
             .then(resetIndex)
             .then(socketUpdateList)
-            .then(() => initial(todolist.id));
+            .then(() => initial(todolistKanban.id));
         }
       });
     }
@@ -89,7 +89,7 @@ const KanbanContainer = ({children}: IKanbanContainer) => {
             {activeId ? (
               <KanbanTaskItem
                 assigneeList={todolistKanban.members}
-                task={todolist.tasks!.filter(e => e.id === activeId)[0]}
+                task={todolist.tasks.filter(e => e.id === activeId)[0]}
               />
             ) : null}
           </DragOverlay>
