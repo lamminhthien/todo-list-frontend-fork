@@ -3,7 +3,9 @@ import {CSS} from '@dnd-kit/utilities';
 import React from 'react';
 
 import {IAssigneeResponse} from '@/data/api/types/task.type';
+import {IMember} from '@/data/api/types/todolist.type';
 
+import KanbanTaskAssignee from './assignee';
 import KanbanTaskDueDate from './due-date';
 import KanbanTaskPriority from './priority';
 import style from './style.module.scss';
@@ -18,10 +20,11 @@ interface IKanbanTaskItem {
   dueDate: Date;
   priority: string;
   storyPoint?: string;
-  assignees?: IAssigneeResponse[];
+  assignees: IAssigneeResponse[];
+  assigneeList: IMember[];
 }
 
-const KanbanTaskItem = ({name, id, dueDate, priority}: IKanbanTaskItem) => {
+const KanbanTaskItem = ({name, id, dueDate, priority, assignees, assigneeList}: IKanbanTaskItem) => {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: id});
 
   const styleDnd = {
@@ -39,7 +42,9 @@ const KanbanTaskItem = ({name, id, dueDate, priority}: IKanbanTaskItem) => {
           <KanbanTaskDueDate date={dueDate} />
           <KanbanTaskPriority priority={priority} taskId={id} />
         </div>
-        <div className="right"></div>
+        <div className="right">
+          <KanbanTaskAssignee assignees={assignees} id={id} assigneeList={assigneeList} />
+        </div>
       </div>
       <div className="status-change"></div>
     </div>

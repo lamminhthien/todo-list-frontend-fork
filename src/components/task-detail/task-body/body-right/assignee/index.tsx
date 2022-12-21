@@ -13,7 +13,7 @@ const Assignee: FC<IBaseProps> = ({className}) => {
   return (
     <div className={classNames('assignee', className)}>
       <Title text="Assignee" />
-      <TaskAssignee {...{task, onSuccess, assigneeList}} readonly={write} />
+      <TaskAssignee assignees={task.assignees} id={task.id} {...{task, onSuccess, assigneeList}} readonly={write} />
     </div>
   );
 };

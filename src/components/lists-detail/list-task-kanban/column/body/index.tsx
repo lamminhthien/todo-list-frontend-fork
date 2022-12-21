@@ -91,6 +91,8 @@ export default function KanbanColumnBody({tasks}: IKanbanColumnBody) {
             <SortableContext disabled={!write} items={taskList.map(task => task.id)}>
               {taskList.map(task => (
                 <KanbanTaskItem
+                  assignees={task.assignees}
+                  assigneeList={todolistKanban.members}
                   priority={task.priority}
                   thumbnail={'https://www.w3schools.com/html/pic_trulli.jpg'}
                   dueDate={task.dueDate || new Date('2022-03-25')}
@@ -105,6 +107,8 @@ export default function KanbanColumnBody({tasks}: IKanbanColumnBody) {
           <DragOverlay>
             {activeId ? (
               <KanbanTaskItem
+                assigneeList={todolistKanban.members}
+                assignees={taskList!.filter(e => e.id === activeId)[0].assignees}
                 priority={taskList!.filter(e => e.id === activeId)[0].priority}
                 dueDate={taskList!.filter(e => e.id === activeId)[0].dueDate || new Date('2022-03-25')}
                 thumbnail={'https://www.w3schools.com/html/pic_trulli.jpg'}

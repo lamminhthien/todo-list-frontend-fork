@@ -3,7 +3,7 @@ import {FC, SyntheticEvent, useState} from 'react';
 
 import AssigneeIcon from '@/components/common/assignee-icon';
 import api from '@/data/api';
-import {ITaskResponse} from '@/data/api/types/task.type';
+import {IAssigneeResponse} from '@/data/api/types/task.type';
 import {IMember} from '@/data/api/types/todolist.type';
 import useMemberOptions from '@/hooks/useMemberOptions';
 import {useStateAuth} from '@/states/auth';
@@ -11,7 +11,8 @@ import {useStateAuth} from '@/states/auth';
 import style from './style.module.scss';
 
 interface ITaskAssigneeProps {
-  task: ITaskResponse;
+  id: string;
+  assignees: IAssigneeResponse[];
   onSuccess?: () => void;
   assigneeList?: IMember[];
   readonly?: boolean;
@@ -20,7 +21,8 @@ interface ITaskAssigneeProps {
 }
 
 const TaskAssignee: FC<ITaskAssigneeProps> = ({
-  task,
+  assignees,
+  id,
   assigneeList = [],
   onSuccess,
   readonly,
@@ -28,7 +30,6 @@ const TaskAssignee: FC<ITaskAssigneeProps> = ({
   hideIconWhenClick = true
 }) => {
   const auth = useStateAuth();
-  const {id, assignees} = task;
   const assigneeId = assignees.filter(e => e.isActive)[0]?.userId;
 
   const {options, optionActive} = useMemberOptions(assigneeList, assigneeId);

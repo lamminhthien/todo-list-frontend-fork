@@ -77,7 +77,8 @@ const Actions: FC<IActionsProps> = ({task, todolist, write = false, kanban = fal
       <StatusSelect className="status" id={statusId} list={todolist.status} readonly={!write} onChange={onChange} />
       <TaskAssignee
         {...{
-          task,
+          id: task.id,
+          assignees: task.assignees,
           onSuccess: socketUpdateList,
           assigneeList
         }}
