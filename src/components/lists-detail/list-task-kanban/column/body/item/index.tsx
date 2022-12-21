@@ -2,7 +2,7 @@ import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import React from 'react';
 
-import {IAssigneeResponse, IAttachmentResponse} from '@/data/api/types/task.type';
+import {ITaskResponse} from '@/data/api/types/task.type';
 import {IMember} from '@/data/api/types/todolist.type';
 
 import KanbanTaskAssignee from './assignee';
@@ -13,20 +13,12 @@ import KanbanTaskName from './task-name';
 import KanbanTaskThumbnail from './thumbnail';
 
 interface IKanbanTaskItem {
-  name: string;
-  id: string;
-  columnId: number;
-  thumbnail: string;
-  createdDate: Date;
-  priority: string;
-  storyPoint?: string;
-  attachments: IAttachmentResponse[];
-  assignees: IAssigneeResponse[];
+  task: ITaskResponse;
   assigneeList: IMember[];
 }
 
-const KanbanTaskItem = ({name, id, createdDate, priority, assignees, assigneeList, attachments}: IKanbanTaskItem) => {
-  const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: id});
+const KanbanTaskItem = ({task, assigneeList}: IKanbanTaskItem) => {
+  const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: task.id});
 
   const styleDnd = {
     transform: CSS.Transform.toString(transform),
@@ -36,15 +28,15 @@ const KanbanTaskItem = ({name, id, createdDate, priority, assignees, assigneeLis
 
   return (
     <div className={style['kanban-task-item']} ref={setNodeRef} style={styleDnd} {...attributes} {...listeners}>
-      {attachments[0] && <KanbanTaskThumbnail url={attachments[0].link} />}
-      <KanbanTaskName id={id} name={name} />
+      {task.attachments[0] && <KanbanTaskThumbnail url={task.attachments[0].link} />}
+      <KanbanTaskName id={task.id} name={task.name} />
       <div className="actions">
         <div className="left">
-          <KanbanTaskCreatedDate date={createdDate} />
-          <KanbanTaskPriority priority={priority} taskId={id} />
+          <KanbanTaskCreatedDate date={new Date(task.createdDate)} />
+          <KanbanTaskPriority priority={task.priority} taskId={task.id} />
         </div>
         <div className="right">
-          <KanbanTaskAssignee assignees={assignees} id={id} assigneeList={assigneeList} />
+          <KanbanTaskAssignee assignees={task.assignees} id={task.id} assigneeList={assigneeList} />
         </div>
       </div>
       <div className="status-change"></div>

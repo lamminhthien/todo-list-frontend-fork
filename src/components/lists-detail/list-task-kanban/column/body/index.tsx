@@ -90,33 +90,15 @@ export default function KanbanColumnBody({tasks}: IKanbanColumnBody) {
           {taskList && taskList.length > 0 && (
             <SortableContext disabled={!write} items={taskList.map(task => task.id)}>
               {taskList.map(task => (
-                <KanbanTaskItem
-                  attachments={task.attachments}
-                  assignees={task.assignees}
-                  assigneeList={todolistKanban.members}
-                  priority={task.priority}
-                  thumbnail={'https://www.w3schools.com/html/pic_trulli.jpg'}
-                  createdDate={new Date(task.createdDate)}
-                  key={task.id}
-                  columnId={task.statusId}
-                  name={task.name}
-                  id={task.id}
-                />
+                <KanbanTaskItem task={task} assigneeList={todolistKanban.members} key={task.id} />
               ))}
             </SortableContext>
           )}
           <DragOverlay>
             {activeId ? (
               <KanbanTaskItem
-                attachments={taskList!.filter(e => e.id === activeId)[0].attachments}
                 assigneeList={todolistKanban.members}
-                assignees={taskList!.filter(e => e.id === activeId)[0].assignees}
-                priority={taskList!.filter(e => e.id === activeId)[0].priority}
-                thumbnail={'https://www.w3schools.com/html/pic_trulli.jpg'}
-                createdDate={new Date(taskList!.filter(e => e.id === activeId)[0].createdDate)}
-                name={taskList!.filter(e => e.id === activeId)[0].name}
-                id={taskList!.filter(e => e.id === activeId)[0].id}
-                columnId={taskList!.filter(e => e.id === activeId)[0].statusId}
+                task={taskList!.filter(e => e.id === activeId)[0]}
               />
             ) : null}
           </DragOverlay>
