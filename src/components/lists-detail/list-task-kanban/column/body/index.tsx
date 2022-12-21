@@ -6,6 +6,7 @@ import {ITaskResponse} from '@/data/api/types/task.type';
 import useTodolist from '@/states/todolist/use-todolist';
 import useTodolistKanban from '@/states/todolist-kanban/use-kanban';
 
+import KanbanTaskDragToColumn from './drag-to-column';
 import KanbanTaskItem from './item';
 import KanbanTaskItemEmpty from './item-empty';
 
