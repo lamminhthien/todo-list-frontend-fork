@@ -2,7 +2,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {ITaskResponse} from '@/data/api/types/task.type';
-import {ITodolistResponse} from '@/data/api/types/todolist.type';
+import {IStatus, ITodolistResponse} from '@/data/api/types/todolist.type';
 
 import initialState, {isOpenModal} from './initialState';
 import {IGetTodolistPayloadAction, ISetIsOpenModalPayload} from './types';
@@ -17,8 +17,7 @@ const todolistSlice = createSlice({
     getTodolistSuccess: (state, {payload}: PayloadAction<ITodolistResponse>) => {
       state.todolist.loading = false;
       state.todolist.data = payload;
-      state.todolist.statusList = payload.status;
-      state.kanbanTasks = payload.tasks;
+      state.todolistKanban = payload.status;
     },
     getTodolistFailure: (state, {payload}) => {
       state.todolist.loading = false;
@@ -27,11 +26,11 @@ const todolistSlice = createSlice({
     setTodolist: (state, {payload}: PayloadAction<ITodolistResponse>) => {
       state.todolist.data = payload;
     },
+    setTodolistKanban: (state, {payload}: PayloadAction<ITodolistResponse>) => {
+      state.todolistKanban = payload.status;
+    },
     setStatusFilter: (state, {payload}: PayloadAction<number>) => {
       state.statusFilter = payload;
-    },
-    setStatusActive: (state, {payload}: PayloadAction<number>) => {
-      state.statusActive = payload;
     },
     setSelectedTask: (state, {payload}: PayloadAction<ITaskResponse | undefined>) => {
       state.selectedTask = payload;

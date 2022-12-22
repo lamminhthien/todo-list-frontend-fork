@@ -17,13 +17,11 @@ export interface IInitialState {
   todolist: {
     loading: boolean;
     data: ITodolistResponse;
-    statusList: IStatus[];
     error: any;
   };
-  kanbanTasks: ITaskResponse[];
+  todolistKanban: IStatus[];
   kanbanActive: boolean;
   statusFilter: number;
-  statusActive: number;
   selectedTask?: ITaskResponse;
   isOpenModal: {
     settings: boolean;

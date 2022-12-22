@@ -18,13 +18,11 @@ interface IKanbanContainer {
 
 const KanbanContainer = ({children}: IKanbanContainer) => {
   const sensors = useSensorGroup();
-  const {todolist, setTodolist, kanbanTasks, setStatusActive} = useTodolist();
+  const {todolist, setTodolist, setTodolistKanban} = useTodolist();
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const onDragStart = ({active}: DragStartEvent) => {
     if (active) setActiveId(active.id);
-    const activeStatusId = kanbanTasks.filter(e => e.id == active.id)[0].statusId;
-    setStatusActive(activeStatusId);
   };
 
   const onDragEnd = ({active, over}: DragEndEvent) => {
@@ -39,6 +37,7 @@ const KanbanContainer = ({children}: IKanbanContainer) => {
       const newTodoList = {...todolist};
       newTodoList.tasks = arrangeTask;
       setTodolist(newTodoList as ITodolistResponse);
+      setTodolistKanban(newTodoList as ITodolistResponse);
 
       arrangeTask.forEach((element, index) => {
         if (element.id === active.id) {
