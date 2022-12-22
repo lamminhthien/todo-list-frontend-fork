@@ -20,6 +20,7 @@ export interface IInitialState {
     statusList: IStatus[];
     error: any;
   };
+  kanbanTasks: ITaskResponse[];
   kanbanActive: boolean;
   statusFilter: number;
   statusActive: number;

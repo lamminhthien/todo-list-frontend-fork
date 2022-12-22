@@ -8,7 +8,7 @@ import KanbanColumnHeader from './column/header';
 import KanbanContainer from './container';
 
 const ListTaskKanban = () => {
-  const {todolist, statusList} = useTodolist();
+  const {todolist, statusList, kanbanTasks} = useTodolist();
   const {setIsOpenModal, setSelectedTodolist, setSelectedColumnId} = useModals();
 
   const onAddTask = (columnId: number) => {
@@ -23,7 +23,7 @@ const ListTaskKanban = () => {
         {statusList.map(column => (
           <KanbanColumn key={column.id}>
             <KanbanColumnHeader name={column.name} color={column.color} />
-            <KanbanColumnBody statusId={column.id} tasks={todolist.tasks.filter(e => e.statusId == column.id)} />
+            <KanbanColumnBody statusId={column.id} tasks={kanbanTasks.filter(e => e.statusId == column.id)} />
             <KanbanColumnFooter onAddTask={() => onAddTask(column.id)} />
           </KanbanColumn>
         ))}

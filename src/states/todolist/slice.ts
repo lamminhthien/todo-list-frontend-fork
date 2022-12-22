@@ -18,6 +18,7 @@ const todolistSlice = createSlice({
       state.todolist.loading = false;
       state.todolist.data = payload;
       state.todolist.statusList = payload.status;
+      state.kanbanTasks = payload.tasks;
     },
     getTodolistFailure: (state, {payload}) => {
       state.todolist.loading = false;

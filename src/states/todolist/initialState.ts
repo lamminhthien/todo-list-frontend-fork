@@ -16,6 +16,7 @@ const initialState: IInitialState = {
     statusList: [],
     error: null
   },
+  kanbanTasks: [],
   kanbanActive: false,
   statusFilter: 0,
   statusActive: 0,
