@@ -50,7 +50,7 @@ export default function useModalUpdateUser({data, open, onClose}: IProps) {
         api.user
           .update({id, name})
           .then(() => {
-            toast.show({type: 'success', title: "Update user's name", content: 'Successful!'});
+            toast.show({type: 'success', title: 'Success!', content: 'Update success name'});
           })
           .then(() => {
             getMyTasks();
