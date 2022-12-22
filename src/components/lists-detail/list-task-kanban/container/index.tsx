@@ -20,24 +20,21 @@ interface IKanbanContainer {
 const KanbanContainer = ({children}: IKanbanContainer) => {
   const sensors = useSensorGroup();
   const {todolist, setTodolist} = useTodolist();
-  const {todolistKanban, initial, statusActive} = useTodolistKanban();
+  const {todolistKanban} = useTodolistKanban();
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const onDragStart = ({active}: DragStartEvent) => {
     if (active) setActiveId(active.id);
-    console.log(todolistKanban.status.filter(e => e.id == statusActive)[0].tasks);
   };
 
   const onDragEnd = ({active, over}: DragEndEvent) => {
     setActiveId(null);
-    console.log(over?.id);
     if (!over) return;
     if (active.id !== over.id) {
       const oldIndex = todolist.tasks?.findIndex(item => active.id === item.id);
       const newIndex = todolist.tasks?.findIndex(item => over.id === item.id);
-      console.log(todolist.tasks[newIndex]?.name);
-      const newStatusId = todolist.tasks[newIndex]?.statusId || over.id;
 
+      const newStatusId = todolist.tasks[newIndex]?.statusId || over.id;
       const arrangeTask = arrayMove(todolist.tasks, oldIndex, newIndex);
       const newTodoList = {...todolist};
       newTodoList.tasks = arrangeTask;
@@ -73,9 +70,8 @@ const KanbanContainer = ({children}: IKanbanContainer) => {
 
           api.task
             .update({id: task.id, index: newTaskIndex, statusId: parseInt(newStatusId.toString())})
-            .then(resetIndex)
             .then(socketUpdateList)
-            .then(() => initial(todolist.id));
+            .then(resetIndex);
         }
       });
     }
@@ -90,7 +86,7 @@ const KanbanContainer = ({children}: IKanbanContainer) => {
             {activeId ? (
               <KanbanTaskItem
                 assigneeList={todolistKanban.members}
-                task={todolistKanban.status.filter(e => e.id == statusActive)[0].tasks![0]}
+                task={todolistKanban.tasks!.filter(e => e.id === activeId)[0]}
               />
             ) : null}
           </DragOverlay>
