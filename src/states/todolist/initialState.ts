@@ -12,10 +12,13 @@ export const isOpenModal = {
 const initialState: IInitialState = {
   todolist: {
     loading: false,
-    data: undefined as unknown as ITodolistResponse,
+    data: [undefined] as unknown as ITodolistResponse,
+    statusList: [],
     error: null
   },
+  kanbanActive: false,
   statusFilter: 0,
+  statusActive: 0,
   selectedTask: undefined,
   isOpenModal
 };
