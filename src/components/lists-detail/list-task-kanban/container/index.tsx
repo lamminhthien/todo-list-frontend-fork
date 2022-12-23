@@ -18,7 +18,7 @@ interface IKanbanContainer {
 
 const KanbanContainer = ({children}: IKanbanContainer) => {
   const sensors = useSensorGroup();
-  const {todolist, setTodolist, setTodolistKanban} = useTodolist();
+  const {todolist, setTodolist, statusActive} = useTodolist();
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const onDragStart = ({active}: DragStartEvent) => {
@@ -27,17 +27,42 @@ const KanbanContainer = ({children}: IKanbanContainer) => {
 
   const onDragEnd = ({active, over}: DragEndEvent) => {
     setActiveId(null);
-    if (!over) return;
-    if (active.id !== over.id) {
-      const oldIndex = todolist.tasks?.findIndex(item => active.id === item.id);
-      const newIndex = todolist.tasks?.findIndex(item => over.id === item.id);
+    const oldIndex = todolist.tasks?.findIndex(item => active.id === item.id);
+    const currentTask = todolist.tasks[oldIndex];
+    const newTodoList = {...todolist};
 
+    if (!over) {
+      console.log(statusActive);
+      const newData = todolist.tasks.map(e => {
+        if (e.name == currentTask.name) {
+          const {statusId, ...rest} = e;
+          return {statusId: statusActive, ...rest};
+        } else {
+          return e;
+        }
+      });
+      newTodoList.tasks = newData;
+      setTodolist(newTodoList as ITodolistResponse);
+    }
+
+    if (!over) return;
+
+    if (active.id !== over.id || statusActive !== 0) {
+      const newIndex = todolist.tasks?.findIndex(item => over.id === item.id);
       const newStatusId = todolist.tasks[newIndex]?.statusId || over.id;
       const arrangeTask = arrayMove(todolist.tasks, oldIndex, newIndex);
-      const newTodoList = {...todolist};
+
       newTodoList.tasks = arrangeTask;
+      const newData = newTodoList.tasks.map(e => {
+        if (e.name == currentTask.name) {
+          const {statusId, ...rest} = e;
+          return {statusId: parseInt(newStatusId.toString()), ...rest};
+        } else {
+          return e;
+        }
+      });
+      newTodoList.tasks = newData;
       setTodolist(newTodoList as ITodolistResponse);
-      setTodolistKanban(newTodoList as ITodolistResponse);
 
       arrangeTask.forEach((element, index) => {
         if (element.id === active.id) {

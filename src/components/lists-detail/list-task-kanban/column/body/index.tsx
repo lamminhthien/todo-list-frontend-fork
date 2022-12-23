@@ -6,7 +6,6 @@ import React from 'react';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import useTodolist from '@/states/todolist/use-todolist';
 
-import KanbanTaskDragToColumn from './drag-to-column';
 import KanbanTaskItem from './item';
 
 interface IKanbanColumnBody {
@@ -25,7 +24,7 @@ export default function KanbanColumnBody({tasks, statusId}: IKanbanColumnBody) {
   return (
     <div className="kanban-column">
       <div className="tasks">
-        {tasks && tasks.length > 0 ? (
+        {tasks && tasks.length > 0 && (
           <>
             <SortableContext
               disabled={!write}
@@ -35,17 +34,6 @@ export default function KanbanColumnBody({tasks, statusId}: IKanbanColumnBody) {
               {tasks.map(task => (
                 <KanbanTaskItem task={task} assigneeList={todolist.members} key={task.id} />
               ))}
-            </SortableContext>
-            <KanbanTaskDragToColumn statusId={statusId} />
-          </>
-        ) : (
-          <>
-            <SortableContext
-              disabled={!write}
-              items={tasks.map(task => task.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <KanbanTaskDragToColumn statusId={statusId} />
             </SortableContext>
           </>
         )}
