@@ -3,14 +3,10 @@ import {useDroppable} from '@dnd-kit/core';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import React from 'react';
 
-import KanbanColumnHeader from '@/components/common/kanban/components/column-header';
-import SortableItem from '@/components/common/kanban/components/sortable-item';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import useTodolist from '@/states/todolist/use-todolist';
 
 import KanbanTaskItem from './item';
-import KanbanTaskName from './item/task-name';
-import KanbanTaskThumbnail from './item/thumbnail';
 import style from './style.module.scss';
 
 interface IKanbanColumnBody {
