@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import {DragEndEvent, DragOverEvent} from '@dnd-kit/core';
 import {useState} from 'react';
 
@@ -9,7 +10,6 @@ import {arrayMove, moveBetweenContainers} from '@/utils/kanban/array';
 export default function useKanbanContainer() {
   const {boardData, setBoard} = useBoards();
   const [activeId, setActiveId] = useState<ITaskResponse>();
-  // const [statusActive, setStatusActive] = useState(0);
 
   const sensors = useSensorGroup();
 
@@ -75,7 +75,6 @@ export default function useKanbanContainer() {
         return moveBetweenContainers(todolistKanban, activeContainer, activeIndex, overContainer, overIndex, active.id);
       };
       setBoard(updatePosition(boardData));
-      // setStatusActive(statusList.filter(e => e.name == overContainer)[0].id);
     }
   };
 
