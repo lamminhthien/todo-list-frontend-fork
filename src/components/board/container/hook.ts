@@ -71,9 +71,9 @@ export default function useKanbanContainer() {
     if (active.id !== over.id) {
       const activeContainer = active.data.current?.statusId || active.id;
       const overContainer = over.data.current?.statusId || over.id;
-      const activeIndex = active.data.current?.sortable.index;
+      const activeIndex = active.data.current?.sortable.index || active.id;
       // const activeItem = active.data.current as ITaskResponse;
-      const overIndex = over.data.current?.sortable.index;
+      const overIndex = over.data.current?.sortable.index || over.id;
 
       if (activeContainer !== overContainer)
         setBoardState({
@@ -81,10 +81,11 @@ export default function useKanbanContainer() {
           [overContainer]: arrayMove(boardState[overContainer], activeIndex, overIndex)
         });
       else {
-        setBoardState({
-          ...boardState,
-          [activeContainer]: arrayMove(boardState[activeContainer], activeIndex, overIndex)
-        });
+        if (active.data != undefined)
+          setBoardState({
+            ...boardState,
+            [activeContainer]: arrayMove(boardState[activeContainer], activeIndex, overIndex)
+          });
       }
     }
   };
