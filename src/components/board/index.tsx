@@ -5,6 +5,7 @@ import {SOCKET_EVENTS} from '@/data/socket/type';
 import {useStateAuth} from '@/states/auth';
 import useBoards from '@/states/board/use-boards';
 
+import ToolBar from '../common/toolbar';
 import KanbanContainer from './container';
 
 export interface Iprops {
@@ -14,7 +15,7 @@ export interface Iprops {
 const KanbanDetail: FC<Iprops> = ({id}) => {
   const auth = useStateAuth();
 
-  const {boardData, getBoard} = useBoards();
+  const {getBoard} = useBoards();
 
   useEffect(() => {
     if (auth) {
@@ -39,8 +40,12 @@ const KanbanDetail: FC<Iprops> = ({id}) => {
     };
   }, [auth]);
 
-  if (!boardData) return null;
-  return <KanbanContainer />;
+  return (
+    <>
+      <ToolBar />
+      <KanbanContainer />
+    </>
+  );
 };
 
 export default KanbanDetail;

@@ -7,7 +7,7 @@ import {ROUTES} from '@/configs/routes.config';
 
 import styles from './style.module.scss';
 
-export default function DefaultLayout({children}: React.PropsWithChildren<Record<string, unknown>>) {
+export default function NewLayout({children}: React.PropsWithChildren<Record<string, unknown>>) {
   useEffect(() => {
     if (window !== undefined) {
       document
@@ -17,8 +17,9 @@ export default function DefaultLayout({children}: React.PropsWithChildren<Record
   });
   const router = useRouter();
   return (
-    <div className={styles['layout-default']}>
+    <div className={styles['new-layout']}>
       <Topbar />
+      {/* <TopBarNew /> */}
       <main>{children}</main>
       {router.asPath === ROUTES.LOGIN ? (
         <>
