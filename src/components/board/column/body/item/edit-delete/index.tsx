@@ -41,7 +41,7 @@ export default function KanbanTaskEditDelete({task}: IKanbanTaskEditDelete) {
     .map((item, idx) => <Tool key={idx} {...{...item, className: 'flex-row-reverse'}} />);
   return (
     <div className="kanban-task-edit-delete">
-      <ToolMenu display="alway" icon={<MUI_ICON.MORE_VERT />} items={toolMenuItems} margin={-1} />
+      <ToolMenu display="alway" icon={<MUI_ICON.MORE_VERT />} items={toolMenuItems} margin={-3} />
     </div>
   );
 }
