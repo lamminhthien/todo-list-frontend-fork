@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-shadow */
-import {DragEndEvent, DragOverEvent, DragStartEvent} from '@dnd-kit/core';
+import {DragEndEvent, DragOverEvent, DragStartEvent, UniqueIdentifier} from '@dnd-kit/core';
 import {arrayMove} from '@dnd-kit/sortable';
-import {useEffect, useState} from 'react';
+import {SetStateAction, useEffect, useState} from 'react';
 
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {IStatus} from '@/data/api/types/todolist.type';
 import {useSensorGroup} from '@/lib/dnd-kit/sensor/sensor-group';
 import useBoards from '@/states/board/use-boards';
-import {moveBetweenContainers} from '@/utils/kanban/array';
+import {moveToColumn} from '@/utils/kanban/array';
 
-import {apiUpdateTaskStatus, kanbanAPIHandler} from './api-handler';
+import {apiUpdateTaskStatus} from './api-handler';
+import DNDCurrent from './type';
 
 export default function useKanbanContainer() {
   const {statusList} = useBoards();
@@ -28,18 +29,36 @@ export default function useKanbanContainer() {
 
   const [boardState, setBoardState] = useState(() => mapDataKanban(statusList));
   const [taskActive, setTaskActive] = useState<ITaskResponse | any>();
+  const [columnOrderState, setColumnOrderState] = useState<string[]>(statusList.map(e => e.id.toString()));
+  const [columnActive, setColumnActive] = useState<string>();
+  let boardUpdateDragEnd: SetStateAction<{[x: number]: ITaskResponse[]}>;
 
   useEffect(() => {
     setBoardState(() => mapDataKanban(statusList));
+    setColumnOrderState(statusList.map(e => e.id.toString()));
   }, [statusList]);
 
   const sensors = useSensorGroup();
 
-  const handleDragStart = ({active}: DragStartEvent) => setTaskActive(active.data.current);
+  const isColumnSelected = (id: UniqueIdentifier) => {
+    return id.toString().includes('column') ? true : false;
+  };
 
-  const handleDragCancel = () => setTaskActive(undefined);
+  const handleDragStart = ({active}: DragStartEvent) => {
+    const {id, data} = active;
+    if (isColumnSelected(id)) {
+      setTaskActive(undefined);
+      setColumnActive(id.toString().replace('column', ''));
+    } else {
+      setTaskActive(data.current);
+      setColumnActive(undefined);
+    }
+  };
 
-  let arrangedBoard = {};
+  const handleDragCancel = () => {
+    setTaskActive(undefined);
+    setColumnActive(undefined);
+  };
 
   const handleDragOver = ({active, over}: DragOverEvent) => {
     const overId = over?.id;
@@ -47,48 +66,55 @@ export default function useKanbanContainer() {
       return;
     }
 
-    const activeColumn = active.data?.current?.statusId || active.id;
-    const overColumn = over.data?.current?.statusId || over.id;
+    // This is code for handle drag column
+    if (columnActive) {
+      const columnActive = active.id.toString().replace('column', '');
+      const columnOver = over.data?.current?.statusId || over.id.toString().replace('column', '');
+      if (columnActive != columnOver) {
+        const columnActiveIndex = columnOrderState.findIndex(e => e == columnActive);
+        const columnOverIndex = columnOrderState.findIndex(e => e == columnOver);
+        const reorderColumnIdList = arrayMove(columnOrderState, columnActiveIndex, columnOverIndex);
+        setColumnOrderState(reorderColumnIdList);
+      }
+    }
 
-    if (activeColumn !== overColumn) {
-      const activeItem = active.data.current as ITaskResponse;
-      const overIndex = over.id in boardState ? boardState[overColumn].length : over.data.current?.sortable?.index;
-      setBoardState(moveBetweenContainers(boardState, activeColumn, activeItem, overColumn, overIndex));
+    // This is code for handle drag task
+    if (columnActive == undefined) {
+      const taskActiveColumn = active.data?.current?.statusId || active.id;
+      const taskOverColumn = over.data?.current?.statusId || over.id.toString().replace('column', '');
+
+      if (taskActiveColumn !== taskOverColumn) {
+        const activeItem = active.data.current as ITaskResponse;
+        const overIndex =
+          over.id in boardState ? boardState[taskOverColumn].length : over.data.current?.sortable?.index;
+        boardUpdateDragEnd = moveToColumn(boardState, taskActiveColumn, activeItem, taskOverColumn, overIndex);
+        setBoardState(boardUpdateDragEnd);
+      }
     }
   };
 
   const handleDragEnd = ({active, over}: DragEndEvent) => {
     if (!over) {
       setTaskActive(undefined);
+      setColumnActive(undefined);
       return;
     }
-    const activeColumn = active.data.current?.statusId || active.id;
-    const activeItem = active.data.current as ITaskResponse;
-    const activeIndex = active.data.current?.sortable.index || active.id;
+    if (over) {
+      const overData: DNDCurrent | any = over.data.current;
+      const activeData: DNDCurrent | any = active.data.current;
 
-    const overColumn = over.data.current?.statusId || over.id;
-    const overIndex = over.data.current?.sortable.index || over.id;
+      const {id: overId, statusId: overStatusId, name: overName} = overData;
+      const {id: activeId, name: activeName} = activeData;
 
-    if (active.id !== over.id) {
-      if (activeColumn !== overColumn) {
-        arrangedBoard = {
-          ...boardState,
-          [overColumn]: arrayMove(boardState[overColumn], activeIndex, overIndex)
-        };
-        setBoardState(arrangedBoard);
-        kanbanAPIHandler(arrangedBoard, activeItem, overColumn);
-      } else {
-        arrangedBoard = {
-          ...boardState,
-          [activeColumn]: arrayMove(boardState[activeColumn], activeIndex, overIndex)
-        };
-        setBoardState(arrangedBoard);
-        kanbanAPIHandler(arrangedBoard, activeItem, overColumn);
+      if (!overName) {
+        console.log('This task is drag to short column area');
+        const newStatus = over.id.toString().replace('column', '');
+        apiUpdateTaskStatus(activeId, parseInt(newStatus));
       }
-    } else {
-      arrangedBoard = moveBetweenContainers(boardState, activeColumn, activeItem, overColumn, overIndex);
-      setBoardState(arrangedBoard);
-      kanbanAPIHandler(boardState, activeItem, overColumn);
+      if (overName) {
+        console.log('This task is drag to column has overflow scroll');
+        apiUpdateTaskStatus(activeId, parseInt(overStatusId));
+      }
     }
   };
 
@@ -100,6 +126,8 @@ export default function useKanbanContainer() {
     handleDragCancel,
     handleDragEnd,
     handleDragOver,
-    taskActive
+    taskActive,
+    columnActive,
+    columnOrderState
   };
 }

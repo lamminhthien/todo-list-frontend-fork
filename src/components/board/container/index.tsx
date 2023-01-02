@@ -1,53 +1,76 @@
-import {DndContext, DragOverlay} from '@dnd-kit/core';
-import React, {useEffect, useState} from 'react';
+import {DndContext, DragOverlay, useDroppable} from '@dnd-kit/core';
+import {horizontalListSortingStrategy, SortableContext} from '@dnd-kit/sortable';
+import React from 'react';
 
 import KanbanColumn from '../column';
 import KanbanColumnBody from '../column/body';
+import KanbanColumnFooter from '../column/body/add-task';
 import KanbanTaskItem from '../column/body/item';
 import KanbanColumnHeader from '../column/header';
 import useKanbanContainer from './hook';
 import style from './style.module.scss';
 
 const KanbanContainer = () => {
-  const {boardData, statusList, sensors, handleDragCancel, handleDragEnd, handleDragOver, handleDragStart, taskActive} =
-    useKanbanContainer();
+  const {
+    boardData,
+    statusList,
+    sensors,
+    handleDragCancel,
+    handleDragEnd,
+    handleDragOver,
+    handleDragStart,
+    taskActive,
+    columnActive,
+    columnOrderState
+  } = useKanbanContainer();
 
-  const [windowHeight, setWindowHeight] = useState(750);
-
-  useEffect(() => {
-    if (window) {
-      window.addEventListener('resize', () => {
-        if (windowHeight > 0) setWindowHeight(window.innerHeight * 0.7);
-      });
-    }
-  }, []);
+  const {setNodeRef} = useDroppable({id: 'drag-column'});
 
   return (
     <div className={style['kanban-container']}>
-      <div className="kanban-container-scroll" style={{height: windowHeight}}>
+      <div className="inner">
         <DndContext
           sensors={sensors}
           onDragStart={handleDragStart}
           onDragCancel={handleDragCancel}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
+          autoScroll={true}
         >
-          {Object.keys(boardData).map(columnId => {
-            return (
-              <KanbanColumn key={columnId}>
-                <KanbanColumnHeader
-                  name={statusList.filter(e => e.id == Number(columnId))[0].name}
-                  color={statusList.filter(e => e.id == Number(columnId))[0].color}
-                />
-                <KanbanColumnBody id={columnId} tasks={boardData[Number(columnId)]} />
-              </KanbanColumn>
-            );
-          })}
-          {taskActive && (
-            <DragOverlay>
-              <KanbanTaskItem task={taskActive} />
-            </DragOverlay>
-          )}
+          <SortableContext id="drag-column" items={[...columnOrderState]} strategy={horizontalListSortingStrategy}>
+            {columnOrderState.map((columnId: string) => (
+              <div className="kanban-wrapper" key={columnId} ref={setNodeRef}>
+                <KanbanColumn id={'column' + columnId}>
+                  <KanbanColumnHeader
+                    name={statusList.filter(e => e.id == Number(columnId))[0].name}
+                    color={statusList.filter(e => e.id == Number(columnId))[0].color}
+                  />
+                  <KanbanColumnBody id={columnId} tasks={boardData[Number(columnId)]} />
+                  <KanbanColumnFooter id={Number(columnId)} />
+                </KanbanColumn>
+              </div>
+            ))}
+            {taskActive && (
+              <DragOverlay>
+                <KanbanTaskItem task={taskActive} />
+              </DragOverlay>
+            )}
+
+            {columnActive && (
+              <DragOverlay>
+                <div className="kanban-wrapper bg-[#f6fafe]" key={columnActive} ref={setNodeRef}>
+                  <KanbanColumn id={'column' + columnActive}>
+                    <KanbanColumnHeader
+                      name={statusList.filter(e => e.id == Number(columnActive))[0].name}
+                      color={statusList.filter(e => e.id == Number(columnActive))[0].color}
+                    />
+                    <KanbanColumnBody id={columnActive} tasks={boardData[Number(columnActive)]} />
+                    <KanbanColumnFooter id={Number(columnActive)} />
+                  </KanbanColumn>
+                </div>
+              </DragOverlay>
+            )}
+          </SortableContext>
         </DndContext>
       </div>
     </div>

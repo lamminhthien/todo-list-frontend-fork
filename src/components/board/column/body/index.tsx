@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {useDroppable} from '@dnd-kit/core';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import React from 'react';
 
 import {ITaskResponse} from '@/data/api/types/task.type';
 
-import AddTaskKanban from './add-task';
 import KanbanTaskItem from './item';
 import style from './style.module.scss';
 
@@ -23,7 +21,6 @@ export default function KanbanColumnBody({id, tasks = []}: IKanbanColumnBody) {
         {tasks.map((task, idx: number) => (
           <KanbanTaskItem key={idx} task={task} />
         ))}
-        <AddTaskKanban id={Number(id)} />
       </ul>
     </SortableContext>
   );
