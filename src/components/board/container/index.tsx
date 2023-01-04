@@ -20,12 +20,11 @@ const KanbanContainer = () => {
     handleDragOver,
     handleDragStart,
     taskActive,
-    columnActive,
+    columnDragActive,
     columnOrderState
   } = useKanbanContainer();
 
   const {setNodeRef} = useDroppable({id: 'drag-column'});
-
   return (
     <div className={style['kanban-container']}>
       <div className="inner">
@@ -42,8 +41,8 @@ const KanbanContainer = () => {
               <div className="kanban-wrapper" key={columnId} ref={setNodeRef}>
                 <KanbanColumn id={'column' + columnId}>
                   <KanbanColumnHeader
-                    name={statusList.filter(e => e.id == Number(columnId))[0].name}
-                    color={statusList.filter(e => e.id == Number(columnId))[0].color}
+                    name={statusList.filter(e => e.id == Number(columnId))[0].name || ''}
+                    color={statusList.filter(e => e.id == Number(columnId))[0].color || ''}
                   />
                   <KanbanColumnBody id={columnId} tasks={boardData[Number(columnId)]} />
                   <KanbanColumnFooter id={Number(columnId)} />
@@ -56,16 +55,16 @@ const KanbanContainer = () => {
               </DragOverlay>
             )}
 
-            {columnActive && (
+            {columnDragActive && (
               <DragOverlay>
-                <div className="kanban-wrapper bg-[#f6fafe]" key={columnActive} ref={setNodeRef}>
-                  <KanbanColumn id={'column' + columnActive}>
+                <div className="kanban-wrapper bg-[#f6fafe]" key={columnDragActive} ref={setNodeRef}>
+                  <KanbanColumn id={'column' + columnDragActive}>
                     <KanbanColumnHeader
-                      name={statusList.filter(e => e.id == Number(columnActive))[0].name}
-                      color={statusList.filter(e => e.id == Number(columnActive))[0].color}
+                      name={statusList.filter(e => e.id == Number(columnDragActive))[0].name}
+                      color={statusList.filter(e => e.id == Number(columnDragActive))[0].color}
                     />
-                    <KanbanColumnBody id={columnActive} tasks={boardData[Number(columnActive)]} />
-                    <KanbanColumnFooter id={Number(columnActive)} />
+                    <KanbanColumnBody id={columnDragActive} tasks={boardData[Number(columnDragActive)]} />
+                    <KanbanColumnFooter id={Number(columnDragActive)} />
                   </KanbanColumn>
                 </div>
               </DragOverlay>
