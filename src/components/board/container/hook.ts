@@ -31,6 +31,8 @@ export default function useKanbanContainer() {
   const [taskActive, setTaskActive] = useState<ITaskResponse | any>();
   const [columnOrderState, setColumnOrderState] = useState<string[]>(statusList.map(e => e.id.toString()));
   const [columnDragActive, setColumnDragActive] = useState<string>();
+  const [overColumnActive, setOverColumnActive] = useState<number>(0);
+  const [startColumnActive, setStartColumnActive] = useState<number>(0);
   let boardUpdateDragEnd: SetStateAction<{[x: number]: ITaskResponse[]}>;
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function useKanbanContainer() {
       setColumnDragActive(id.toString().replace('column', ''));
     } else {
       setTaskActive(data.current);
+      setStartColumnActive(data.current?.statusId);
       setColumnDragActive(undefined);
     }
   };
@@ -90,6 +93,7 @@ export default function useKanbanContainer() {
         boardUpdateDragEnd = moveToColumn(boardState, taskActiveColumn, activeItem, taskOverColumn, overIndex);
         setBoardState(boardUpdateDragEnd);
       }
+      setOverColumnActive(taskOverColumn);
     }
   };
 
@@ -99,51 +103,52 @@ export default function useKanbanContainer() {
       setColumnDragActive(undefined);
       return;
     }
+
+    let updatePosition = {};
     if (over) {
       const overData: DNDCurrent | ITaskResponse | any = over.data.current;
       const activeData: DNDCurrent | ITaskResponse | any = active.data.current;
-      const overColumnId = overData.statusId || overData.sortable.containerId;
-      const activeColumnId = activeData.statusId || activeData.sortable.containerId;
-      const isDragBelowColumn = overData.name?.includes('column');
 
-      if (!isDragBelowColumn && activeColumnId !== overColumnId) {
-        // apiUpdateTaskStatus(activeData.id, parseInt(overColumnId));
+      if (columnDragActive) {
+        const activeColumnId = Number(active.id.toString().replace('column', ''));
+        const listID = boardData.id;
+        apiUpdateColumnKanban(activeColumnId, columnOrderState, statusList, listID);
+        return;
       }
-      if (isDragBelowColumn && activeColumnId !== overColumnId) {
-        console.log('This task is drag to column has overflow scroll or inside column');
-        // console.log('Active');
-        // console.log(active);
-        // console.log('Over');
-        // console.log(over);
+      if (startColumnActive !== overColumnActive) {
+        // alert(`over column is different`);
+        const beforePositionInColumn = activeData.sortable.index;
+        if (overData) {
+          const afterPositionInColumn = overData.sortable.index;
+          updatePosition = {
+            ...boardState,
+            [overColumnActive]: arrayMove(
+              boardState[Number(overColumnActive)],
+              beforePositionInColumn,
+              afterPositionInColumn
+            )
+          };
+          setBoardState(updatePosition);
+        }
+        apiUpdateTaskKanban(updatePosition, activeData, overColumnActive);
+        return;
+      }
 
+      if (startColumnActive == overColumnActive && !columnDragActive) {
         const beforePositionInColumn = activeData.sortable.index;
         const afterPositionInColumn = overData.sortable.index;
-        const overColumnId = overData.sortable.containerId;
-        alert('Let move task id');
-
-        setBoardState({
+        updatePosition = {
           ...boardState,
-          [overColumnId]: arrayMove(boardState[Number(overColumnId)], beforePositionInColumn, afterPositionInColumn)
-        });
-        //This is where we check the task active position and task over position
-        // apiUpdateTaskStatus(activeData.id, parseInt(overData.statusId));
+          [overColumnActive]: arrayMove(
+            boardState[Number(overColumnActive)],
+            beforePositionInColumn,
+            afterPositionInColumn
+          )
+        };
+        setBoardState(updatePosition);
+        apiUpdateTaskKanban(updatePosition, activeData, startColumnActive);
+        return;
       }
-
-      if (activeColumnId == overColumnId && !columnDragActive) {
-        const beforePositionInColumn = activeData.sortable.index;
-        const afterPositionInColumn = overData.sortable.index;
-        alert('Let move task on the same column');
-        setBoardState({
-          ...boardState,
-          [overColumnId]: arrayMove(boardState[Number(overColumnId)], beforePositionInColumn, afterPositionInColumn)
-        });
-        // apiUpdateTaskKanban(boardState, activeData, activeColumnId);
-      }
-    }
-    if (columnDragActive) {
-      const activeColumnId = Number(active.id.toString().replace('column', ''));
-      const listID = boardData.id;
-      apiUpdateColumnKanban(activeColumnId, columnOrderState, statusList, listID);
     }
   };
 
