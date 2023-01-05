@@ -10,13 +10,13 @@ const Invited: FC<TypeNotifications> = props => {
   const {content, link, sender} = notification;
 
   const textLink = (
-    <Link href={`${ROUTES.LIST}/${link}}`} onClick={handleIsRead}>
+    <Link href={`${ROUTES.LIST}/${link}`} onClick={handleIsRead}>
       {content}
     </Link>
   );
   return (
     <p className="content">
-      {sender.name} invited you in a list task {textLink}
+      <span className="sender-name">{sender.name}</span> invited you in a list task {textLink}
     </p>
   );
 };

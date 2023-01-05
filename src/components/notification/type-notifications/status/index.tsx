@@ -14,15 +14,16 @@ const Status: FC<TypeNotifications> = props => {
   const statusAfter: IStatus = JSON.parse(after);
 
   const textLink = (
-    <Link href={`${ROUTES.TASK}/${link}}`} onClick={handleIsRead}>
+    <Link href={`${ROUTES.TASK}/${link}`} onClick={handleIsRead}>
       {content}
     </Link>
   );
 
   return (
     <p className="content">
-      {sender.name} changed a task {textLink} from <span style={{color: statusBefore.color}}>{statusBefore.name}</span>{' '}
-      to <span style={{color: statusAfter.color}}>{statusAfter.name}</span>
+      <span className="sender-name">{sender.name}</span> changed a task {textLink} from{' '}
+      <span style={{color: statusBefore.color}}>{statusBefore.name}</span> to{' '}
+      <span style={{color: statusAfter.color}}>{statusAfter.name}</span>
     </p>
   );
 };

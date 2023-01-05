@@ -10,14 +10,14 @@ const DeletedTask: FC<TypeNotifications> = props => {
   const {content, link, sender} = notification;
 
   const textLink = (
-    <Link href={`${ROUTES.TASK}/${link}}`} onClick={handleIsRead}>
+    <Link href={`${ROUTES.TASK}/${link}`} onClick={handleIsRead}>
       {content}
     </Link>
   );
 
   return (
     <p className="content">
-      {sender.name} delete to a task {textLink}
+      <span className="sender-name">{sender.name}</span> delete to a task {textLink}
     </p>
   );
 };

@@ -10,14 +10,15 @@ const UnassignedMyself: FC<TypeNotifications> = props => {
   const {content, link, sender} = notification;
 
   const textLink = (
-    <Link href={`${ROUTES.TASK}/${link}}`} onClick={handleIsRead}>
+    <Link href={`${ROUTES.TASK}/${link}`} onClick={handleIsRead}>
       {content}
     </Link>
   );
 
   return (
     <p className="content">
-      {sender.name} unassigned a task {textLink} to {sender.name}
+      <span className="sender-name">{sender.name}</span> unassigned a task {textLink} to{' '}
+      <span className="sender-name">{sender.name}</span>
     </p>
   );
 };

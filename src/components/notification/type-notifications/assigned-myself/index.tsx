@@ -10,14 +10,15 @@ const AssignedMyself: FC<TypeNotifications> = props => {
   const {content, link, sender} = notification;
 
   const textLink = (
-    <Link href={`${ROUTES.TASK}/${link}}`} onClick={handleIsRead}>
+    <Link href={`${ROUTES.TASK}/${link}`} onClick={handleIsRead}>
       {content}
     </Link>
   );
 
   return (
     <p className="content">
-      {sender.name} assigned a task {textLink} to {sender.name}
+      <span className="sender-name">{sender.name}</span> assigned a task {textLink} to{' '}
+      <span className="sender-name">{sender.name}</span>
     </p>
   );
 };
