@@ -3,7 +3,7 @@
   .decor {
     @apply hidden md:block;
     .decor-inner {
-      @apply flex h-12 w-12 items-center rounded-xl border border-transparent bg-[#38BDF8];
+      @apply flex h-12 w-12 items-center rounded-xl border border-transparent bg-[#38BDF8] px-1;
     }
   }
   .page-action {
@@ -11,9 +11,7 @@
   }
   .page-title {
     @apply text-h4 font-semibold;
-  }
-  .favorite-list {
-    @apply hidden md:block;
+    @apply gap-x-1 sm:flex;
   }
   .more {
     @apply hidden md:block;
