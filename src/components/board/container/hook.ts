@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-shadow */
 import {DragEndEvent, DragOverEvent, DragStartEvent, UniqueIdentifier} from '@dnd-kit/core';
 import {arrayMove} from '@dnd-kit/sortable';
@@ -10,6 +11,7 @@ import useBoards from '@/states/board/use-boards';
 import {moveToColumn} from '@/utils/kanban/array';
 
 import {apiUpdateColumnKanban, apiUpdateTaskKanban} from './api-handler';
+import DNDCurrent from './type';
 
 export default function useKanbanContainer() {
   const {statusList, boardData} = useBoards();
@@ -33,9 +35,8 @@ export default function useKanbanContainer() {
   const [overColumnActive, setOverColumnActive] = useState<number>(0);
   const [startColumnActive, setStartColumnActive] = useState<number>(0);
 
-  const [positionOnOtherColumn, setPositionOnOtherColumn] = useState<number>(0);
-
   let boardUpdateDragEnd: SetStateAction<{[x: number]: ITaskResponse[]}>;
+  let updateTaskPosition = {};
 
   useEffect(() => {
     setBoardState(() => mapDataKanban(statusList));
@@ -87,15 +88,13 @@ export default function useKanbanContainer() {
     if (columnDragActive == undefined) {
       const taskActiveColumn = active.data?.current?.statusId || active.id;
       const taskOverColumn = over.data?.current?.statusId || over.id.toString().replace('column', '');
-      const taskOverIndex = over.data?.current?.sortable.index;
-      if (taskOverIndex >= 0) setPositionOnOtherColumn(taskOverIndex);
-      console.log(positionOnOtherColumn);
 
       if (taskActiveColumn !== taskOverColumn) {
         const activeItem = active.data.current as ITaskResponse;
         const overIndex =
           over.id in boardState ? boardState[taskOverColumn].length : over.data.current?.sortable?.index;
         boardUpdateDragEnd = moveToColumn(boardState, taskActiveColumn, activeItem, taskOverColumn, overIndex);
+        updateTaskPosition = boardUpdateDragEnd;
         setBoardState(boardUpdateDragEnd);
       }
       setOverColumnActive(taskOverColumn);
@@ -110,6 +109,8 @@ export default function useKanbanContainer() {
     }
 
     if (over) {
+      const overData: DNDCurrent | ITaskResponse | any = over.data.current;
+
       if (columnDragActive) {
         const activeColumnId = Number(active.id.toString().replace('column', ''));
         apiUpdateColumnKanban(activeColumnId, columnOrderState, statusList, todolistId);
@@ -117,24 +118,15 @@ export default function useKanbanContainer() {
       }
 
       if (startColumnActive !== overColumnActive) {
+        const listTask = boardData.tasks.filter(x => x.statusId === overColumnActive);
         apiUpdateTaskKanban(boardState, taskActive, startColumnActive, overColumnActive, todolistId);
-        const afterPositionInColumn = boardState[overColumnActive].findIndex(e => e.id == over.id);
-        const updateTaskPosition = {
-          ...boardState,
-          [overColumnActive]: arrayMove(
-            boardState[Number(overColumnActive)],
-            positionOnOtherColumn,
-            afterPositionInColumn
-          )
-        };
-        setBoardState(updateTaskPosition);
         return;
       }
 
       if (startColumnActive == overColumnActive && !columnDragActive) {
-        const beforePositionInColumn = boardState[startColumnActive].findIndex(e => e.id == active.id);
-        const afterPositionInColumn = boardState[overColumnActive].findIndex(e => e.id == over.id);
-        const updateTaskPosition = {
+        const beforePositionInColumn = taskActive.sortable.index;
+        const afterPositionInColumn = overData.sortable.index;
+        updateTaskPosition = {
           ...boardState,
           [overColumnActive]: arrayMove(
             boardState[Number(overColumnActive)],
@@ -143,6 +135,7 @@ export default function useKanbanContainer() {
           )
         };
         setBoardState(updateTaskPosition);
+        const listTask = boardData.tasks.filter(x => x.statusId === overColumnActive);
         apiUpdateTaskKanban(updateTaskPosition, taskActive, startColumnActive, overColumnActive, todolistId);
         return;
       }
