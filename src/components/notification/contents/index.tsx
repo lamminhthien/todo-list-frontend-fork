@@ -73,7 +73,7 @@ const Contents: FC<IProps> = ({handleClose}) => {
             )}
             {unreadNotificationIds.length > 0 && (
               <p className="read-all" onClick={hadleReadAll}>
-                Read all
+                Mark all as read
               </p>
             )}
           </div>
