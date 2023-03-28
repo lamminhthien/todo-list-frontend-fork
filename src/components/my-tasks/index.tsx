@@ -42,7 +42,6 @@ const MyTasks = () => {
     };
   }, [auth]);
   if (myTasks == undefined) return <Loading />;
-  if (myTasks) console.log('🚀 ~ file: index.tsx:62 ~ MyTasks ~ myTasks', myTasks);
 
   if (myTasks)
     return (

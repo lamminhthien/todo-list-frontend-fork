@@ -17,12 +17,14 @@ import {IProps} from '../types-create-update';
 
 interface IFormInputs {
   name: string;
+  taskSymbol: string;
   visibility?: keyof typeof Visibilities;
   member: {ids: string[]};
 }
 
 const Schema = yup.object().shape({
-  name: yup.string().required('Please enter your list name.')
+  name: yup.string().required('Please enter your list name.'),
+  taskSymbol: yup.string()
 });
 
 export default function useModalUpdateList({data, open, onClose, onSuccess}: IProps) {
@@ -41,18 +43,20 @@ export default function useModalUpdateList({data, open, onClose, onSuccess}: IPr
   useEffect(() => {
     reset();
     setValue('name', data?.name || '');
+    setValue('taskSymbol', data?.taskSymbol || '');
   }, [data, open, setValue]);
 
   const submitHandler: SubmitHandler<IFormInputs> = async formData => {
     if (isSubmitting) return;
-    const {name, visibility, member} = formData;
+    const {name, visibility, member, taskSymbol} = formData;
 
     if (data) {
       const {id} = data;
-      const req = api.todolist.update({id, name, visibility, member}).then(res => {
+      const req = api.todolist.update({id, name, visibility, member, taskSymbol}).then(res => {
         if (router.asPath.includes(ROUTES.LIST)) {
           const newTodolist: ITodolistResponse = res.data;
           newTodolist.name = name;
+          newTodolist.taskSymbol = taskSymbol;
           setTodolist(newTodolist);
         }
         toast.show({type: 'success', title: 'Update List', content: ToastContents.SUCCESS});
@@ -69,11 +73,6 @@ export default function useModalUpdateList({data, open, onClose, onSuccess}: IPr
 
     onClose();
   };
-
-  useEffect(() => {
-    setValue('name', data?.name || '');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   return {errors, isSubmitting, setValue, onSubmit: handleSubmit(submitHandler), owner, ownerKanban, ...rest};
 }

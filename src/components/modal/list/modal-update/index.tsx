@@ -55,6 +55,13 @@ const ModalUpdateList: FC<IProps> = props => {
                 placeholder={'Enter your list name'}
                 {...register('name')}
               />
+              <Input
+                error={errors.taskSymbol?.message}
+                value={data?.taskSymbol}
+                placeholder={'Enter your task Symbol. EX: TEST (optional)'}
+                {...register('taskSymbol')}
+                className="mt-4"
+              />
               {data && (owner || ownerKanban) && (
                 <Select
                   {...register('visibility')}

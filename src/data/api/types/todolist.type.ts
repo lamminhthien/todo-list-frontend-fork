@@ -8,6 +8,7 @@ export interface ITodolistGetOne {
 
 export interface ITodolistCreate {
   name: string;
+  taskSymbol?: string;
 }
 
 export interface ITodolistUpdate extends ITodolistGetOne {
@@ -22,6 +23,7 @@ export interface ITodolistUpdate extends ITodolistGetOne {
   statusIndex?: number;
   resetIndexStatus?: boolean;
   resetIndexTask?: boolean;
+  taskSymbol?: string;
 }
 
 export interface ITodolistSync {
@@ -47,6 +49,7 @@ export interface IMember {
 export interface ITask {
   id: string;
   name: string;
+  order: number;
   isDone: boolean;
   statusId: number;
   index: number;
@@ -56,6 +59,7 @@ export interface ITask {
 export interface ITodolistResponse {
   id: string;
   name: string;
+  taskSymbol: string;
   userId: string;
   favorite: boolean;
   visibility: keyof typeof Visibilities;
