@@ -4,18 +4,18 @@ import {FC} from 'react';
 import Back from '@/components/common/back';
 import TodolistFavorite from '@/components/common/todolist-favorite';
 import {ROUTES} from '@/configs/routes.config';
-import {isBoardPage, isListDetailPage} from '@/utils/check-routes';
+import {isBoardPage, isListDetailPage, isMyListPage, isMyTasksPage} from '@/utils/check-routes';
 
 import useTopAreaLeft from './hook';
 import style from './style.module.scss';
 
 const TopAreaLeft: FC = () => {
-  const {boardData, currentPage, id, pageTitle, path, returnTo, todolist} = useTopAreaLeft();
+  const {boardData, currentPage, id, path, returnTo, todolist} = useTopAreaLeft();
+
   return (
     <div className={style['top-area-left']}>
       <div className="decor">
         <div className="decor-inner">
-          {/* <Icon name="decor" className="ico-three-line text-white" /> */}
           <img src="/icons/breadcumb.png" alt="Google Login" />
         </div>
       </div>
@@ -33,7 +33,11 @@ const TopAreaLeft: FC = () => {
         />
       </div>
       <div className="page-title">
-        <p>{pageTitle}</p>
+        <p>To-Do List |</p>
+        {isMyListPage(path, id as string) && 'My Lists'}
+        {isMyTasksPage(path, id as string) && 'My Tasks'}
+        {isListDetailPage(path, id as string) && todolist.name}
+        {isBoardPage(path, id as string) && boardData.name}
         <div className="page-action">
           <div className="favorite-list">
             {isListDetailPage(path, id as string) && <TodolistFavorite id={todolist.id} favorite={todolist.favorite} />}
