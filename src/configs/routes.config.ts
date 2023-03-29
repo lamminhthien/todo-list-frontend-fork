@@ -3,5 +3,6 @@ export const ROUTES = {
   HOME: '/',
   LIST: '/lists',
   TASK: '/tasks',
-  KANBAN: '/boards'
+  KANBAN: '/boards',
+  DOCUMENT: '/documents'
 };

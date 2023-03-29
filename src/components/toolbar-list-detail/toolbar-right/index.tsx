@@ -52,18 +52,13 @@ const ToolBarRight: FC = () => {
         {!isKanbanView && (
           <div className={`add-task`}>
             <span className="hidden sm:block">Add Task</span>
-            <Icon
-              name="add-task"
-              className="ico-plus-circle leading-tight hover:cursor-pointer"
-              size={16}
-              onClick={onAddTask}
-            />
+            <Icon name="add-task" className="ico-plus-circle icons" size={16} onClick={onAddTask} />
           </div>
         )}
         <div className={`kanban-view ${!isKanbanView ? '' : 'active'}`}>
           <Icon
             name="list-view"
-            className="ico-vertical leading-tight hover:cursor-pointer"
+            className="ico-vertical icons"
             size={16}
             onClick={() => router.push(`${ROUTES.KANBAN}/${id}`)}
           />
@@ -71,19 +66,19 @@ const ToolBarRight: FC = () => {
         <div className={`list-view ${isKanbanView ? '' : 'active'}`}>
           <Icon
             name="horizontal"
-            className="ico-horizontal leading-tight hover:cursor-pointer"
+            className="ico-horizontal icons"
             size={16}
             onClick={() => router.push(`${ROUTES.LIST}/${id}`)}
           />
         </div>
-        <div>
+        <div className="flex items-center">
           <Icon
             name="documents"
-            className="ico-note-list leading-tight hover:cursor-pointer"
-            size={16}
-            onClick={() => router.push(`${ROUTES.LIST}/${id}`)}
+            className="ico-note-list icons"
+            size={24}
+            onClick={() => router.push(`${ROUTES.DOCUMENT}`)}
           />
-          <span className="hidden sm:block">Docs</span>
+          <span>Docs</span>
         </div>
         {!isKanbanView && (
           <div className="tool-filter">
@@ -92,12 +87,7 @@ const ToolBarRight: FC = () => {
         )}
         <div className="delete ml-1">
           <span className="hidden sm:block">Delete</span>
-          <Icon
-            name="Delete list"
-            className="ico-trash-2 leading-tight hover:cursor-pointer"
-            size={16}
-            onClick={onDelete}
-          />
+          <Icon name="Delete list" className="ico-trash-2 icons" size={16} onClick={onDelete} />
         </div>
       </div>
       <div className="sort hover:cursor-pointer">
@@ -106,7 +96,7 @@ const ToolBarRight: FC = () => {
       </div>
       <div className="settings hover:cursor-pointer" onClick={() => onSettingBoard()}>
         <span className="hidden sm:block">Settings</span>
-        <Icon name="Settings" className="ico-settings leading-tight hover:cursor-pointer" size={16} />
+        <Icon name="Settings" className="ico-settings icons" size={16} />
       </div>
     </div>
   );
