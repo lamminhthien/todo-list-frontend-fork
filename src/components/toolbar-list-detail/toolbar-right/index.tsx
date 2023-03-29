@@ -76,6 +76,15 @@ const ToolBarRight: FC = () => {
             onClick={() => router.push(`${ROUTES.LIST}/${id}`)}
           />
         </div>
+        <div>
+          <Icon
+            name="documents"
+            className="ico-note-list leading-tight hover:cursor-pointer"
+            size={16}
+            onClick={() => router.push(`${ROUTES.LIST}/${id}`)}
+          />
+          <span className="hidden sm:block">Docs</span>
+        </div>
         {!isKanbanView && (
           <div className="tool-filter">
             <ToolFilter todolist={todolist} />
@@ -83,7 +92,6 @@ const ToolBarRight: FC = () => {
         )}
         <div className="delete ml-1">
           <span className="hidden sm:block">Delete</span>
-
           <Icon
             name="Delete list"
             className="ico-trash-2 leading-tight hover:cursor-pointer"
