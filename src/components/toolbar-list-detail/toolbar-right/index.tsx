@@ -71,13 +71,8 @@ const ToolBarRight: FC = () => {
             onClick={() => router.push(`${ROUTES.LIST}/${id}`)}
           />
         </div>
-        <div className="flex items-center">
-          <Icon
-            name="documents"
-            className="ico-note-list icons"
-            size={24}
-            onClick={() => router.push(`${ROUTES.DOCUMENT}`)}
-          />
+        <div className="flex cursor-pointer items-center" onClick={() => router.push(`${ROUTES.DOCUMENT}/${id}`)}>
+          <Icon name="documents" className="ico-note-list icons" size={24} />
           <span>Docs</span>
         </div>
         {!isKanbanView && (

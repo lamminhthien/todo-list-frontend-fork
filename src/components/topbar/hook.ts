@@ -25,7 +25,7 @@ const useTopbar = () => {
         if (checkPage === ROUTES.TASK) router.push(ROUTES.TASK);
         else router.push(ROUTES.LIST);
         break;
-      case `${ROUTES.TASK}/[id]`:
+      case `${ROUTES.TASK}/[id]` || `${ROUTES.DOCUMENT}`:
         if (checkPage === ROUTES.KANBAN) {
           router.push(ROUTES.KANBAN + '/' + LocalStorage.listId.get());
         } else if (checkPage === ROUTES.LIST) {
