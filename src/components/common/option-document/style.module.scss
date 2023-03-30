@@ -1,0 +1,10 @@
+.options :global {
+  @apply w-40 py-1 px-3;
+  @apply border border-[#E2E8F0];
+  @apply bg-white;
+  a {
+    @apply block  py-3;
+    @apply text-black no-underline hover:bg-slate-200;
+    @apply border-b last:border-none;
+  }
+}
