@@ -10,7 +10,7 @@ const Documents: FC<IProps> = ({id}) => {
   console.log('🚀 ~ file: index.tsx:10 ~ id:', id);
   return (
     <div className="flex">
-      <DocumentList />
+      <DocumentList listId={id} />
       <DocumentContent />
     </div>
   );

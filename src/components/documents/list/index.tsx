@@ -3,13 +3,21 @@ import React, {useState} from 'react';
 
 import Document from '@/components/common/document';
 import Icon from '@/core-ui/icon';
+import useModals from '@/states/modals/use-modals';
 
 import style from './style.module.scss';
 
-const DocumentList: React.FC = () => {
+interface IItemProps {
+  listId: string;
+}
+
+const DocumentList: React.FC<IItemProps> = ({listId}) => {
   const [showFavorite, setShowFavorite] = useState([]);
   const [showPages, setShowPages] = useState([]);
-
+  const {setIsOpenModal} = useModals();
+  const onNew = () => {
+    setIsOpenModal('createDocument');
+  };
   function toggleShow(
     i: number,
     set: {
@@ -27,7 +35,7 @@ const DocumentList: React.FC = () => {
     <div className={style['document-list']}>
       <div className="mb-3 flex justify-between">
         <h4 className="font-bold">Documents</h4>
-        <Icon name="add" className="ico-plus-circle cursor-pointer text-sky-500" />
+        <Icon name="add" className="ico-plus-circle cursor-pointer text-sky-500" onClick={onNew} />
       </div>
       <hr />
       <div>
