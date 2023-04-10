@@ -1,87 +1,104 @@
 import cls from 'classnames';
-import React, {FC, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import Document from '@/components/common/document';
+import OptionDocument from '@/components/common/option-document';
 import Icon from '@/core-ui/icon';
-import {IDocumentResponse} from '@/data/api/types/document.type';
+import {IGetDocuments} from '@/data/api/types/documents.type';
+import {useDocumentsStore} from '@/hooks/useDocuments';
 import useModals from '@/states/modals/use-modals';
 
 import style from './style.module.scss';
 
-interface IDocuments {
-  documents?: IDocumentResponse[];
-  favoriteDocuments?: IDocumentResponse[];
+interface IProps {
+  id: string;
 }
-const DocumentList: FC<IDocuments> = ({documents = [], favoriteDocuments = []}) => {
-  const [showFavorite, setShowFavorite] = useState([]);
-  const [showPages, setShowPages] = useState([]);
-  const {setIsOpenModal, setSelectedTodolist} = useModals();
+
+const DocumentList: React.FC<IProps> = ({id}) => {
+  const [showPages, setShowPages] = useState<Array<string>>([]);
+  const {documents, getAllDocument, getDocument} = useDocumentsStore();
+  const [isRename, setisRename] = useState(false);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | undefined>(undefined);
+  const {setIsOpenModal} = useModals();
   const onNew = () => {
     setIsOpenModal('createDocument');
-    setSelectedTodolist();
   };
-  // const onClick = id => {
-  //   setSelectedDocument(id);
-  // };
-  function toggleShow(
-    i: number,
-    set: {
-      (value: React.SetStateAction<never[]>): void;
-      (value: React.SetStateAction<never[]>): void;
-      (arg0: (prevState: any) => any): void;
+
+  useEffect(() => {
+    getAllDocument(id);
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (selectedDocumentId && !event.target.closest('.options')) {
+        setSelectedDocumentId(undefined);
+      }
     }
-  ) {
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [selectedDocumentId]);
+
+  function toggleShow(i: string, set: React.Dispatch<React.SetStateAction<string[]>>) {
     set(prevState => {
       if (prevState.includes(i)) return prevState.filter((item: any) => item !== i);
       else return [...prevState, i];
     });
   }
-  return (
-    <div className={style['document-list']}>
-      <div className="mb-3 flex justify-between">
-        <h4 className="font-bold">Documents</h4>
-        <Icon name="add" className="ico-plus-circle cursor-pointer text-sky-500" onClick={onNew} />
-      </div>
-      <hr />
-      <div>
-        <p className="mt-3 font-bold">Favorite</p>
-        {favoriteDocuments.length ? (
-          [1, 2, 3].map(i => (
-            <div key={i}>
-              <Document
-                content="CSS"
-                onClick={() => toggleShow(i, setShowFavorite)}
-                iconDropdown={showFavorite.includes(i) ? 'ico-angle-down-small' : 'ico-angle-right-small'}
-              />
-              <div className={cls(showFavorite.includes(i) ? 'block' : 'hidden', `ml-4`)}>
-                {[2, 3].map(k => (
-                  <Document content="CSS" key={k} />
-                ))}
-              </div>
-            </div>
-          ))
-        ) : (
-          <Document content="Empty document" key={0} />
+
+  const renderNode = (node: IGetDocuments, css: string) => {
+    return (
+      <div key={node.id}>
+        <Document
+          content={node.name}
+          showMoreDoc={() => toggleShow(node.id, setShowPages)}
+          showContent={() => {
+            getDocument(node.id);
+          }}
+          iconDropdown={
+            node.children && (showPages.includes(node.id) ? 'ico-angle-down-small' : 'ico-angle-right-small')
+          }
+          isRename={isRename}
+          onSave={() => {
+            setisRename(true);
+          }}
+          showPopup={() => {
+            setSelectedDocumentId(node.id);
+          }}
+        />
+        {node.children && (
+          <div className={cls(showPages.includes(node.id) ? 'block' : 'hidden', css)}>
+            {node.children.map(child => renderNode(child, 'ml-4'))}
+          </div>
+        )}
+        {selectedDocumentId === node.id && (
+          <OptionDocument
+            handleRename={() => {
+              setisRename(false);
+            }}
+          />
         )}
       </div>
-      <div>
-        <p className="mt-3 font-bold">Pages</p>
-        {documents.map(i => (
-          <div key={i.id}>
-            <Document
-              content={i.name}
-              onClick={() => toggleShow(i, setShowPages)}
-              iconDropdown={showFavorite.includes(i) ? 'ico-angle-down-small' : 'ico-angle-right-small'}
-            />
-            <div className={cls(showPages.includes(i) ? 'block' : 'hidden', `ml-4`)}>
-              {/* {[7, 8, 9].map(k => (
-                <Document content="React" key={k} />
-              ))} */}
-            </div>
-          </div>
-        ))}
+    );
+  };
+
+  return (
+    <>
+      <div className={style['document-list']}>
+        <div className="mb-3 flex justify-between">
+          <h4 className="font-bold">Documents</h4>
+          <Icon name="add" className="ico-plus-circle cursor-pointer text-sky-500" onClick={onNew} />
+        </div>
+        <hr />
+        <div>
+          <p className="mt-3 font-bold">Pages</p>
+          <div className="relative">{documents?.map(item => renderNode(item, 'ml-4'))}</div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -8,7 +8,7 @@ import iosAutoFocus from '@/utils/ios-autofocus';
 
 import useModalCreateDocument from '../../documents/modal-create/hook';
 import styles from '../style-create-upate.module.scss';
-import {IProps} from '../types-create-update';
+import {IProps} from '../types-create';
 
 const ModalCreateDocument: FC<IProps> = props => {
   const {open, onClose} = props;

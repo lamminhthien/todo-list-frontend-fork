@@ -3,13 +3,7 @@ import http from '@/utils/http';
 
 import {IAuthLogin, IAuthResponse, IAuthUpdate} from './types/auth.type';
 import {ISeo} from './types/commom';
-import {
-  IDocumentCreate,
-  IDocumentGet,
-  IDocumentGetByList,
-  IDocumentResponse,
-  IDocumentUpdate
-} from './types/document.type';
+import {IDocumentCreate, IDocumentResponse, IGetDocuments, IUpdateDocument} from './types/documents.type';
 import {INotificationResponse} from './types/notification.type';
 import {ITaskCreate, ITaskGet, ITaskReindexAll, ITaskResponse, ITaskUpdate} from './types/task.type';
 import {
@@ -30,15 +24,6 @@ const api = {
   user: {
     getIndentify: () => http.get<IUserResponse[]>(API_ENDPOINTS.USER + '/identify'),
     update: (data: IUserResponse) => http.patch<IUserResponse>(API_ENDPOINTS.USER, data)
-  },
-  document: {
-    get: () => http.get<IDocumentResponse[]>(API_ENDPOINTS.DOCUMENT),
-    // getOne: ({id}: ITodolistGetOne) => http.get<IDocumentResponse>(API_ENDPOINTS.LIST + '/' + id),
-    getByList: ({todolistIdid}: IDocumentGetByList) =>
-      http.get<IDocumentResponse[]>(API_ENDPOINTS.DOCUMENT + '/tree/' + todolistIdid),
-    create: (data: IDocumentCreate) => http.post<IDocumentResponse>(API_ENDPOINTS.DOCUMENT, data),
-    update: (data: IDocumentUpdate) => http.patch<IDocumentResponse>(API_ENDPOINTS.DOCUMENT, data),
-    getFavorite: () => http.get<IDocumentResponse[]>(API_ENDPOINTS.LIST + '/favorite')
   },
   todolist: {
     get: () => http.get<ITodolistResponse[]>(API_ENDPOINTS.LIST),
@@ -64,6 +49,12 @@ const api = {
     get: () => http.get<INotificationResponse[]>(API_ENDPOINTS.NOTIFICATION),
     update: (id: string) => http.patch(API_ENDPOINTS.NOTIFICATION + '/' + id),
     updateAll: () => http.patch<INotificationResponse[]>(API_ENDPOINTS.NOTIFICATION)
+  },
+  documents: {
+    getListDocument: (id: string) => http.get<IGetDocuments[]>(API_ENDPOINTS.DOCUMENT + '/tree/' + id),
+    getOneDocument: (id: string) => http.get<IGetDocuments>(API_ENDPOINTS.DOCUMENT + '/' + id),
+    updateDocument: (data: IUpdateDocument) => http.patch<IGetDocuments>(API_ENDPOINTS.DOCUMENT + '/update', data),
+    create: (data: IDocumentCreate) => http.post<IDocumentResponse>(API_ENDPOINTS.DOCUMENT, data)
   }
 };
 
