@@ -1,22 +1,16 @@
-import {useRouter} from 'next/router';
-import React from 'react';
-
-import {ROUTES} from '@/configs/routes.config';
+import React, {FC, memo} from 'react';
 
 import style from './style.module.scss';
 
-interface IKanbanTaskName {
-  id: string;
+interface IKanbanTaskNameProps {
   name: string;
 }
 
-export default function KanbanTaskName({id, name}: IKanbanTaskName) {
-  const router = useRouter();
+const KanbanTaskName: FC<IKanbanTaskNameProps> = ({name}) => {
   return (
     <div className={style['kanban-task-name']}>
-      <p className="task-name" onClick={() => router.push(`${ROUTES.TASK}/${id}`)}>
-        {name}
-      </p>
+      <p className="task-name">{name}</p>
     </div>
   );
-}
+};
+export default memo(KanbanTaskName);

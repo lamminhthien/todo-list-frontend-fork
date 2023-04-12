@@ -44,14 +44,10 @@ const KanbanDetail: FC<Iprops> = ({id}) => {
       socket.off(SOCKET_EVENTS.updateList);
     };
   }, [auth]);
+
   if (error) return <ErrorInformation />;
-  if (boardData && boardData.id == id)
-    return (
-      <>
-        <KanbanContainer />
-      </>
-    );
-  return null;
+  if (!boardData || boardData.id !== id) return null;
+  return <KanbanContainer />;
 };
 
 export default KanbanDetail;

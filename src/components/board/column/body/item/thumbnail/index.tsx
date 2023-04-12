@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-import React from 'react';
+import Image from 'next/image';
+import React, {FC, memo} from 'react';
 
 import style from './style.module.scss';
 
@@ -7,10 +7,12 @@ interface IKanbanTaskThumbnail {
   url: string;
 }
 
-export default function KanbanTaskThumbnail({url}: IKanbanTaskThumbnail) {
+const KanbanTaskThumbnail: FC<IKanbanTaskThumbnail> = ({url}) => {
   return (
     <div className={style['task-thumbnail']}>
-      <img src={url} alt={url} />
+      <Image src={url} alt={url} objectFit="cover" layout="fill" />
     </div>
   );
-}
+};
+
+export default memo(KanbanTaskThumbnail);

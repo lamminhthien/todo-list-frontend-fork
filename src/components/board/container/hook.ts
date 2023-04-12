@@ -10,44 +10,43 @@ import {moveBetweenContainers} from '@/utils/kanban/array';
 
 import {apiUpdateColumnKanban, apiUpdateTaskKanban} from './api-handler';
 
+export interface IBoardState {
+  [x: string]: string[];
+}
+
 export default function useKanbanContainer() {
   const {statusList, boardData} = useBoards();
   const {tasks} = boardData;
   const todolistId = boardData.id;
 
-  const mapDataKanban = (statusList: IStatus[]) => {
-    const boardDataMap: {[x: number]: string[]} = {};
-    statusList.map(lists => {
-      const columnData = {
-        [lists.id]: lists.tasks?.map(e => e.id)
-      };
-      Object.assign(boardDataMap, columnData);
-    });
-    return boardDataMap;
-  };
-
-  const [boardState, setBoardState] = useState(() => mapDataKanban(statusList));
+  const [boardState, setBoardState] = useState<IBoardState>({});
   const [taskActive, setTaskActive] = useState<UniqueIdentifier>();
   const [columnOrderState, setColumnOrderState] = useState<string[]>(statusList.map(e => e.id.toString()));
   const [columnDragActive, setColumnDragActive] = useState<string>();
   const [overColumnId, setOverColumnId] = useState<number>(0);
 
   useEffect(() => {
+    const mapDataKanban = (statusList: IStatus[]) => {
+      const boardDataMap: IBoardState = {};
+      statusList.map(lists => {
+        const columnData = {[lists.id]: lists.tasks?.map(e => e.id)};
+        Object.assign(boardDataMap, columnData);
+      });
+      return boardDataMap;
+    };
     setBoardState(() => mapDataKanban(statusList));
     setColumnOrderState(statusList.map(e => e.id.toString()));
   }, [statusList]);
 
   const sensors = useSensorGroup();
 
-  const isColumnSelected = (id: UniqueIdentifier) => {
-    return id.toString().includes('column') ? true : false;
-  };
+  const isColumnSelected = (id: UniqueIdentifier) => (String(id).includes('column') ? true : false);
 
   const handleDragStart = ({active}: DragStartEvent) => {
     const {id} = active;
     if (isColumnSelected(id)) {
       setTaskActive(undefined);
-      setColumnDragActive(id.toString().replace('column', ''));
+      setColumnDragActive(String(id).replace('column', ''));
     } else {
       setTaskActive(id);
       setColumnDragActive(undefined);
@@ -61,9 +60,7 @@ export default function useKanbanContainer() {
 
   const handleDragOver = ({active, over}: DragOverEvent) => {
     const overId = over?.id;
-    if (!overId) {
-      return;
-    }
+    if (!overId) return;
 
     // This is code for handle drag column
     if (columnDragActive) {
@@ -94,7 +91,7 @@ export default function useKanbanContainer() {
           activeIndex,
           overColumn,
           overIndex,
-          active.id.toString()
+          String(active.id)
         );
 
         setBoardState(newBoardState);

@@ -1,25 +1,25 @@
-import {useSortable} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
-import React, {ReactNode} from 'react';
+import React, {FC} from 'react';
 
-interface IKanbanColumn {
-  onDragStart?: () => void;
-  onDragEnd?: () => void;
-  onDragOver?: () => void;
-  children: ReactNode;
-  id: string;
+import KanbanColumnBody from './body';
+import KanbanColumnFooter from './footer/add-task';
+import KanbanColumnHeader from './header';
+import KanbanColumnWrapper from './wrapper';
+
+export interface IKanbanColumnProps {
+  columnId: string;
+  name: string;
+  color: string;
+  taskIds: string[];
 }
 
-export default function KanbanColumn({children, id}: IKanbanColumn) {
-  const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id});
-  const styleDnd = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1
-  };
+const KanbanColumn: FC<IKanbanColumnProps> = ({columnId, name, color, taskIds}) => {
   return (
-    <ul className="kanban-column-container h-full" ref={setNodeRef} style={styleDnd} {...attributes} {...listeners}>
-      {children}
-    </ul>
+    <KanbanColumnWrapper id={'column' + columnId}>
+      <KanbanColumnHeader name={name} color={color} />
+      <KanbanColumnBody id={columnId} taskIds={taskIds} />
+      <KanbanColumnFooter id={Number(columnId)} />
+    </KanbanColumnWrapper>
   );
-}
+};
+
+export default KanbanColumn;

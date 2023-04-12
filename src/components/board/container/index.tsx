@@ -1,16 +1,13 @@
-import {DndContext, DragOverlay, useDroppable} from '@dnd-kit/core';
+import {DndContext, DragOverlay} from '@dnd-kit/core';
 import {horizontalListSortingStrategy, SortableContext} from '@dnd-kit/sortable';
-import React from 'react';
+import React, {FC, useEffect, useState} from 'react';
 
-import KanbanColumn from '../column';
-import KanbanColumnBody from '../column/body';
+import KanbanColumn, {IKanbanColumnProps} from '../column';
 import KanbanTaskItem from '../column/body/item';
-import KanbanColumnFooter from '../column/footer/add-task';
-import KanbanColumnHeader from '../column/header';
 import useKanbanContainer from './hook';
 import style from './style.module.scss';
 
-const KanbanContainer = () => {
+const KanbanContainer: FC = () => {
   const {
     boardData,
     statusList,
@@ -24,7 +21,30 @@ const KanbanContainer = () => {
     columnOrderState
   } = useKanbanContainer();
 
-  const {setNodeRef} = useDroppable({id: 'drag-column'});
+  const [columns, setColumns] = useState<IKanbanColumnProps[]>([]);
+  const [columnActive, setColumnActive] = useState<IKanbanColumnProps>();
+
+  useEffect(() => {
+    setColumns(
+      columnOrderState.map(columnId => {
+        const status = statusList.find(e => String(e.id) === columnId);
+        const name = status?.name || '';
+        const color = status?.color || '';
+        const taskIds = boardData[Number(columnId)];
+        return {columnId, color, name, taskIds};
+      })
+    );
+  }, [boardData]);
+
+  useEffect(() => {
+    if (columnDragActive) {
+      const status = statusList.find(e => String(e.id) === columnDragActive);
+      const name = status?.name || '';
+      const color = status?.color || '';
+      const taskIds = boardData[Number(columnDragActive)];
+      setColumnActive({columnId: columnDragActive, color, name, taskIds});
+    }
+  }, [columnDragActive]);
 
   return (
     <div className={style['kanban-container']}>
@@ -38,39 +58,20 @@ const KanbanContainer = () => {
           autoScroll={true}
         >
           <SortableContext id="drag-column" items={[...columnOrderState]} strategy={horizontalListSortingStrategy}>
-            {columnOrderState.map((columnId: string) => (
-              <div className="kanban-wrapper" key={columnId} ref={setNodeRef}>
-                <KanbanColumn id={'column' + columnId}>
-                  <KanbanColumnHeader
-                    name={statusList.filter(e => e.id == Number(columnId))[0]?.name || ''}
-                    color={statusList.filter(e => e.id == Number(columnId))[0]?.color || ''}
-                  />
-                  <KanbanColumnBody id={columnId} taskIds={boardData[Number(columnId)]} />
-                  <KanbanColumnFooter id={Number(columnId)} />
-                </KanbanColumn>
-              </div>
+            {columns.map(column => (
+              <KanbanColumn key={column.columnId} {...column} />
             ))}
-            {taskActive && (
-              <DragOverlay>
-                <KanbanTaskItem id={taskActive.toString()} />
-              </DragOverlay>
-            )}
-
-            {columnDragActive && (
-              <DragOverlay>
-                <div className="kanban-wrapper bg-[#f6fafe]" key={columnDragActive} ref={setNodeRef}>
-                  <KanbanColumn id={'column' + columnDragActive}>
-                    <KanbanColumnHeader
-                      name={statusList.filter(e => e.id == Number(columnDragActive))[0].name}
-                      color={statusList.filter(e => e.id == Number(columnDragActive))[0].color}
-                    />
-                    <KanbanColumnBody id={columnDragActive} taskIds={boardData[Number(columnDragActive)]} />
-                    <KanbanColumnFooter id={Number(columnDragActive)} />
-                  </KanbanColumn>
-                </div>
-              </DragOverlay>
-            )}
           </SortableContext>
+          {taskActive && (
+            <DragOverlay>
+              <KanbanTaskItem id={String(taskActive)} />
+            </DragOverlay>
+          )}
+          {columnActive && (
+            <DragOverlay>
+              <KanbanColumn {...columnActive} />
+            </DragOverlay>
+          )}
         </DndContext>
       </div>
     </div>

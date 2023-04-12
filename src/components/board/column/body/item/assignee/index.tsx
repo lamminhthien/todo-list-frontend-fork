@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC, memo} from 'react';
 
 import TaskAssignee from '@/components/common/task-assignee';
 import {IAssigneeResponse} from '@/data/api/types/task.type';
@@ -14,17 +14,13 @@ interface IKanbanTaskAssignee {
   assigneeList?: IMember[];
 }
 
-export default function KanbanTaskAssignee({id, assignees, assigneeList}: IKanbanTaskAssignee) {
+const KanbanTaskAssignee: FC<IKanbanTaskAssignee> = ({id, assignees, assigneeList}) => {
   const {write, getBoard, boardData} = useBoards();
+
   return (
     <div className={style['kanban-task-assignee']}>
       <TaskAssignee
-        {...{
-          id,
-          assignees,
-          onSuccess: socketUpdateList,
-          assigneeList
-        }}
+        {...{id, assignees, onSuccess: socketUpdateList, assigneeList}}
         readonly={write}
         sx={{position: 'absolute'}}
         hideIconWhenClick={false}
@@ -32,4 +28,6 @@ export default function KanbanTaskAssignee({id, assignees, assigneeList}: IKanba
       />
     </div>
   );
-}
+};
+
+export default memo(KanbanTaskAssignee);

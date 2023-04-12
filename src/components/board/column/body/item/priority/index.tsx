@@ -1,39 +1,24 @@
-import {SelectChangeEvent} from '@mui/material';
-import React from 'react';
+import React, {FC, memo} from 'react';
 
-import TaskPiority from '@/components/common/task-priority';
-import useToast from '@/core-ui/toast';
-import api from '@/data/api';
-import {socketUpdateList} from '@/data/socket';
-import useBoards from '@/states/board/use-boards';
-import {ToastContents} from '@/utils/toast-content';
+import Icon from '@/core-ui/icon';
+import {PriorityColors, PriorityIcons} from '@/utils/constant';
 
 import style from './style.module.scss';
 
-interface IKanbanTaskPriority {
-  priority: string;
-  taskId: string;
+interface IKanbanTaskPriorityProps {
+  priority: keyof typeof PriorityIcons;
 }
 
-export default function KanbanTaskPriority({priority, taskId}: IKanbanTaskPriority) {
-  const toast = useToast();
-  const {write} = useBoards();
-
-  const onChangePriority = (event: SelectChangeEvent<unknown>) => {
-    api.task
-      .update({id: taskId, priority: event.target.value as string})
-      .then(socketUpdateList)
-      .catch(() => toast.show({type: 'danger', title: 'Priority', content: ToastContents.ERROR}));
-  };
+const KanbanTaskPriority: FC<IKanbanTaskPriorityProps> = ({priority}) => {
   return (
     <div className={style['kanban-task-priority']}>
-      <TaskPiority
-        priority={priority}
-        hideTitle={true}
-        readOnly={!write}
-        onChange={onChangePriority}
-        stylePriorityIcon={{height: '30px', width: '30px'}}
-      />
+      <div className="h-[30px] w-[30px]">
+        <div className={`${style.inner}`}>
+          <Icon name={PriorityIcons[priority]} style={{color: PriorityColors[priority]}} />
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default memo(KanbanTaskPriority);

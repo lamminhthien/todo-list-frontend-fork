@@ -1,5 +1,7 @@
 import {arrayMove as dndKitArrayMove} from '@dnd-kit/sortable';
 
+import {IBoardState} from '@/components/board/container/hook';
+
 export const removeAtIndex = (array: string[], index: number) => {
   return [...array.slice(0, index), ...array.slice(index + 1)];
 };
@@ -14,7 +16,7 @@ export const arrayMove = (array: string[], oldIndex: number, newIndex: number) =
   return dndKitArrayMove(array, oldIndex, newIndex);
 };
 export const moveBetweenContainers = (
-  items: {[x: string]: string[]},
+  items: IBoardState,
   activeContainer: string | number,
   activeIndex: number,
   overContainer: string | number,
