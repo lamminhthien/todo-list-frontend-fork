@@ -1,12 +1,13 @@
 import cls from 'classnames';
+import router from 'next/router';
 import React, {useEffect, useState} from 'react';
 
 import Document from '@/components/common/document';
-import OptionDocument from '@/components/common/option-document';
+import ModalCreateDocument from '@/components/modal/documents/modal-create';
+import {ROUTES} from '@/configs/routes.config';
 import Icon from '@/core-ui/icon';
 import {IGetDocuments} from '@/data/api/types/documents.type';
 import {useDocumentsStore} from '@/hooks/useDocuments';
-import useModals from '@/states/modals/use-modals';
 
 import style from './style.module.scss';
 
@@ -16,31 +17,12 @@ interface IProps {
 
 const DocumentList: React.FC<IProps> = ({id}) => {
   const [showPages, setShowPages] = useState<Array<string>>([]);
-  const {documents, getAllDocument, getDocument} = useDocumentsStore();
-  const [isRename, setisRename] = useState(false);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<string | undefined>(undefined);
-  const {setIsOpenModal} = useModals();
-  const onNew = () => {
-    setIsOpenModal('createDocument');
-  };
+  const [showModalCreate, isShowModalCreate] = useState<boolean>(false);
+  const {documents, document, isFeching, getAllDocument, getDocument} = useDocumentsStore();
 
   useEffect(() => {
     getAllDocument(id);
-  }, []);
-
-  useEffect(() => {
-    function handleClickOutside(event: any) {
-      if (selectedDocumentId && !event.target.closest('.options')) {
-        setSelectedDocumentId(undefined);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [selectedDocumentId]);
+  }, [isFeching]);
 
   function toggleShow(i: string, set: React.Dispatch<React.SetStateAction<string[]>>) {
     set(prevState => {
@@ -55,31 +37,19 @@ const DocumentList: React.FC<IProps> = ({id}) => {
         <Document
           content={node.name}
           showMoreDoc={() => toggleShow(node.id, setShowPages)}
-          showContent={() => {
-            getDocument(node.id);
-          }}
           iconDropdown={
             node.children && (showPages.includes(node.id) ? 'ico-angle-down-small' : 'ico-angle-right-small')
           }
-          isRename={isRename}
-          onSave={() => {
-            setisRename(true);
+          getDocument={() => {
+            getDocument(node.id);
+            router.push(`${ROUTES.DOCUMENT}/${id}?id=${node.id}`, undefined, {shallow: true});
           }}
-          showPopup={() => {
-            setSelectedDocumentId(node.id);
-          }}
+          active={document.id == node.id}
         />
         {node.children && (
           <div className={cls(showPages.includes(node.id) ? 'block' : 'hidden', css)}>
             {node.children.map(child => renderNode(child, 'ml-4'))}
           </div>
-        )}
-        {selectedDocumentId === node.id && (
-          <OptionDocument
-            handleRename={() => {
-              setisRename(false);
-            }}
-          />
         )}
       </div>
     );
@@ -90,7 +60,11 @@ const DocumentList: React.FC<IProps> = ({id}) => {
       <div className={style['document-list']}>
         <div className="mb-3 flex justify-between">
           <h4 className="font-bold">Documents</h4>
-          <Icon name="add" className="ico-plus-circle cursor-pointer text-sky-500" onClick={onNew} />
+          <Icon
+            name="add"
+            className="ico-plus-circle cursor-pointer text-sky-500"
+            onClick={() => isShowModalCreate(true)}
+          />
         </div>
         <hr />
         <div>
@@ -98,6 +72,9 @@ const DocumentList: React.FC<IProps> = ({id}) => {
           <div className="relative">{documents?.map(item => renderNode(item, 'ml-4'))}</div>
         </div>
       </div>
+      {showModalCreate && (
+        <ModalCreateDocument open={showModalCreate} onClose={() => isShowModalCreate(false)} docChild={false} />
+      )}
     </>
   );
 };
