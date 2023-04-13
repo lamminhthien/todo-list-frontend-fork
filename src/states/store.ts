@@ -15,6 +15,7 @@ import todolistSlice from './todolist/slice';
 const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
+  devTools: process.env.NODE_ENV === 'development',
   middleware: [sagaMiddleware],
   reducer: {
     global: globalSlice.reducer,
