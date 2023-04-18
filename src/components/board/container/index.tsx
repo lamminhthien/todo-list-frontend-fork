@@ -82,7 +82,7 @@ const KanbanContainer: FC = () => {
     if (activeColumn === 'board' && overColumn === 'board') {
       const newIds = arrayMove(boardState.ids, activeIndex, overIndex);
       setBoardState({...boardState, ids: newIds});
-      const indexList = newIds.map(e => boardStore.entitiesColumn[e].status.index);
+      const indexList = newIds.map(e => Number(boardStore.entitiesColumn[e].status.index));
       const prevIndex = boardStore.entitiesColumn[newIds[overIndex - 1]]?.status.index;
       const nextIndex = boardStore.entitiesColumn[newIds[overIndex + 1]]?.status.index;
       const {reset: resetIndexStatus, value: statusIndex} = getnewIndexForDragDrop({indexList, prevIndex, nextIndex});
@@ -98,9 +98,9 @@ const KanbanContainer: FC = () => {
       const newEntities = {...boardState.entities};
       newEntities[activeColumn] = arrayMove(newEntities[activeColumn], activeIndex, overIndex);
       setBoardState({...boardState, entities: newEntities});
-      const indexList = newEntities[overColumn].map(e => boardStore.entitiesItem[e].indexColumn);
-      const prevIndex = boardStore.entitiesItem[boardState.entities[overColumn][overIndex - 1]]?.indexColumn;
-      const nextIndex = boardStore.entitiesItem[boardState.entities[overColumn][overIndex + 1]]?.indexColumn;
+      const indexList = newEntities[overColumn].map(e => Number(boardStore.entitiesItem[e].indexColumn));
+      const prevIndex = boardStore.entitiesItem[newEntities[overColumn][overIndex - 1]]?.indexColumn;
+      const nextIndex = boardStore.entitiesItem[newEntities[overColumn][overIndex + 1]]?.indexColumn;
       const {reset: resetIndexColumn, value: indexColumn} = getnewIndexForDragDrop({indexList, prevIndex, nextIndex});
       if (indexColumn) {
         boardStore.updateState(state => {
