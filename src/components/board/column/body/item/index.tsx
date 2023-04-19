@@ -33,9 +33,10 @@ const KanbanTaskItem = ({itemId}: IKanbanTaskItem) => {
   if (!task) return null;
   return (
     <li className={style[`kanban-task-item`]} ref={setNodeRef} style={styleDnd} {...attributes} {...listeners}>
-      {Boolean(attachments?.length) && <KanbanTaskThumbnail url={attachments?.[0]?.link} />}
-      <KanbanTaskName name={(taskSymbol && order ? `[${taskSymbol}-${order}]` : '') + name} />
-      <div className="bg" onClick={() => router.push(`${ROUTES.TASK}/${itemId}`)} />
+      <div className="bg" onClick={() => router.push(`${ROUTES.TASK}/${itemId}`)}>
+        {Boolean(attachments?.length) && <KanbanTaskThumbnail url={attachments?.[0]?.link} />}
+        <KanbanTaskName name={(taskSymbol && order ? `[${taskSymbol}-${order}]` : '') + name} />
+      </div>
       <div className="actions">
         <div className="left">
           <KanbanTaskCreatedDate date={createdDate} />
