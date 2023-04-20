@@ -3,12 +3,7 @@ import {devtools} from 'zustand/middleware';
 import {immer} from 'zustand/middleware/immer';
 
 import api from '@/data/api';
-import {
-  IDocumentAttribute,
-  IDocumentCreate,
-  IGetDocuments,
-  IUpdateDocument
-} from '@/data/api/types/documents.type';
+import {IDocumentAttribute, IDocumentCreate, IGetDocuments, IUpdateDocument} from '@/data/api/types/documents.type';
 
 type State = {
   error: boolean;
@@ -22,7 +17,7 @@ type Action = {
   getDocument: (id: string) => void;
   updateDocument: (data: IUpdateDocument) => void;
   createDocument: (data: IDocumentCreate) => void;
-  setDocument: (newContent: string) => void;
+  setContentDocument: (newContent: string) => void;
 };
 
 export const useDocumentsStore = create<State & Action>()(
@@ -31,8 +26,8 @@ export const useDocumentsStore = create<State & Action>()(
       documents: [],
       error: false,
       isFeching: false,
-      document: {id: '', content: '', name: '', todolistId: '', parentId: ''},
-      setDocument: newContent =>
+      document: {} as IDocumentAttribute,
+      setContentDocument: newContent =>
         set(state => ({
           ...state,
           document: {
@@ -47,6 +42,7 @@ export const useDocumentsStore = create<State & Action>()(
             state => {
               state.documents = res.data;
               state.isFeching = true;
+              if (!state.document?.id && !state.documents) state.document = state.documents?.[0];
             },
             false,
             'documents/getAllDocument'
@@ -54,8 +50,8 @@ export const useDocumentsStore = create<State & Action>()(
         } catch (error) {
           set(
             state => {
-              state.isFeching = false;
               state.error = true;
+              state.isFeching = false;
             },
             false,
             'documents/error'
@@ -88,8 +84,8 @@ export const useDocumentsStore = create<State & Action>()(
           const res = await api.documents.create(data);
           set(
             state => {
-              state.isFeching = false;
               state.document = res.data;
+              state.isFeching = false;
             },
             false,
             'documents/createDocumentSucces'
@@ -97,8 +93,8 @@ export const useDocumentsStore = create<State & Action>()(
         } catch (error) {
           set(
             state => {
-              state.isFeching = false;
               state.error = true;
+              state.isFeching = false;
             },
             false,
             'documents/createDocumentError'
@@ -110,8 +106,8 @@ export const useDocumentsStore = create<State & Action>()(
           const res = await api.documents.updateDocument(data);
           set(
             state => {
-              state.isFeching = false;
               state.document = res.data;
+              state.isFeching = false;
             },
             false,
             'documents/updateDocument'
@@ -119,8 +115,8 @@ export const useDocumentsStore = create<State & Action>()(
         } catch (error) {
           set(
             state => {
-              state.isFeching = false;
               state.error = true;
+              state.isFeching = false;
             },
             false,
             'documents/error'
