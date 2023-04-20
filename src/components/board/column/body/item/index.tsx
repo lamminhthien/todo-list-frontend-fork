@@ -6,7 +6,6 @@ import React, {memo} from 'react';
 import {ROUTES} from '@/configs/routes.config';
 import {useBoardState} from '@/hooks/useBoardState';
 import useBoards from '@/states/board/use-boards';
-import {PriorityIcons} from '@/utils/constant';
 
 import KanbanTaskAssignee from './assignee';
 import KanbanTaskDuoDate from './duo-date';
@@ -35,12 +34,13 @@ const KanbanTaskItem = ({itemId}: IKanbanTaskItem) => {
     <li className={style[`kanban-task-item`]} ref={setNodeRef} style={styleDnd} {...attributes} {...listeners}>
       <div className="bg" onClick={() => router.push(`${ROUTES.TASK}/${itemId}`)}>
         {Boolean(attachments?.length) && <KanbanTaskThumbnail url={attachments?.[0]?.link} />}
-        <KanbanTaskName name={(taskSymbol && order ? `[${taskSymbol}-${order}]` : '') + name} />
+        <KanbanTaskName name={(taskSymbol && order ? `[${taskSymbol}-${order}] ` : '') + name} />
+        {/* <KanbanTaskName name={task.indexColumn} /> */}
       </div>
       <div className="actions">
         <div className="left">
           <KanbanTaskDuoDate date={dueDate} />
-          <KanbanTaskPriority priority={priority as keyof typeof PriorityIcons} />
+          <KanbanTaskPriority priority={priority} />
           <KanbanTaskStoryPoint point={storyPoint} />
         </div>
         <div className="right">

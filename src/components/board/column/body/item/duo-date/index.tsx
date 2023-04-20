@@ -12,7 +12,7 @@ const KanbanTaskDuoDate: FC<IKanbanTaskDuoDate> = ({date}) => {
   if (!date) return null;
   const duoDate = new Date(date);
   const month = duoDate.toLocaleString('default', {month: 'long'});
-  const day = duoDate.getDay().toString();
+  const day = duoDate.getDate();
 
   return (
     <div className={style['kanban-task-duo-date']}>
