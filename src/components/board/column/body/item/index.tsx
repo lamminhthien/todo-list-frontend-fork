@@ -35,7 +35,7 @@ const KanbanTaskItem = ({itemId}: IKanbanTaskItem) => {
       <div className="bg" onClick={() => router.push(`${ROUTES.TASK}/${itemId}`)}>
         {Boolean(attachments?.length) && <KanbanTaskThumbnail url={attachments?.[0]?.link} />}
         <KanbanTaskName name={(taskSymbol && order ? `[${taskSymbol}-${order}] ` : '') + name} />
-        {/* <KanbanTaskName name={task.indexColumn} /> */}
+        {process.env.NODE_ENV === 'development' && <KanbanTaskName name={String(task.indexColumn)} />}
       </div>
       <div className="actions">
         <div className="left">
