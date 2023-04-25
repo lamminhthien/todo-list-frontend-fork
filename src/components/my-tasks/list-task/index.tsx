@@ -32,18 +32,18 @@ const ListTask: FC = () => {
                 )
               : PrioritieValue && statusFilterInMytask.length != 0
               ? todolist?.tasks.filter(e => e.priority == PrioritieValue && e.statusId == statusFilterInMytask[index])
-              : featureFilterInList != 'undefined' && statusFilterInMytask.length != 0
-              ? todolist?.tasks.filter(
-                  e => e.isFeature == featureFilterInList && e.statusId == statusFilterInMytask[index]
-                )
-              : PrioritieValue && featureFilterInList != 'undefined'
-              ? todolist?.tasks.filter(e => e.priority == PrioritieValue && e.isFeature == featureFilterInList)
-              : PrioritieValue
+              : // : featureFilterInList != 'undefined' && statusFilterInMytask.length != 0
+              // ? todolist?.tasks.filter(
+              //     e => e.isFeature == featureFilterInList && e.statusId == statusFilterInMytask[index]
+              //   )
+              // : PrioritieValue && featureFilterInList != 'undefined'
+              // ? todolist?.tasks.filter(e => e.priority == PrioritieValue && e.isFeature == featureFilterInList)
+              // : featureFilterInList != 'undefined'
+              // ? todolist?.tasks.filter(e => e.isFeature == featureFilterInList)
+              PrioritieValue
               ? todolist?.tasks.filter(e => e.priority == PrioritieValue)
               : statusFilterInMytask.length != 0
               ? todolist?.tasks.filter(e => e.statusId == statusFilterInMytask[index])
-              : featureFilterInList != 'undefined'
-              ? todolist?.tasks.filter(e => e.isFeature == featureFilterInList)
               : todolist?.tasks.filter(e => !e.isDone)
         };
       });

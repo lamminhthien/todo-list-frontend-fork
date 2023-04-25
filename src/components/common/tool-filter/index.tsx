@@ -14,6 +14,7 @@ import {
 import classNames from 'classnames';
 import {FC, useState} from 'react';
 
+import useTopbar from '@/components/topbar/hook';
 import Icon from '@/core-ui/icon';
 import {ITodolistResponse} from '@/data/api/types/todolist.type';
 import useMemberOptions from '@/hooks/useMemberOptions';
@@ -31,26 +32,17 @@ interface IProps {
   myTasks?: ITodolistResponse[];
 }
 
-interface StatusIprops {
-  id: number;
-  name: string;
-  color: string;
-  backgroundColor: string;
+interface StatusItem {
+  id?: number;
+  name?: string;
+  color?: string;
 }
-
-const status: StatusIprops[] = [
-  {id: 1, name: 'Backlog', color: '#78716C', backgroundColor: '#D6D3D1'},
-  {id: 2, name: 'To-Do', color: '#0EA5E9', backgroundColor: '#BAE6FD'},
-  {id: 3, name: 'In-progress', color: '#F59E0B', backgroundColor: '#FEF3C7'},
-  {id: 4, name: 'In-review', color: '#F43F5E', backgroundColor: '#FBCFE8'},
-  {id: 5, name: 'In-QA', color: '#8B5CF6', backgroundColor: '#DDD6FE'},
-  {id: 6, name: 'Done', color: '#22C55E', backgroundColor: '#BBF7D0'}
-];
 
 const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const {setStatusFilterInList, setStatusFilterInMyTask, setPriorityFilterInList, setAssigneeFilterInList} =
     useFilter();
-  const [selectStatus, setSelectStatus] = useState<number>(0);
+  const {auth} = useTopbar();
+  const [selectStatus, setSelectStatus] = useState<number | number[]>(0);
   const [selectPriority, setSelectPriority] = useState<string>('default');
   const [selectAssignee, setSelectAssignee] = useState<string>('default');
   const [openStatus, setOpenStatus] = useState(false);
@@ -63,71 +55,36 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const prioColors = Object.values(PriorityColors).reverse();
   const prioIcons = Object.values(PriorityIcons).reverse();
 
-  const temp0: {id: number[]; backgroundColor: string; color: string} = {
-    id: [],
-    color: '#78716C',
-    backgroundColor: '#D6D3D1'
-  };
-  const temp1: {id: number[]; backgroundColor: string; color: string} = {
-    id: [],
-    color: '#0EA5E9',
-    backgroundColor: '#BAE6FD'
-  };
-  const temp2: {id: number[]; backgroundColor: string; color: string} = {
-    id: [],
-    color: '#F59E0B',
-    backgroundColor: '#FEF3C7'
-  };
-  const temp3: {id: number[]; backgroundColor: string; color: string} = {
-    id: [],
-    color: '#F43F5E',
-    backgroundColor: '#FBCFE8'
-  };
-  const temp4: {id: number[]; backgroundColor: string; color: string} = {
-    id: [],
-    color: '#8B5CF6',
-    backgroundColor: '#DDD6FE'
-  };
-  const temp5: {id: number[]; backgroundColor: string; color: string} = {
-    id: [],
-    color: '#22C55E',
-    backgroundColor: '#BBF7D0'
-  };
+  let myTasksStatus: {id?: number[]; color?: string; name?: string}[] = [];
 
   if (myTasks) {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    myTasks.forEach(todolist => {
-      todolist?.status.forEach(e => {
-        const {id, color} = e;
-        switch (color) {
-          case '#78716C':
-            temp0.id.push(id);
-            break;
-          case '#0EA5E9':
-            temp1.id.push(id);
-            break;
-          case '#F59E0B':
-            temp2.id.push(id);
-            break;
-          case '#F43F5E':
-            temp3.id.push(id);
-            break;
-          case '#8B5CF6':
-            temp4.id.push(id);
-            break;
-          case '#22C55E':
-            temp5.id.push(id);
-            break;
-          default:
-            break;
+    const statusList: StatusItem[] = [];
+    myTasks.map(({status}) => status.map(statusItem => statusList.push(statusItem)));
+    if (statusList && statusList.length > 0) {
+      const newStatusList = statusList!
+        .map(e => ({name: e.name, color: e.color}))
+        .reduce((acc, cur) => {
+          const index = acc.findIndex(e => e.name === cur.name && e.color === cur.color);
+          if (index === -1) {
+            return acc.concat(cur);
+          } else {
+            return acc;
+          }
+        }, [] as StatusItem[]);
+      myTasksStatus = [];
+      for (const newStatus of newStatusList) {
+        const ids: number[] = [];
+        for (const status of statusList) {
+          if (status.name === newStatus.name && status.color === newStatus.color) {
+            ids.push(status.id ? status.id : 0);
+          }
         }
-      });
-    });
+        myTasksStatus.push({id: ids, name: newStatus.name, color: newStatus.color});
+      }
+    }
   }
-  const assignees: {id: string; name: string; email?: string}[] = [];
-  const myTasksStatus: {id: number[]; color: string; backgroundColor: string}[] = [];
-  myTasksStatus.push(temp0, temp1, temp2, temp3, temp4, temp5);
 
+  const assignees: {id: string; name: string; email?: string}[] = [];
   const onOpenPriority = () => {
     setOpenPriority(!openPriority);
   };
@@ -143,15 +100,15 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const onChangeStatus = (e: SelectChangeEvent<number>) => {
     const statusNumber = Number(e.target.value);
     setSelectStatus(statusNumber);
-    let temp;
     if (todolist) {
-      temp = (todolist.status[statusNumber - 1] && todolist.status[statusNumber - 1].id) || 0;
-      setStatusFilterInList(temp);
+      setStatusFilterInList(statusNumber);
     }
 
     if (myTasks) {
-      temp = (myTasksStatus[statusNumber - 1] && myTasksStatus[statusNumber - 1].id) || [];
-      setStatusFilterInMyTask(temp);
+      const myTasksStatusFiltered = myTasksStatus?.filter(item => item.id && item.id.some(x => x == statusNumber));
+      myTasksStatusFiltered.length != 0
+        ? setStatusFilterInMyTask(myTasksStatusFiltered[0].id ? myTasksStatusFiltered[0].id : [])
+        : setStatusFilterInMyTask([]);
     }
   };
 
@@ -184,6 +141,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
     setStatusFilterInList(0);
     setPriorityFilterInList('');
     setAssigneeFilterInList('default');
+    setStatusFilterInMyTask([]);
     setOpenAssignee(false);
     setOpenPriority(false);
     setOpenStatus(false);
@@ -219,10 +177,20 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
         disableUnderline
         className={style['menu-dropdown']}
         autoWidth
-        sx={{'&:hover': {backgroundColor: 'transparent'}, '&:active': {backgroundColor: 'transparent'}}}
+        sx={{
+          '&:hover': {backgroundColor: 'transparent'},
+          '&:active': {backgroundColor: 'transparent'}
+        }}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)'
+            }
+          }
+        }}
       >
-        <div className="select-inner scrollbar max-h-[70vh] overflow-y-auto overflow-x-hidden">
-          <MenuItem className={`${style['menu-item']} hover:cursor-default`}>
+        <div className="select-inner scrollbar max-h-[70vh] overflow-y-auto overflow-x-hidden py-2">
+          <MenuItem className={`${style['menu-item']} hover:cursor-default`} sx={{paddingY: '0px', paddingX: '20px'}}>
             <div className="menu-header-inner">
               <span className="font-bold">Filter</span>
               <span className="font-medium text-blue-500 hover:cursor-pointer" onClick={onReset}>
@@ -231,11 +199,15 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
             </div>
           </MenuItem>
           <hr className="mx-[20px] mt-3" />
-          <MenuItem className={`${style['menu-item']} menu-item`}>
+          <MenuItem className={`${style['menu-item']} menu-item`} sx={{paddingY: '0px', paddingX: '20px'}}>
             <List component="nav" className="list-inner">
-              <ListItemButton onClick={onOpenStatus}>
+              <ListItemButton onClick={onOpenStatus} className={!openStatus ? 'is-close' : ''}>
                 <span>Status</span>
-                {openStatus ? <ExpandLess /> : <ExpandMore />}
+                {openStatus ? (
+                  <ExpandLess fontSize="small" sx={{color: '#64748B', fontWeight: '100'}} />
+                ) : (
+                  <ExpandMore fontSize="small" sx={{color: '#64748B', fontWeight: '100'}} />
+                )}
               </ListItemButton>
               <Collapse in={openStatus} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
@@ -255,14 +227,24 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
                         label="Not Done"
                         checked={selectStatus == 0}
                       />
-                      {status.map(({id, name, color, backgroundColor}) => (
+                      {todoList?.status?.map(({id, color, name, index}) => (
                         <FormControlLabel
-                          key={color}
+                          key={index}
                           value={id}
-                          sx={{color, background: backgroundColor}}
+                          sx={{color, background: color + '32'}}
                           control={<BpRadio />}
                           label={name}
                           checked={selectStatus == id}
+                        />
+                      ))}
+                      {myTasksStatus?.map(({id, color, name}) => (
+                        <FormControlLabel
+                          key={color}
+                          value={id && id[0]}
+                          sx={{color, background: color + '32'}}
+                          control={<BpRadio />}
+                          label={name}
+                          checked={selectStatus == (id && id[0])}
                         />
                       ))}
                     </RadioGroup>
@@ -272,11 +254,15 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
             </List>
             <hr />
           </MenuItem>
-          <MenuItem className={`${style['menu-item']} menu-item`}>
-            <List component="nav" className="list-inner">
-              <ListItemButton onClick={onOpenPriority}>
+          <MenuItem className={`${style['menu-item']} menu-item`} sx={{paddingY: '0px', paddingX: '20px'}}>
+            <List component="nav" className={`list-inner ${myTasks?.length && 'is-last'}`}>
+              <ListItemButton onClick={onOpenPriority} className={!openPriority ? 'is-close' : ''}>
                 <span>Priority</span>
-                {openPriority ? <ExpandLess /> : <ExpandMore />}
+                {openPriority ? (
+                  <ExpandLess fontSize="small" sx={{color: '#64748B', fontWeight: '100'}} />
+                ) : (
+                  <ExpandMore fontSize="small" sx={{color: '#64748B', fontWeight: '100'}} />
+                )}
               </ListItemButton>
               <Collapse in={openPriority} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
@@ -293,7 +279,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
                         value={'default'}
                         sx={{color: '#000000'}}
                         control={<BpRadio />}
-                        label="Prioritys"
+                        label="Show All"
                         checked={selectPriority == 'default'}
                       />
                       {prioList.map((e, index) => (
@@ -319,14 +305,18 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
                 </List>
               </Collapse>
             </List>
-            <hr />
+            {!myTasks?.length && <hr />}
           </MenuItem>
           {!myTasks?.length && (
-            <MenuItem className={`${style['menu-item']} menu-item`}>
-              <List component="nav" className="list-inner">
-                <ListItemButton onClick={onOpenAssignee}>
+            <MenuItem className={`${style['menu-item']} menu-item`} sx={{paddingY: '0px', paddingX: '20px'}}>
+              <List component="nav" className={`list-inner is-last`}>
+                <ListItemButton onClick={onOpenAssignee} className={!openAssignee ? 'is-close' : ''}>
                   <span>Assignee</span>
-                  {openAssignee ? <ExpandLess /> : <ExpandMore />}
+                  {openAssignee ? (
+                    <ExpandLess fontSize="small" sx={{color: '#64748B', fontWeight: '100'}} />
+                  ) : (
+                    <ExpandMore fontSize="small" sx={{color: '#64748B', fontWeight: '100'}} />
+                  )}
                 </ListItemButton>
                 <Collapse in={openAssignee} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
@@ -351,27 +341,57 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
                           value={'Unassigned'}
                           sx={{color: '#000000'}}
                           control={<BpRadio />}
-                          label="Unassigned"
+                          label={
+                            <>
+                              <div className="assignee-user mr-1">
+                                <AssigneeIcon name="U" bg="bg-slate-200" />
+                              </div>
+                              <span>Unassigned</span>
+                            </>
+                          }
                           checked={selectAssignee == 'Unassigned'}
+                        />
+                        <FormControlLabel
+                          key={auth?.id}
+                          value={auth?.id}
+                          control={<BpRadio />}
+                          label={
+                            <>
+                              <div className="assignee-user mr-1">
+                                <AssigneeIcon
+                                  name={auth?.name}
+                                  bg={assigneeOptions
+                                    .filter(a => a.length > 0)
+                                    .map(a => (a[0].id == auth?.id ? a[0].bg : ''))
+                                    .join('')}
+                                />
+                              </div>
+                              <span>Assign to me</span>
+                            </>
+                          }
+                          checked={selectAssignee == auth?.id}
                         />
                         {assigneeOptions
                           .filter(a => a.length > 0)
-                          .map(a => (
-                            <FormControlLabel
-                              key={a[0].id}
-                              value={a[0].id}
-                              control={<BpRadio />}
-                              label={
-                                <>
-                                  <div className="assignee-user mr-1">
-                                    <AssigneeIcon name={a[0].name} bg={a[0].bg} />
-                                  </div>
-                                  <span>{a[0].name}</span>
-                                </>
-                              }
-                              checked={selectAssignee == a[0].id}
-                            />
-                          ))}
+                          .map(
+                            a =>
+                              a[0].id != auth?.id && (
+                                <FormControlLabel
+                                  key={a[0].id}
+                                  value={a[0].id}
+                                  control={<BpRadio />}
+                                  label={
+                                    <>
+                                      <div className="assignee-user mr-1">
+                                        <AssigneeIcon name={a[0].name} bg={a[0].bg} />
+                                      </div>
+                                      <span>{a[0].name}</span>
+                                    </>
+                                  }
+                                  checked={selectAssignee == a[0].id}
+                                />
+                              )
+                          )}
                       </RadioGroup>
                     </FormControl>
                   </List>

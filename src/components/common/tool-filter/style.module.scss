@@ -40,12 +40,18 @@
   }
   .MuiListItemButton-root {
     @apply mb-3 flex w-full justify-between p-0 font-semibold;
+    &.is-close {
+      @apply mb-0;
+    }
   }
   .MuiList-root {
     @apply w-full py-0;
   }
   .list-inner {
     @apply py-3;
+    &.is-last {
+      @apply pb-0;
+    }
   }
   .MuiTypography-root {
     @apply font-medium;
@@ -88,11 +94,12 @@
   }
 }
 
+.MuiPaper-root {
+  background-color: #000;
+}
 .menu-dropdown :global {
   @apply w-full max-w-xs;
-  .MuiPaper-root {
-    background-color: #000;
-  }
+
   .MuiSelect-outlined {
     @apply border-0 border-none;
   }
@@ -101,30 +108,5 @@
 .menu-item {
   &:hover {
     background-color: transparent !important;
-  }
-}
-.scrollbar {
-  &::-webkit-scrollbar {
-    @apply h-2 w-2;
-  }
-  &::-webkit-scrollbar-track {
-    @apply rounded bg-blue-400;
-  }
-  &::-webkit-scrollbar-thumb {
-    @apply rounded bg-blue-500;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    @apply bg-blue-500;
-  }
-  &.scrolling-touch {
-    -webkit-overflow-scrolling: touch;
-  }
-  &.scrolling-auto {
-    -webkit-overflow-scrolling: auto;
-  }
-}
-.scrollbar-none {
-  &::-webkit-scrollbar {
-    @apply h-0 w-0;
   }
 }
