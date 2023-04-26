@@ -54,11 +54,10 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const prioList = Object.values(Priorities).reverse();
   const prioColors = Object.values(PriorityColors).reverse();
   const prioIcons = Object.values(PriorityIcons).reverse();
-
   let myTasksStatus: {id?: number[]; color?: string; name?: string}[] = [];
-
   if (myTasks) {
     const statusList: StatusItem[] = [];
+
     myTasks.map(({status}) => status.map(statusItem => statusList.push(statusItem)));
     if (statusList && statusList.length > 0) {
       const newStatusList = statusList!
@@ -170,7 +169,6 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
         <Icon name="ico-filter mr-1" size={20} />
         <span>Filter</span>
       </div>
-
       <Select
         style={{width: 65}}
         variant="standard"
@@ -227,26 +225,28 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
                         label="Not Done"
                         checked={selectStatus == 0}
                       />
-                      {todoList?.status?.map(({id, color, name, index}) => (
-                        <FormControlLabel
-                          key={index}
-                          value={id}
-                          sx={{color, background: color + '32'}}
-                          control={<BpRadio />}
-                          label={name}
-                          checked={selectStatus == id}
-                        />
-                      ))}
-                      {myTasksStatus?.map(({id, color, name}) => (
-                        <FormControlLabel
-                          key={color}
-                          value={id && id[0]}
-                          sx={{color, background: color + '32'}}
-                          control={<BpRadio />}
-                          label={name}
-                          checked={selectStatus == (id && id[0])}
-                        />
-                      ))}
+                      {todolist &&
+                        todoList?.status?.map(({id, color, name, index}) => (
+                          <FormControlLabel
+                            key={index}
+                            value={id}
+                            sx={{color, background: color + '32'}}
+                            control={<BpRadio />}
+                            label={name}
+                            checked={selectStatus == id}
+                          />
+                        ))}
+                      {myTasks &&
+                        myTasksStatus?.map(({id, color, name}) => (
+                          <FormControlLabel
+                            key={color}
+                            value={id && id[0]}
+                            sx={{color, background: color + '32'}}
+                            control={<BpRadio />}
+                            label={name}
+                            checked={selectStatus == (id && id[0])}
+                          />
+                        ))}
                     </RadioGroup>
                   </FormControl>
                 </List>
