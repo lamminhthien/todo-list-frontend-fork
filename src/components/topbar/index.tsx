@@ -50,8 +50,18 @@ const Topbar: FC<IProps> = ({className}) => {
               `${ROUTES.TASK}/[id]` ||
               `${ROUTES.KANBAN}/[id]`) && (
               <div className="left-topbar flex w-full items-center">
-                <Back currentPage={currentPage} onClick={() => returnTo(currentPage)} />
-                <span className="h2 ml-2 ">{task.todolist.name}</span>
+                <Back
+                  visibleOn={[
+                    `${ROUTES.LIST}`,
+                    `${ROUTES.LIST}/[id]`,
+                    `${ROUTES.TASK}`,
+                    `${ROUTES.TASK}/[id]`,
+                    `${ROUTES.KANBAN}/[id]`
+                  ]}
+                  currentPage={currentPage}
+                  onClick={() => returnTo(currentPage)}
+                />
+                <span className="h2 ml-2 ">{task?.todolist?.name}</span>
               </div>
             )}
 
