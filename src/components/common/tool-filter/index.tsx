@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import classNames from 'classnames';
 import {useRouter} from 'next/router';
-import {FC, useState} from 'react';
+import {FC, useEffect, useState} from 'react';
 
 import useTopbar from '@/components/topbar/hook';
 import {ROUTES} from '@/configs/routes.config';
@@ -41,8 +41,14 @@ interface StatusItem {
 }
 
 const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
-  const {setStatusFilterInList, setStatusFilterInMyTask, setPriorityFilterInList, setAssigneeFilterInList} =
-    useFilter();
+  const {
+    setStatusFilterInList,
+    setStatusFilterInMyTask,
+    setPriorityFilterInList,
+    setAssigneeFilterInList,
+    assigneeFilterInList,
+    priorityFilterInList
+  } = useFilter();
   const {auth} = useTopbar();
   const [selectStatus, setSelectStatus] = useState<number | number[]>(0);
   const [selectPriority, setSelectPriority] = useState<string>('default');
@@ -55,6 +61,16 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const prioList = Object.values(Priorities).reverse();
   const prioColors = Object.values(PriorityColors).reverse();
   const prioIcons = Object.values(PriorityIcons).reverse();
+
+  useEffect(() => {
+    setSelectStatus(0),
+      setSelectPriority(priorityFilterInList),
+      setSelectAssignee(assigneeFilterInList),
+      setStatusFilterInList(0),
+      setPriorityFilterInList(priorityFilterInList),
+      setAssigneeFilterInList(assigneeFilterInList);
+  }, [router]);
+
   let myTasksStatus: {id?: number[]; color?: string; name?: string}[] = [];
   if (myTasks) {
     const statusList: StatusItem[] = [];

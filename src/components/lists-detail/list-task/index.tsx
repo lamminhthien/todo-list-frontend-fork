@@ -14,11 +14,7 @@ import {IndexStep} from '@/utils/constant';
 
 const ListTask = () => {
   const {todolist, write, setTodolist} = useTodolist();
-  console.log('🚀 ~ file: index.tsx:17 ~ ListTask ~ todolist:', todolist);
   const {
-    setStatusFilterInList,
-    setPriorityFilterInList,
-    setAssigneeFilterInList,
     getFilterdTasks,
     priorityFilterInList,
     assigneeFilterInList,
@@ -84,12 +80,6 @@ const ListTask = () => {
       });
     }
   }
-
-  useEffect(() => {
-    setStatusFilterInList(0);
-    setPriorityFilterInList('');
-    setAssigneeFilterInList('default');
-  }, []);
 
   return (
     <DndContext {...{sensors, modifiers, onDragCancel, onDragEnd, onDragStart}}>

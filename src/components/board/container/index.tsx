@@ -23,13 +23,7 @@ const KanbanContainer: FC = () => {
   const sensors = useSensorGroup();
   const {listID, statusList} = useBoards();
   const boardStore = useBoardState();
-  const {
-    priorityFilterInList,
-    assigneeFilterInList,
-    getFilterdTasks,
-    setAssigneeFilterInList,
-    setPriorityFilterInList
-  } = useFilter();
+  const {priorityFilterInList, assigneeFilterInList, getFilterdTasks} = useFilter();
 
   const [boardState, setBoardState] = useState<BoardState>({ids: [], entities: {}});
   const [activeItemId, setActiveItemId] = useState<string>();
@@ -47,11 +41,6 @@ const KanbanContainer: FC = () => {
     boardStore.generateState(newStatusList);
     setNeedUpdate(true);
   }, [statusList, priorityFilterInList, assigneeFilterInList]);
-
-  useEffect(() => {
-    setPriorityFilterInList('');
-    setAssigneeFilterInList('default');
-  }, []);
 
   useEffect(() => {
     if (needUpdate) {
