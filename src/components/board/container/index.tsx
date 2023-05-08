@@ -1,5 +1,6 @@
 import {Active, DndContext, DragEndEvent, DragOverEvent, DragOverlay, DragStartEvent, Over} from '@dnd-kit/core';
 import {arrayMove, horizontalListSortingStrategy, SortableContext} from '@dnd-kit/sortable';
+import {useRouter} from 'next/router';
 import React, {FC, useEffect, useState} from 'react';
 
 import api from '@/data/api';
@@ -23,13 +24,23 @@ const KanbanContainer: FC = () => {
   const sensors = useSensorGroup();
   const {listID, statusList} = useBoards();
   const boardStore = useBoardState();
-  const {priorityFilterInList, assigneeFilterInList, getFilterdTasks} = useFilter();
+  const {
+    priorityFilterInList,
+    assigneeFilterInList,
+    currentAssignee,
+    currentPriority,
+    currentStatus,
+    getFilterdTasks,
+    setStatusFilterInList,
+    setPriorityFilterInList,
+    setAssigneeFilterInList
+  } = useFilter();
 
   const [boardState, setBoardState] = useState<BoardState>({ids: [], entities: {}});
   const [activeItemId, setActiveItemId] = useState<string>();
   const [activeColumnId, setActiveColumnId] = useState<string>();
   const [needUpdate, setNeedUpdate] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     const newStatusList: IStatus[] = [];
     statusList.map(a =>
@@ -40,7 +51,19 @@ const KanbanContainer: FC = () => {
     );
     boardStore.generateState(newStatusList);
     setNeedUpdate(true);
-  }, [statusList, priorityFilterInList, assigneeFilterInList]);
+  }, [statusList, priorityFilterInList, assigneeFilterInList, router]);
+
+  useEffect(() => {
+    if (currentPriority || (currentAssignee != '' && currentAssignee != 'default') || currentStatus) {
+      setPriorityFilterInList(currentPriority);
+      setAssigneeFilterInList(currentAssignee);
+      setStatusFilterInList(0);
+    } else {
+      setStatusFilterInList(0);
+      setPriorityFilterInList('');
+      setAssigneeFilterInList('default');
+    }
+  }, []);
 
   useEffect(() => {
     if (needUpdate) {

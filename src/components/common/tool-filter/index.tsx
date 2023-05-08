@@ -46,8 +46,12 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
     setStatusFilterInMyTask,
     setPriorityFilterInList,
     setAssigneeFilterInList,
-    assigneeFilterInList,
-    priorityFilterInList
+    currentAssignee,
+    currentPriority,
+    currentStatus,
+    setCurrentAssignee,
+    setCurrentPriority,
+    setCurrentStatus
   } = useFilter();
   const {auth} = useTopbar();
   const [selectStatus, setSelectStatus] = useState<number | number[]>(0);
@@ -61,15 +65,6 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const prioList = Object.values(Priorities).reverse();
   const prioColors = Object.values(PriorityColors).reverse();
   const prioIcons = Object.values(PriorityIcons).reverse();
-
-  useEffect(() => {
-    setSelectStatus(0),
-      setSelectPriority(priorityFilterInList),
-      setSelectAssignee(assigneeFilterInList),
-      setStatusFilterInList(0),
-      setPriorityFilterInList(priorityFilterInList),
-      setAssigneeFilterInList(assigneeFilterInList);
-  }, [router]);
 
   let myTasksStatus: {id?: number[]; color?: string; name?: string}[] = [];
   if (myTasks) {
@@ -116,6 +111,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const onChangeStatus = (e: SelectChangeEvent<number>) => {
     const statusNumber = Number(e.target.value);
     setSelectStatus(statusNumber);
+    setCurrentStatus(statusNumber);
     if (todolist) {
       setStatusFilterInList(statusNumber);
     }
@@ -131,6 +127,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const onChangePriority = (e: SelectChangeEvent<unknown>) => {
     const priorityValue = String(e.target.value);
     setSelectPriority(priorityValue);
+    setCurrentPriority(priorityValue);
     if (todolist) {
       setPriorityFilterInList(priorityValue);
     }
@@ -142,6 +139,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const onChangeAssignee = (e: SelectChangeEvent<unknown>) => {
     const assigneeValue = String(e.target.value);
     setSelectAssignee(assigneeValue);
+    setCurrentAssignee(assigneeValue);
     if (todolist) {
       setAssigneeFilterInList(assigneeValue);
     }
@@ -151,6 +149,9 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   };
 
   const onReset = () => {
+    setCurrentAssignee('');
+    setCurrentPriority('');
+    setCurrentStatus(0);
     setSelectStatus(0);
     setSelectPriority('default');
     setSelectAssignee('default');
@@ -162,6 +163,18 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
     setOpenPriority(false);
     setOpenStatus(false);
   };
+
+  useEffect(() => {
+    if (currentPriority || (currentAssignee != '' && currentAssignee != 'default') || currentStatus) {
+      setSelectStatus(currentStatus);
+      setSelectPriority(currentPriority);
+      setSelectAssignee(currentAssignee);
+    } else {
+      setSelectStatus(0);
+      setSelectPriority('default');
+      setSelectAssignee('default');
+    }
+  }, [router]);
 
   const {options} = useMemberOptions(todolist?.members as IMember[]);
   (todolist?.tasks || []).map(({assignees: Assigneeitem}) => {

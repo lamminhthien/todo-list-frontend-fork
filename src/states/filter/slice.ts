@@ -11,11 +11,20 @@ const filterSlice = createSlice({
     setStatusFilterInList: (state, {payload}: PayloadAction<number>) => {
       state.statusFilterInList = payload;
     },
+    setCurrentStatus: (state, {payload}: PayloadAction<number>) => {
+      state.currentStatus = payload;
+    },
     setStatusFilterInMyTask: (state, {payload}: PayloadAction<number[]>) => {
       state.statusFilterInMytask = payload;
     },
+    setCurrentPriority: (state, {payload}: PayloadAction<string>) => {
+      state.currentPriority = payload;
+    },
     setPriorityFilterInList: (state, {payload}: PayloadAction<string>) => {
       state.priorityFilterInList = payload;
+    },
+    setCurrentAssignee: (state, {payload}: PayloadAction<string>) => {
+      state.currentAssignee = payload;
     },
     setPriorityFilterInMyTask: (state, {payload}: PayloadAction<string[]>) => {
       state.priorityFilterInMytask = payload;

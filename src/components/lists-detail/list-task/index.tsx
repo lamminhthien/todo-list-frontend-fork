@@ -1,6 +1,7 @@
 import {DndContext, DragEndEvent, DragOverlay, DragStartEvent, UniqueIdentifier} from '@dnd-kit/core';
 import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
+import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 
 import TaskItem from '@/components/common/task-item';
@@ -13,14 +14,21 @@ import useTodolist from '@/states/todolist/use-todolist';
 import {IndexStep} from '@/utils/constant';
 
 const ListTask = () => {
+  const router = useRouter();
   const {todolist, write, setTodolist} = useTodolist();
   const {
     getFilterdTasks,
     priorityFilterInList,
     assigneeFilterInList,
     statusFilterInList,
+    currentAssignee,
+    currentPriority,
+    currentStatus,
     setFilterTasks,
-    filterTasks
+    filterTasks,
+    setStatusFilterInList,
+    setPriorityFilterInList,
+    setAssigneeFilterInList
   } = useFilter();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
@@ -28,13 +36,25 @@ const ListTask = () => {
 
   useEffect(() => {
     setFilterTasks(getFilterdTasks(todolist.tasks, false));
-  }, [priorityFilterInList, assigneeFilterInList, statusFilterInList, todolist]);
+  }, [priorityFilterInList, assigneeFilterInList, statusFilterInList, todolist, router]);
   const sensors = useSensorGroup();
   const modifiers = [restrictToVerticalAxis];
   const onDragCancel = () => setActiveId(null);
   const onDragStart = ({active}: DragStartEvent) => {
     if (active) setActiveId(active.id);
   };
+
+  useEffect(() => {
+    if (currentPriority || (currentAssignee != '' && currentAssignee != 'default') || currentStatus) {
+      setStatusFilterInList(currentStatus);
+      setPriorityFilterInList(currentPriority);
+      setAssigneeFilterInList(currentAssignee);
+    } else {
+      setStatusFilterInList(0);
+      setPriorityFilterInList('');
+      setAssigneeFilterInList('default');
+    }
+  }, []);
 
   function onDragEnd({active, over}: DragEndEvent) {
     setActiveId(null);
