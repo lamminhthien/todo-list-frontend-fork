@@ -41,7 +41,7 @@ const KanbanContainer: FC = () => {
     statusList.map(a =>
       newStatusList.push({
         ...a,
-        tasks: getFilterdTasks(a.tasks as ITaskResponse[])
+        tasks: getFilterdTasks(a.tasks as ITaskResponse[], true)
       })
     );
     boardStore.generateState(newStatusList);

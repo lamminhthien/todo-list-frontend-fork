@@ -31,7 +31,7 @@ const ListTask = () => {
   //FIXME: Fix chữa cháy kịp buổi release, sẽ sớm viết lại hàm getTask và các filter cho gọn hơn.
 
   useEffect(() => {
-    setFilterTasks(getFilterdTasks(todolist.tasks));
+    setFilterTasks(getFilterdTasks(todolist.tasks, false));
   }, [priorityFilterInList, assigneeFilterInList, statusFilterInList, todolist]);
   const sensors = useSensorGroup();
   const modifiers = [restrictToVerticalAxis];

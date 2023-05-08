@@ -33,7 +33,7 @@ export default function useFilter() {
   const setFeatureFilterInMyTask = (value: boolean[] | undefined | string) =>
     dispatch(actions.setFeatureFilterInMyTask(value));
   const setFilterTasks = (value: ITaskResponse[]) => dispatch(actions.setFilterTasks(value));
-  const getFilterdTasks = (filterList: ITaskResponse[]) => {
+  const getFilterdTasks = (filterList: ITaskResponse[], isKanban: boolean) => {
     const prioritiesList = Object.values(Priorities).reverse();
     const prioritieValue = prioritiesList.includes(priorityFilterInList) ? priorityFilterInList : '';
     return filterList.filter(e => {
@@ -61,6 +61,7 @@ export default function useFilter() {
       } else if (assigneeFilterInList != 'default') {
         return e.assignees[0]?.userId == assigneeFilterInList;
       }
+      if (isKanban) return e;
       return !e.isDone;
     });
   };
