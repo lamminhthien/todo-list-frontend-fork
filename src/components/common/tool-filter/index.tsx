@@ -18,10 +18,10 @@ import {FC, useState} from 'react';
 import useTopbar from '@/components/topbar/hook';
 import {ROUTES} from '@/configs/routes.config';
 import Icon from '@/core-ui/icon';
-import {ITodolistResponse} from '@/data/api/types/todolist.type';
+import {IMember, ITodolistResponse} from '@/data/api/types/todolist.type';
+import {IUserResponse} from '@/data/api/types/user.type';
 import useMemberOptions from '@/hooks/useMemberOptions';
 import useFilter from '@/states/filter/use-filter';
-import useTodolist from '@/states/todolist/use-todolist';
 import {Priorities, PriorityColors, PriorityIcons} from '@/utils/constant';
 
 import AssigneeIcon from '../assignee-icon';
@@ -52,9 +52,6 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   const [openPriority, setOpenPriority] = useState(false);
   const router = useRouter();
   const isKanbanView = router.asPath.includes(ROUTES.KANBAN) ? true : false;
-  // const [isFeature, setIsFeature] = useState<any>(false);
-  // const {write: isWrite} = useTodolist();
-  const {todolist: todoList} = useTodolist();
   const prioList = Object.values(Priorities).reverse();
   const prioColors = Object.values(PriorityColors).reverse();
   const prioIcons = Object.values(PriorityIcons).reverse();
@@ -87,7 +84,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
     }
   }
 
-  const assignees: {id: string; name: string; email?: string}[] = [];
+  const assignees: IUserResponse[] = [];
   const onOpenPriority = () => {
     setOpenPriority(!openPriority);
   };
@@ -150,19 +147,8 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
     setOpenStatus(false);
   };
 
-  // const onChangeIsFeature = (event: SelectChangeEvent<unknown>) => {
-  //   const newIsFeature = event.target.value;
-  //   console.log(newIsFeature);
-  //   setIsFeature(newIsFeature);
-  //   if (todolist) {
-  //     setFeatureFilterInList(newIsFeature);
-  //   }
-  //   if (myTasks) {
-  //     setFeatureFilterInList(newIsFeature);
-  //   }
-  // };
-  const {options} = useMemberOptions(todoList.members);
-  (todoList.tasks || []).map(({assignees: Assigneeitem}) => {
+  const {options} = useMemberOptions(todolist?.members as IMember[]);
+  (todolist?.tasks || []).map(({assignees: Assigneeitem}) => {
     Assigneeitem[0]?.user?.id && assignees.push(Assigneeitem[0]?.user);
   });
   const newAssigneeList = Array.from(new Set(assignees.map(e => e.id)));
@@ -231,7 +217,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
                           checked={selectStatus == 0}
                         />
                         {todolist &&
-                          todoList?.status?.map(({id, color, name, index}) => (
+                          todolist?.status?.map(({id, color, name, index}) => (
                             <FormControlLabel
                               key={index}
                               value={id}

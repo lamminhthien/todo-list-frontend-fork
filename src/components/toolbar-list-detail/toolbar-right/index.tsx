@@ -17,7 +17,9 @@ const ToolBarRight: FC = () => {
   const {id} = router.query;
 
   const {boardData, owner: boardOwner, write: boardWrite} = useBoards();
+  console.log('🚀 ~ file: index.tsx:20 ~ boardData:', boardData);
   const {todolist, statusList, write, owner} = useTodolist();
+  console.log('🚀 ~ file: index.tsx:21 ~ todolist:', todolist);
   const {setIsOpenModal, setSelectedTodolist, setSelectedColumnId} = useModals();
 
   const setSelectList = () => {
@@ -78,20 +80,13 @@ const ToolBarRight: FC = () => {
           <Icon name="documents" className="ico-note-list icons" size={20} />
           <span>Docs</span>
         </div>
-        {isKanbanView && (
-          <div className="tool-filter">
-            <ToolFilter todolist={todolist} />
-          </div>
-        )}
+        <div className="tool-filter">
+          <ToolFilter todolist={!isKanbanView ? todolist : boardData} />
+        </div>
         {isKanbanView && (
           <div className="flex cursor-pointer items-center">
             <Icon name="ico-sort-ascending-outlined mr-1" size={20} />
             <span>Sort</span>
-          </div>
-        )}
-        {!isKanbanView && (
-          <div className="tool-filter">
-            <ToolFilter todolist={todolist} />
           </div>
         )}
         {(write || owner || boardOwner || boardWrite) && (
