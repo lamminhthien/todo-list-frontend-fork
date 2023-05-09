@@ -1,6 +1,5 @@
 import {Active, DndContext, DragEndEvent, DragOverEvent, DragOverlay, DragStartEvent, Over} from '@dnd-kit/core';
 import {arrayMove, horizontalListSortingStrategy, SortableContext} from '@dnd-kit/sortable';
-import {useRouter} from 'next/router';
 import React, {FC, useEffect, useState} from 'react';
 
 import api from '@/data/api';
