@@ -17,9 +17,7 @@ const ToolBarRight: FC = () => {
   const {id} = router.query;
 
   const {boardData, owner: boardOwner, write: boardWrite} = useBoards();
-  console.log('🚀 ~ file: index.tsx:20 ~ boardData:', boardData);
   const {todolist, statusList, write, owner} = useTodolist();
-  console.log('🚀 ~ file: index.tsx:21 ~ todolist:', todolist);
   const {setIsOpenModal, setSelectedTodolist, setSelectedColumnId} = useModals();
 
   const setSelectList = () => {

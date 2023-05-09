@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {ITaskResponse} from '@/data/api/types/task.type';
 import {Priorities} from '@/utils/constant';
 
+import useBoards from '../board/use-boards';
 import {RootState} from '../store';
 import filterSlice from './slice';
 
@@ -23,7 +24,7 @@ export default function useFilter() {
     filterTasks
   } = filterState;
   const {actions} = filterSlice;
-
+  const {statusList} = useBoards();
   const dispatch = useDispatch();
   const setStatusFilterInList = (value: number) => dispatch(actions.setStatusFilterInList(value));
   const setCurrentStatus = (value: number) => dispatch(actions.setCurrentStatus(value));
@@ -40,19 +41,26 @@ export default function useFilter() {
     dispatch(actions.setFeatureFilterInMyTask(value));
   const setFilterTasks = (value: ITaskResponse[]) => dispatch(actions.setFilterTasks(value));
   const getFilterdTasks = (filterList: ITaskResponse[], isKanban: boolean) => {
+    const revStatusList = Object.values(statusList).reverse();
     const prioritiesList = Object.values(Priorities).reverse();
     const prioritieValue = prioritiesList.includes(priorityFilterInList) ? priorityFilterInList : '';
+
     return filterList.filter(e => {
       if (!isKanban) {
         if (assigneeFilterInList == 'Unassigned' && statusFilterInList == 0 && prioritieValue)
-          return e.assignees.length == 0 && e.priority == prioritieValue && !e.isDone;
+          return e.assignees.length == 0 && e.priority == prioritieValue && !(e.statusId == revStatusList[0].id);
         if (assigneeFilterInList != 'default' && statusFilterInList == 0 && prioritieValue)
-          return e.assignees[0]?.userId == assigneeFilterInList && e.priority == prioritieValue && !e.isDone;
+          return (
+            e.assignees[0]?.userId == assigneeFilterInList &&
+            e.priority == prioritieValue &&
+            !(e.statusId == revStatusList[0].id)
+          );
         if (assigneeFilterInList == 'Unassigned' && statusFilterInList == 0)
-          return e.assignees.length == 0 && !e.isDone;
+          return e.assignees.length == 0 && !(e.statusId == revStatusList[0].id);
         if (assigneeFilterInList != 'default' && statusFilterInList == 0)
-          return e.assignees[0]?.userId == assigneeFilterInList && !e.isDone;
-        if (prioritieValue && statusFilterInList == 0) return e.priority == prioritieValue && !e.isDone;
+          return e.assignees[0]?.userId == assigneeFilterInList && !(e.statusId == revStatusList[0].id);
+        if (prioritieValue && statusFilterInList == 0)
+          return e.priority == prioritieValue && !(e.statusId == revStatusList[0].id);
         if (assigneeFilterInList == 'Unassigned' && statusFilterInList && prioritieValue)
           return e.assignees.length == 0 && e.statusId == statusFilterInList && e.priority == prioritieValue;
         if (assigneeFilterInList != 'default' && statusFilterInList && prioritieValue)
@@ -78,7 +86,7 @@ export default function useFilter() {
         } else if (assigneeFilterInList != 'default') {
           return e.assignees[0]?.userId == assigneeFilterInList;
         }
-        return !e.isDone;
+        return !(e.statusId == revStatusList[0].id);
       } else {
         if (assigneeFilterInList == 'Unassigned' && statusFilterInList && prioritieValue)
           return e.assignees.length == 0 && e.statusId == statusFilterInList && e.priority == prioritieValue;

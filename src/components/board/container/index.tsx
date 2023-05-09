@@ -142,13 +142,14 @@ const KanbanContainer: FC = () => {
       const indexList = boardState.entities[overColumn]
         .filter(e => e !== activeId)
         .map(e => Number(boardStore.entitiesItem[e].indexColumn));
+
       newEntities[activeColumn] = arrayMove(newEntities[activeColumn], activeIndex, overIndex);
       setBoardState({...boardState, entities: newEntities});
       const prevIndex = boardStore.entitiesItem[newEntities[overColumn][overIndex - 1]]?.indexColumn;
       const nextIndex = boardStore.entitiesItem[newEntities[overColumn][overIndex + 1]]?.indexColumn;
       const {reset: resetIndexColumn, value: indexColumn} = getnewIndexForDragDrop({indexList, prevIndex, nextIndex});
-      const revStatusList = Object.values(statusList).reverse();
       if (indexColumn) {
+        const revStatusList = Object.values(statusList).reverse();
         boardStore.updateState(state => {
           state.entitiesItem[activeId].indexColumn = indexColumn;
         });
