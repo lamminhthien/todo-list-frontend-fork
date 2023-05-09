@@ -27,6 +27,7 @@ const KanbanContainer: FC = () => {
   const {
     priorityFilterInList,
     assigneeFilterInList,
+    statusFilterInList,
     currentAssignee,
     currentPriority,
     currentStatus,
@@ -40,7 +41,20 @@ const KanbanContainer: FC = () => {
   const [activeItemId, setActiveItemId] = useState<string>();
   const [activeColumnId, setActiveColumnId] = useState<string>();
   const [needUpdate, setNeedUpdate] = useState(false);
-  const router = useRouter();
+
+  useEffect(() => {
+    if (currentPriority || (currentAssignee != '' && currentAssignee != 'default') || currentStatus) {
+      setPriorityFilterInList(currentPriority);
+      setAssigneeFilterInList(currentAssignee);
+      setStatusFilterInList(0);
+      console.log('test');
+    } else {
+      setStatusFilterInList(0);
+      setPriorityFilterInList('');
+      setAssigneeFilterInList('default');
+    }
+  }, []);
+
   useEffect(() => {
     const newStatusList: IStatus[] = [];
     statusList.map(a =>
@@ -51,19 +65,7 @@ const KanbanContainer: FC = () => {
     );
     boardStore.generateState(newStatusList);
     setNeedUpdate(true);
-  }, [statusList, priorityFilterInList, assigneeFilterInList, router]);
-
-  useEffect(() => {
-    if (currentPriority || (currentAssignee != '' && currentAssignee != 'default') || currentStatus) {
-      setPriorityFilterInList(currentPriority);
-      setAssigneeFilterInList(currentAssignee);
-      setStatusFilterInList(0);
-    } else {
-      setStatusFilterInList(0);
-      setPriorityFilterInList('');
-      setAssigneeFilterInList('default');
-    }
-  }, []);
+  }, [statusList, priorityFilterInList, assigneeFilterInList, statusFilterInList]);
 
   useEffect(() => {
     if (needUpdate) {
