@@ -46,7 +46,6 @@ const KanbanContainer: FC = () => {
       setPriorityFilterInList(currentPriority);
       setAssigneeFilterInList(currentAssignee);
       setStatusFilterInList(0);
-      console.log('test');
     } else {
       setStatusFilterInList(0);
       setPriorityFilterInList('');
@@ -148,12 +147,19 @@ const KanbanContainer: FC = () => {
       const prevIndex = boardStore.entitiesItem[newEntities[overColumn][overIndex - 1]]?.indexColumn;
       const nextIndex = boardStore.entitiesItem[newEntities[overColumn][overIndex + 1]]?.indexColumn;
       const {reset: resetIndexColumn, value: indexColumn} = getnewIndexForDragDrop({indexList, prevIndex, nextIndex});
+      const revStatusList = Object.values(statusList).reverse();
       if (indexColumn) {
         boardStore.updateState(state => {
           state.entitiesItem[activeId].indexColumn = indexColumn;
         });
         api.task
-          .update({id: activeId, statusId: Number(overColumn), indexColumn, resetIndexColumn})
+          .update({
+            id: activeId,
+            statusId: Number(overColumn),
+            indexColumn,
+            resetIndexColumn,
+            isDone: Number(overColumn) == revStatusList[0].id ? true : false
+          })
           .then(socketUpdateList);
       }
     }

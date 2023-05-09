@@ -43,32 +43,70 @@ export default function useFilter() {
     const prioritiesList = Object.values(Priorities).reverse();
     const prioritieValue = prioritiesList.includes(priorityFilterInList) ? priorityFilterInList : '';
     return filterList.filter(e => {
-      if (assigneeFilterInList == 'Unassigned' && statusFilterInList && prioritieValue)
-        return e.assignees.length == 0 && e.statusId == statusFilterInList && e.priority == prioritieValue;
-      if (assigneeFilterInList != 'default' && statusFilterInList && prioritieValue)
-        return (
-          e.assignees[0]?.userId == assigneeFilterInList &&
-          e.statusId == statusFilterInList &&
-          e.priority == prioritieValue
-        );
-      if (assigneeFilterInList == 'Unassigned' && prioritieValue)
-        return e.assignees.length == 0 && e.priority == prioritieValue;
-      if (prioritieValue && assigneeFilterInList != 'default')
-        return e.priority == prioritieValue && e.assignees[0]?.userId == assigneeFilterInList;
-      if (assigneeFilterInList == 'Unassigned' && statusFilterInList)
-        return e.assignees.length == 0 && e.statusId == statusFilterInList;
-      if (assigneeFilterInList != 'default' && statusFilterInList)
-        return e.assignees[0]?.userId == assigneeFilterInList && e.statusId == statusFilterInList;
-      if (prioritieValue && statusFilterInList) return e.priority == prioritieValue && e.statusId == statusFilterInList;
-      if (prioritieValue) return e.priority == prioritieValue;
-      if (statusFilterInList) return e.statusId == statusFilterInList;
-      if (assigneeFilterInList == 'Unassigned') {
-        return e.assignees.length == 0;
-      } else if (assigneeFilterInList != 'default') {
-        return e.assignees[0]?.userId == assigneeFilterInList;
+      if (!isKanban) {
+        if (assigneeFilterInList == 'Unassigned' && statusFilterInList == 0 && prioritieValue)
+          return e.assignees.length == 0 && e.priority == prioritieValue && !e.isDone;
+        if (assigneeFilterInList != 'default' && statusFilterInList == 0 && prioritieValue)
+          return e.assignees[0]?.userId == assigneeFilterInList && e.priority == prioritieValue && !e.isDone;
+        if (assigneeFilterInList == 'Unassigned' && statusFilterInList == 0)
+          return e.assignees.length == 0 && !e.isDone;
+        if (assigneeFilterInList != 'default' && statusFilterInList == 0)
+          return e.assignees[0]?.userId == assigneeFilterInList && !e.isDone;
+        if (prioritieValue && statusFilterInList == 0) return e.priority == prioritieValue && !e.isDone;
+        if (assigneeFilterInList == 'Unassigned' && statusFilterInList && prioritieValue)
+          return e.assignees.length == 0 && e.statusId == statusFilterInList && e.priority == prioritieValue;
+        if (assigneeFilterInList != 'default' && statusFilterInList && prioritieValue)
+          return (
+            e.assignees[0]?.userId == assigneeFilterInList &&
+            e.statusId == statusFilterInList &&
+            e.priority == prioritieValue
+          );
+        if (assigneeFilterInList == 'Unassigned' && prioritieValue)
+          return e.assignees.length == 0 && e.priority == prioritieValue;
+        if (prioritieValue && assigneeFilterInList != 'default')
+          return e.priority == prioritieValue && e.assignees[0]?.userId == assigneeFilterInList;
+        if (assigneeFilterInList == 'Unassigned' && statusFilterInList)
+          return e.assignees.length == 0 && e.statusId == statusFilterInList;
+        if (assigneeFilterInList != 'default' && statusFilterInList)
+          return e.assignees[0]?.userId == assigneeFilterInList && e.statusId == statusFilterInList;
+        if (prioritieValue && statusFilterInList)
+          return e.priority == prioritieValue && e.statusId == statusFilterInList;
+        if (prioritieValue) return e.priority == prioritieValue;
+        if (statusFilterInList) return e.statusId == statusFilterInList;
+        if (assigneeFilterInList == 'Unassigned') {
+          return e.assignees.length == 0;
+        } else if (assigneeFilterInList != 'default') {
+          return e.assignees[0]?.userId == assigneeFilterInList;
+        }
+        return !e.isDone;
+      } else {
+        if (assigneeFilterInList == 'Unassigned' && statusFilterInList && prioritieValue)
+          return e.assignees.length == 0 && e.statusId == statusFilterInList && e.priority == prioritieValue;
+        if (assigneeFilterInList != 'default' && statusFilterInList && prioritieValue)
+          return (
+            e.assignees[0]?.userId == assigneeFilterInList &&
+            e.statusId == statusFilterInList &&
+            e.priority == prioritieValue
+          );
+        if (assigneeFilterInList == 'Unassigned' && prioritieValue)
+          return e.assignees.length == 0 && e.priority == prioritieValue;
+        if (prioritieValue && assigneeFilterInList != 'default')
+          return e.priority == prioritieValue && e.assignees[0]?.userId == assigneeFilterInList;
+        if (assigneeFilterInList == 'Unassigned' && statusFilterInList)
+          return e.assignees.length == 0 && e.statusId == statusFilterInList;
+        if (assigneeFilterInList != 'default' && statusFilterInList)
+          return e.assignees[0]?.userId == assigneeFilterInList && e.statusId == statusFilterInList;
+        if (prioritieValue && statusFilterInList)
+          return e.priority == prioritieValue && e.statusId == statusFilterInList;
+        if (prioritieValue) return e.priority == prioritieValue;
+        if (statusFilterInList) return e.statusId == statusFilterInList;
+        if (assigneeFilterInList == 'Unassigned') {
+          return e.assignees.length == 0;
+        } else if (assigneeFilterInList != 'default') {
+          return e.assignees[0]?.userId == assigneeFilterInList;
+        }
+        return e;
       }
-      if (isKanban) return e;
-      return !e.isDone;
     });
   };
 
