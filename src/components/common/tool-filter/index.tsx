@@ -166,7 +166,11 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
 
   useEffect(() => {
     if (currentPriority || (currentAssignee != '' && currentAssignee != 'default') || currentStatus) {
-      setSelectStatus(currentStatus);
+      if (isKanbanView) {
+        setSelectStatus(currentStatus);
+      } else {
+        setSelectStatus(0);
+      }
       setSelectPriority(currentPriority);
       setSelectAssignee(currentAssignee);
     } else {
