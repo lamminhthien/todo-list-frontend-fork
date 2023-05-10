@@ -40,7 +40,13 @@ const WYSIWYG: React.FC<IProps> = ({content}) => {
     });
   }, []);
 
-  return <div ref={ref} className="wysiwyg" dangerouslySetInnerHTML={{__html: replaceCdnUrl(content) || ''}}></div>;
+  return (
+    <div
+      ref={ref}
+      className="wysiwyg ck-content prose"
+      dangerouslySetInnerHTML={{__html: replaceCdnUrl(content) || ''}}
+    ></div>
+  );
 };
 
 export default WYSIWYG;
