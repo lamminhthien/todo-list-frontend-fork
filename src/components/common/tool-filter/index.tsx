@@ -377,47 +377,42 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
                           }
                           checked={selectAssignee == 'Unassigned'}
                         />
-                        <FormControlLabel
-                          key={auth?.id}
-                          value={auth?.id}
-                          control={<BpRadio />}
-                          label={
-                            <>
-                              <div className="assignee-user mr-1">
-                                <AssigneeIcon
-                                  name={auth?.name}
-                                  bg={assigneeOptions
-                                    .filter(a => a.length > 0)
-                                    .map(a => (a[0].id == auth?.id ? a[0].bg : ''))
-                                    .join('')}
-                                />
-                              </div>
-                              <span>Assign to me</span>
-                            </>
-                          }
-                          checked={selectAssignee == auth?.id}
-                        />
                         {assigneeOptions
-                          .filter(a => a.length > 0)
-                          .map(
-                            a =>
-                              a[0].id != auth?.id && (
-                                <FormControlLabel
-                                  key={a[0].id}
-                                  value={a[0].id}
-                                  control={<BpRadio />}
-                                  label={
-                                    <>
-                                      <div className="assignee-user mr-1">
-                                        <AssigneeIcon name={a[0].name} bg={a[0].bg} />
-                                      </div>
-                                      <span>{a[0].name}</span>
-                                    </>
-                                  }
-                                  checked={selectAssignee == a[0].id}
-                                />
-                              )
-                          )}
+                          .filter(a => a.length > 0 && a[0].id == auth?.id)
+                          .map(a => (
+                            <FormControlLabel
+                              key={a[0].id}
+                              value={a[0].id}
+                              control={<BpRadio />}
+                              label={
+                                <>
+                                  <div className="assignee-user mr-1">
+                                    <AssigneeIcon name={a[0].name} bg={a[0].bg} />
+                                  </div>
+                                  <span>Assign to me</span>
+                                </>
+                              }
+                              checked={selectAssignee == a[0].id}
+                            />
+                          ))}
+                        {assigneeOptions
+                          .filter(a => a.length > 0 && a[0].id != auth?.id)
+                          .map(a => (
+                            <FormControlLabel
+                              key={a[0].id}
+                              value={a[0].id}
+                              control={<BpRadio />}
+                              label={
+                                <>
+                                  <div className="assignee-user mr-1">
+                                    <AssigneeIcon name={a[0].name} bg={a[0].bg} />
+                                  </div>
+                                  <span>{a[0].name}</span>
+                                </>
+                              }
+                              checked={selectAssignee == a[0].id}
+                            />
+                          ))}
                       </RadioGroup>
                     </FormControl>
                   </List>

@@ -45,7 +45,7 @@ export default function useFilter() {
     const prioritiesList = Object.values(Priorities).reverse();
     const prioritieValue = prioritiesList.includes(priorityFilterInList) ? priorityFilterInList : '';
 
-    return filterList.filter(e => {
+    return filterList?.filter(e => {
       if (!isKanban) {
         if (assigneeFilterInList == 'Unassigned' && statusFilterInList == 0 && prioritieValue)
           return e.assignees.length == 0 && e.priority == prioritieValue && !(e.statusId == revStatusList[0].id);

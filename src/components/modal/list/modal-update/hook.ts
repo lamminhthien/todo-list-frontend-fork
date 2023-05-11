@@ -30,7 +30,7 @@ const Schema = yup.object().shape({
 export default function useModalUpdateList({data, open, onClose, onSuccess}: IProps) {
   const router = useRouter();
   const toast = useToast();
-  const {setTodolist, owner} = useTodolist();
+  const {setTodolist, owner, todolist: curTodolist} = useTodolist();
   const {owner: ownerKanban} = useBoards();
 
   const {formState, handleSubmit, reset, setValue, ...rest} = useForm<IFormInputs>({
@@ -57,6 +57,7 @@ export default function useModalUpdateList({data, open, onClose, onSuccess}: IPr
           const newTodolist: ITodolistResponse = res.data;
           newTodolist.name = name;
           newTodolist.taskSymbol = taskSymbol;
+          newTodolist.status = curTodolist.status;
           setTodolist(newTodolist);
         }
         toast.show({type: 'success', title: 'Update List', content: ToastContents.SUCCESS});
