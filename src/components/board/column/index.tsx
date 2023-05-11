@@ -15,11 +15,11 @@ export interface IKanbanColumnProps {
 
 const KanbanColumn: FC<IKanbanColumnProps> = ({columnId, itemIds, showHeader = true}) => {
   const boardStore = useBoardState();
-  const {name, color} = boardStore.entitiesColumn[columnId].status;
+  const {name, color, tasks} = boardStore.entitiesColumn[columnId].status;
 
   return (
     <KanbanColumnWrapper columnId={columnId}>
-      <KanbanColumnHeader name={name} color={color} />
+      <KanbanColumnHeader name={name} color={color} numberTasks={tasks?.length} />
       <KanbanColumnBody columnId={columnId} itemIds={itemIds} />
       {showHeader && <KanbanColumnFooter columnId={columnId} />}
     </KanbanColumnWrapper>

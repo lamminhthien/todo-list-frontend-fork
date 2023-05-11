@@ -8,6 +8,7 @@ import Input from '@/core-ui/input';
 import {Modal} from '@/core-ui/modal';
 import api from '@/data/api';
 import {IUserResponse} from '@/data/api/types/user.type';
+import useModals from '@/states/modals/use-modals';
 import {Visibilities} from '@/utils/constant';
 
 import styles from '../style-create-upate.module.scss';
@@ -20,12 +21,15 @@ const ModalUpdateList: FC<IProps> = props => {
   const [options, setOptions] = useState<IUserResponse[]>([]);
   const defaultMemberIds = data?.members?.map((e: {id: any}) => e.id) || [];
   const memberDefaultValue = options.filter(e => defaultMemberIds.includes(e.id));
+  const {setIsOpenModal} = useModals();
   const visibilityDefaultValue = hiddenVisibility
     ? undefined
     : data?.visibility
     ? data.visibility
     : Visibilities.PUBLIC;
-
+  const onDelete = () => {
+    setIsOpenModal('deleteList');
+  };
   useEffect(() => {
     api.user.getIndentify().then(res => {
       if (res && res.status == 200) {
@@ -80,30 +84,42 @@ const ModalUpdateList: FC<IProps> = props => {
                 </Select>
               )}
               {data && options.length > 0 && (owner || ownerKanban) && (
-                <Autocomplete
-                  multiple
-                  className="input-members"
-                  defaultValue={[...memberDefaultValue]}
-                  onChange={(e, value) => setValue('member', {ids: value.map(u => u.id)})}
-                  options={options}
-                  disableCloseOnSelect
-                  getOptionLabel={option => option.email || 'no email'}
-                  renderOption={(prop, option, state) => {
-                    const {selected} = state;
-                    if (!selected)
-                      return (
-                        <li {...prop} className={styles['assignee-item']}>
-                          <AssigneeIcon name={option.name} />
-                          <span>
-                            {option?.email} ({option?.name})
-                          </span>
-                        </li>
-                      );
-                  }}
-                  renderInput={params => (
-                    <TextField {...params} className="members-textfield" label="member" placeholder="Add members..." />
-                  )}
-                />
+                <>
+                  <Autocomplete
+                    multiple
+                    className="input-members"
+                    defaultValue={[...memberDefaultValue]}
+                    onChange={(e, value) => setValue('member', {ids: value.map(u => u.id)})}
+                    options={options}
+                    disableCloseOnSelect
+                    getOptionLabel={option => option.email || 'no email'}
+                    renderOption={(prop, option, state) => {
+                      const {selected} = state;
+                      if (!selected)
+                        return (
+                          <li {...prop} className={styles['assignee-item']}>
+                            <AssigneeIcon name={option.name} />
+                            <span>
+                              {option?.email} ({option?.name})
+                            </span>
+                          </li>
+                        );
+                    }}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        className="members-textfield"
+                        label="member"
+                        placeholder="Add members..."
+                      />
+                    )}
+                  />
+                  <div className="delete mt-4 flex items-center justify-end">
+                    <span className="hidden underline hover:cursor-pointer sm:block" onClick={() => onDelete()}>
+                      Delete List
+                    </span>
+                  </div>
+                </>
               )}
             </Modal.Body>
             <Modal.Footer>

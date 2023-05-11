@@ -35,11 +35,6 @@ const ToolBarRight: FC = () => {
     setIsOpenModal('settings');
   };
 
-  const onDelete = () => {
-    setSelectList();
-    setIsOpenModal('deleteList');
-  };
-
   const onAddTask = () => {
     setSelectList();
     setIsOpenModal('createTask');
@@ -81,18 +76,6 @@ const ToolBarRight: FC = () => {
         <div className="tool-filter">
           <ToolFilter todolist={!isKanbanView ? todolist : boardData} />
         </div>
-        {isKanbanView && (
-          <div className="flex cursor-pointer items-center">
-            <Icon name="ico-sort-ascending-outlined mr-1" size={20} />
-            <span>Sort</span>
-          </div>
-        )}
-        {(write || owner || boardOwner || boardWrite) && (
-          <div className="delete ml-1 flex items-center hover:cursor-pointer" onClick={onDelete}>
-            <Icon name="Delete list" className="ico-trash-2 icons" size={20} onClick={onDelete} />
-            <span className="hidden sm:block">Delete</span>
-          </div>
-        )}
       </div>
       {(write || owner || boardOwner || boardWrite) && (
         <div className="settings flex items-center hover:cursor-pointer" onClick={() => onSettingBoard()}>
