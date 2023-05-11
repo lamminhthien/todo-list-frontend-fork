@@ -1,5 +1,5 @@
 .toolbar-right :global {
-  @apply flex items-center gap-x-3 sm:gap-x-7;
+  @apply flex items-center gap-x-4;
   .add-task {
     @apply flex gap-x-2;
   }
@@ -11,9 +11,6 @@
   }
   .sort {
     @apply flex gap-x-1;
-  }
-  .tool-filter {
-    @apply ml-2;
   }
   .settings {
     @apply flex gap-x-1 pl-1;
