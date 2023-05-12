@@ -189,7 +189,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
   return (
     <div className={classNames(style['tool-filter'], className)}>
       <div className="filter-icon">
-        <Icon name="ico-filter mr-1" size={20} />
+        <Icon name="ico-filter" size={20} />
         <span>Filter</span>
       </div>
       <Select

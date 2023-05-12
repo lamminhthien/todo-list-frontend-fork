@@ -3,36 +3,4 @@
   .inner {
     @apply flex w-full items-center justify-between md:p-0;
   }
-
-  .authenticated {
-    @apply flex items-center justify-end sm:w-full;
-    .h2 {
-      @apply flex items-center break-words text-h5 leading-none md:text-h4;
-    }
-    .abc-icon.size-24:before {
-      @apply text-xl md:text-2xl;
-    }
-    .active {
-      @apply mt-1 border-b-[1.5px] border-b-blue-500;
-    }
-  }
-  .ico-user {
-    @apply ml-auto mr-2;
-  }
-  .sep {
-    @apply mx-2 mt-[3px] h-4 w-[1px] items-center bg-cyan-800;
-  }
-  .sep-none {
-    @apply mx-2;
-  }
-  a:hover {
-    @apply no-underline;
-  }
-  .text {
-    @apply flex items-end whitespace-nowrap text-h4 leading-none;
-  }
-  .unverified,
-  .logout {
-    @apply ml-1 cursor-pointer text-base text-red-500;
-  }
 }
