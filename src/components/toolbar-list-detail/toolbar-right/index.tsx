@@ -55,21 +55,24 @@ const ToolBarRight: FC = () => {
         )}
         <div className={`kanban-view ${!isKanbanView ? '' : 'active'} flex items-center`}>
           <Icon
-            name="list-view"
-            className="ico-vertical icons"
+            name="horizontal"
+            className="ico-carbon-horizontal-view icons"
             size={20}
             onClick={() => router.push(`${ROUTES.KANBAN}/${id}`)}
           />
         </div>
         <div className={`list-view ${isKanbanView ? '' : 'active'} flex items-center`}>
           <Icon
-            name="horizontal"
-            className="ico-horizontal icons"
+            name="list-view"
+            className="ico-carbon-vertical-view icons"
             size={20}
             onClick={() => router.push(`${ROUTES.LIST}/${id}`)}
           />
         </div>
-        <div className="flex cursor-pointer items-center" onClick={() => router.push(`${ROUTES.DOCUMENT}/${id}`)}>
+        <div
+          className="flex cursor-pointer items-center gap-x-1"
+          onClick={() => router.push(`${ROUTES.DOCUMENT}/${id}`)}
+        >
           <Icon name="documents" className="ico-note-list icons" size={20} />
           <span>Docs</span>
         </div>

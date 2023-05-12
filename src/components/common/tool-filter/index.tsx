@@ -193,7 +193,7 @@ const ToolFilter: FC<IProps> = ({className, todolist, myTasks}) => {
         <span>Filter</span>
       </div>
       <Select
-        style={{width: 65}}
+        style={{width: 60}}
         variant="standard"
         disableUnderline
         className={style['menu-dropdown']}

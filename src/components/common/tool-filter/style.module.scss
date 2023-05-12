@@ -4,7 +4,7 @@
     @apply hidden;
   }
   .filter-icon {
-    @apply absolute top-0 flex h-full items-center;
+    @apply absolute top-0 flex h-full items-center gap-x-1;
     svg {
       @apply hidden;
     }

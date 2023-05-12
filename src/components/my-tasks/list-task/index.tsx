@@ -58,7 +58,7 @@ const ListTask: FC = () => {
       )}
       {onAfterFilter &&
         onAfterFilter.length > 0 &&
-        onAfterFilter.map(todolist => {
+        onAfterFilter.map((todolist, index) => {
           const write = Boolean(todolist)
             ? todolist.visibility === 'PUBLIC' || Boolean(auth && auth.id === todolist.userId)
             : false;
@@ -66,7 +66,7 @@ const ListTask: FC = () => {
             <div key={todolist.id}>
               {todolist.tasks?.length > 0 && (
                 <>
-                  <div className="h-6 lg:h-7"></div>
+                  {index != 0 && <div className="h-6 lg:h-7"></div>}
                   <Link href={ROUTES.LIST + `/${todolist.id}`}>
                     <h4 className="w-fit cursor-pointer text-base font-semibold md:text-h4">{todolist.name}</h4>
                   </Link>
