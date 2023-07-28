@@ -1,4 +1,9 @@
 name: Deploy on server stage
+
+env:
+  APP_ENV: ${{ secrets.STAGING }}
+  NAME: todo-list-website
+
 on:
   push:
     branches: ["main"]
@@ -10,10 +15,18 @@ jobs:
       - name: Pull code
         uses: actions/checkout@v3
 
+      - name: Extract env file multi line.
+        run: |
+          rm -r -f .env
+          touch .env_temp
+          echo $APP_ENV | tee .env_temp
+          sed 's/ /\n/g' .env_temp >> .env
+          rm -r -f .env_temp
+
       - name: Docker
         run: |
-          docker build -t todo-list-website .
-          docker save -o todo-list-website.tar todo-list-website
+          docker build -t $NAME .
+          docker save -o $NAME.tar $NAME
 
       - name: Copy Docker image to ec2
         uses: appleboy/scp-action@master
@@ -22,8 +35,8 @@ jobs:
           username: ubuntu
           port: 22
           key: ${{ secrets.STAGE_SERVER_KEY_SSH }}
-          source: "todo-list-website.tar,docker-compose.yml"
-          target: "~/todo-list-website"
+          source: "$NAME.tar,docker-compose.yml"
+          target: "~/$NAME"
 
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v0.1.10
@@ -33,7 +46,7 @@ jobs:
           port: 22
           key: ${{ secrets.STAGE_SERVER_KEY_SSH }}
           script: |
-            cd ~/todo-list-website
+            cd ~/$NAME
             sudo snap install docker
-            sudo docker load --input todo-list-website.tar
+            sudo docker load --input $NAME.tar
             sudo docker-compose up -d --force-recreate
