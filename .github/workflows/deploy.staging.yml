@@ -1,8 +1,11 @@
+# This workflow will use github action server to build docker, then deploy docker image on your own server.
+# Prevent overload, high cpu, high RAM usage on your own server.
+# This not only work for Amazon Web Service, but also work for 3rd party server like Vietnix VPS, Digital Ocean, Viettel IDC,...
+# Attention: Use your Visual Studio Code to open and copy ssh key, do not use cat command on terminal to copy key.
 name: Deploy on server stage
 
 env:
   APP_ENV: ${{ secrets.STAGING }}
-  NAME: todo-list-website
 
 on:
   push:
@@ -25,20 +28,20 @@ jobs:
 
       - name: Docker
         run: |
-          docker build -t $NAME .
-          docker save -o $NAME.tar $NAME
+          docker build -t todo-list-website .
+          docker save -o todo-list-website.tar todo-list-website
 
-      - name: Copy Docker image to ec2
+      - name: Copy Docker image to ec2 use SSH Key
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.STAGE_SERVER_HOST }}
           username: ubuntu
           port: 22
           key: ${{ secrets.STAGE_SERVER_KEY_SSH }}
-          source: "$NAME.tar,docker-compose.yml"
-          target: "~/$NAME"
+          source: "todo-list-website.tar,docker-compose.yml"
+          target: "~/todo-list-website"
 
-      - name: executing remote ssh commands using password
+      - name: Executing remote ssh commands using SSH Key
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.STAGE_SERVER_HOST }}
@@ -46,7 +49,8 @@ jobs:
           port: 22
           key: ${{ secrets.STAGE_SERVER_KEY_SSH }}
           script: |
-            cd ~/$NAME
+            cd ~/todo-list-website
             sudo snap install docker
-            sudo docker load --input $NAME.tar
+            sudo docker load --input todo-list-website.tar
             sudo docker-compose up -d --force-recreate
+            rm -rf todo-list-website.tar
