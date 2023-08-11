@@ -5,11 +5,12 @@ import TypeItem from './item';
 
 interface ITypeProps {
   data: {text: string; icon: string}[];
+  title?: string;
   trigger?: ReactNode;
   onSelect?: (value: string) => void;
 }
 
-export const Type: FC<ITypeProps> = ({data, trigger, onSelect}) => {
+export const Type: FC<ITypeProps> = ({data, title, trigger, onSelect}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -38,9 +39,16 @@ export const Type: FC<ITypeProps> = ({data, trigger, onSelect}) => {
           vertical: 'bottom',
           horizontal: 'left'
         }}
+        elevation={8}
+        sx={{
+          '& .MuiPaper-elevation8': {
+            width: 1,
+            maxWidth: 200
+          }
+        }}
       >
-        <div className="flex flex-col space-y-4 p-4">
-          <p className="font-semibold">CHANGE ISSUE TYPE</p>
+        <div className="flex w-full max-w-md flex-col space-y-4 p-4">
+          {title && <p className="font-semibold">{title}</p>}
           {data.map(({text, icon}, index) => (
             <TypeItem key={index} text={text} icon={icon} onClick={() => handleSelect(text)} />
           ))}

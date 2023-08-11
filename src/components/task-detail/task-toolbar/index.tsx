@@ -33,6 +33,7 @@ const TaskToolbar: FC<IBaseProps> = ({className}) => {
       <div className="header">
         <Type
           data={TaskTypeData}
+          title="CHANGE ISSUE TYPE"
           trigger={
             <div className="rounded bg-slate-100 p-1 px-2 text-h7">
               <Image src={`/icons/${taskType?.icon}`} alt={taskType?.text} width={24} height={24} />
