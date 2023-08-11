@@ -1,18 +1,15 @@
 import {Popover} from '@mui/material';
-import Image from 'next/image';
-import {FC, useState} from 'react';
-
-import Button from '@/core-ui/button';
+import {FC, ReactNode, useState} from 'react';
 
 import TypeItem from './item';
 
 interface ITypeProps {
   data: {text: string; icon: string}[];
-  selected?: {text: string; icon: string};
+  trigger?: ReactNode;
   onSelect?: (value: string) => void;
 }
 
-export const Type: FC<ITypeProps> = ({data, selected, onSelect}) => {
+export const Type: FC<ITypeProps> = ({data, trigger, onSelect}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,9 +29,7 @@ export const Type: FC<ITypeProps> = ({data, selected, onSelect}) => {
 
   return (
     <div>
-      <Button className="rounded bg-slate-100 p-1 px-2 text-h7" onClick={handleClick}>
-        <Image src={`/icons/${selected?.icon}`} alt={selected?.text} width={24} height={24} />
-      </Button>
+      <button onClick={handleClick}>{trigger}</button>
       <Popover
         open={open}
         anchorEl={anchorEl}

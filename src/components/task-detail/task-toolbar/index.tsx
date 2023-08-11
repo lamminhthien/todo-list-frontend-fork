@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import Image from 'next/image';
 import {FC} from 'react';
 
 import useToast from '@/core-ui/toast';
@@ -18,6 +19,7 @@ const TaskToolbar: FC<IBaseProps> = ({className}) => {
   const {task, update} = useTask();
   const taskSymbol = task?.todolist.taskSymbol;
   const order = task?.order;
+  const taskType = TaskTypeData.find(x => x.text === task.type);
 
   const onSelectType = (type: string) => {
     api.task
@@ -31,7 +33,11 @@ const TaskToolbar: FC<IBaseProps> = ({className}) => {
       <div className="header">
         <Type
           data={TaskTypeData}
-          selected={TaskTypeData.find(x => x.text === task.type)}
+          trigger={
+            <div className="rounded bg-slate-100 p-1 px-2 text-h7">
+              <Image src={`/icons/${taskType?.icon}`} alt={taskType?.text} width={24} height={24} />
+            </div>
+          }
           onSelect={value => {
             onSelectType(value);
           }}
