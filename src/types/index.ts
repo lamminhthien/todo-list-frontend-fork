@@ -7,3 +7,11 @@ export interface IBaseProps {
   visible?: boolean;
   disabled?: boolean;
 }
+
+export interface IStateInit {
+  isCreating?: boolean;
+  isUpdating?: boolean;
+  isDeleting?: boolean;
+  isFeching?: boolean;
+  error?: boolean;
+}
