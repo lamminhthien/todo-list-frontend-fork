@@ -106,12 +106,14 @@ const ModalUpdateList: FC<IProps> = props => {
                         );
                     }}
                     renderInput={params => (
-                      <TextField
-                        {...params}
-                        className="members-textfield"
-                        label="member"
-                        placeholder="Add members..."
-                      />
+                      <div className="max-h-[200px] overflow-auto p-1.5">
+                        <TextField
+                          {...params}
+                          className="members-textfield"
+                          label="member"
+                          placeholder="Add members..."
+                        />
+                      </div>
                     )}
                   />
                   <div className="delete mt-4 flex items-center justify-end">
