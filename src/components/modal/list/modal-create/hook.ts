@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import {ROUTES} from '@/configs/routes.config';
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
+import useModals from '@/states/modals/use-modals';
 import {ToastContents} from '@/utils/toast-content';
 
 import {IProps} from '../types-create-update';
@@ -24,6 +25,7 @@ const Schema = yup.object().shape({
 export default function useModalCreateList({open, onClose, onSuccess}: IProps) {
   const router = useRouter();
   const toast = useToast();
+  const {setSelectedTodolist, setIsOpenModal} = useModals();
 
   const {formState, handleSubmit, reset, setValue, ...rest} = useForm<IFormInputs>({
     resolver: yupResolver(Schema),
@@ -43,6 +45,9 @@ export default function useModalCreateList({open, onClose, onSuccess}: IProps) {
     const req = api.todolist.create({name, taskSymbol}).then(res => {
       toast.show({type: 'success', title: 'Create List', content: ToastContents.SUCCESS});
       router.push(ROUTES.LIST + '/' + res.data.id);
+
+      setIsOpenModal('settings');
+      setSelectedTodolist(res.data);
     });
 
     req
