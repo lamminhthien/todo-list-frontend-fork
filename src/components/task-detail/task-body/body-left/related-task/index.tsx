@@ -1,7 +1,6 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import classNames from 'classnames';
-import {useRouter} from 'next/router';
 import {FC, useEffect, useState} from 'react';
 
 import TaskItem from '@/components/common/task-item';
@@ -21,25 +20,34 @@ import Title from '../../title';
 type IRelatedTaskProps = IBaseProps;
 
 const RelatedTask: FC<IRelatedTaskProps> = ({className}) => {
-  const router = useRouter();
   const toast = useToast();
   const {task, update} = useTask();
   const useModalTaskDetail = useModalTaskDetailState();
   const [isEditing, setIsEditing] = useState(false);
-  const [relatedIds, setRelatedIds] = useState<string[]>([]);
   const [ortherTasks, setOrtherTasks] = useState<ITaskResponse[]>([]);
+  const [relatedId, setRelatedId] = useState<string>('');
+
+  const relatedIds = task.relatedTasks.map(x => x.id);
 
   const handleOpenRelatedTask = (relatedTask: ITaskResponse) => {
     if (useModalTaskDetail.task) {
       useModalTaskDetail.setState(relatedTask);
     } else {
-      router.push(`${ROUTES.TASK}/${relatedTask.id}`);
+      window.open(`${ROUTES.TASK}/${relatedTask.id}`, '_blank');
     }
   };
 
-  const handleAddRelatedTask = () => {
+  const handleAddRelatedTask = (relatedTaskId: string) => {
     api.task
-      .update({id: task.id, relatedIds: relatedIds})
+      .update({id: task.id, relatedIds: [...relatedIds, relatedTaskId]})
+      .then(update)
+      .catch(() => toast.show({type: 'danger', title: 'Related task', content: ToastContents.ERROR}));
+  };
+
+  const handleRemoveRelatedTask = (relatedTaskId: string) => {
+    const newRelatedTaskIds = relatedIds.filter(x => x !== relatedTaskId);
+    api.task
+      .update({id: task.id, relatedIds: newRelatedTaskIds})
       .then(update)
       .catch(() => toast.show({type: 'danger', title: 'Related task', content: ToastContents.ERROR}));
   };
@@ -70,25 +78,27 @@ const RelatedTask: FC<IRelatedTaskProps> = ({className}) => {
             disablePortal
             options={ortherTasks}
             sx={{width: 1}}
-            getOptionLabel={option => `${option.order}-${option.name}`}
+            getOptionLabel={({order, name}) => `${task.todolist.taskSymbol} ${order}-${name}`}
             renderInput={params => <TextField {...params} label="Add sub task" />}
-            onChange={(e, value) => {
+            onChange={(_e, value) => {
               if (value) {
-                setRelatedIds([...relatedIds, value.id]);
+                setRelatedId(value.id);
               }
             }}
           />
-          <Icon name="ico-plus-circle" onClick={handleAddRelatedTask} className="cursor-pointer" />
+          <Icon name="ico-plus-circle" className="cursor-pointer" onClick={() => handleAddRelatedTask(relatedId)} />
         </div>
       )}
       {task.relatedTasks.map(item => (
-        <TaskItem
-          key={item.id}
-          task={item}
-          todolist={item.todolist}
-          className="!mt-2 !rounded !bg-inherit !p-2 hover:!bg-blue-100"
-          onClick={() => handleOpenRelatedTask(item)}
-        />
+        <div key={item.id} className="flex items-center space-x-2">
+          <TaskItem
+            task={item}
+            todolist={item.todolist}
+            className="!mt-2 !rounded !bg-inherit !p-2 hover:!bg-blue-100"
+            onClick={() => handleOpenRelatedTask(item)}
+          />
+          <Icon name="ico-times" className="cursor-pointer" onClick={() => handleRemoveRelatedTask(item.id)} />
+        </div>
       ))}
     </div>
   );
