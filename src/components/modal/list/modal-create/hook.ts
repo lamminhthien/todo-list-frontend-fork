@@ -7,14 +7,16 @@ import * as yup from 'yup';
 import {ROUTES} from '@/configs/routes.config';
 import useToast from '@/core-ui/toast';
 import api from '@/data/api';
-import useModals from '@/states/modals/use-modals';
+import {Visibilities} from '@/utils/constant';
 import {ToastContents} from '@/utils/toast-content';
 
 import {IProps} from '../types-create-update';
 
 interface IFormInputs {
   name: string;
-  taskSymbol?: string;
+  taskSymbol: string;
+  visibility?: keyof typeof Visibilities;
+  member: {ids: string[]};
 }
 
 const Schema = yup.object().shape({
@@ -25,7 +27,6 @@ const Schema = yup.object().shape({
 export default function useModalCreateList({open, onClose, onSuccess}: IProps) {
   const router = useRouter();
   const toast = useToast();
-  const {setSelectedTodolist, setIsOpenModal} = useModals();
 
   const {formState, handleSubmit, reset, setValue, ...rest} = useForm<IFormInputs>({
     resolver: yupResolver(Schema),
@@ -40,14 +41,9 @@ export default function useModalCreateList({open, onClose, onSuccess}: IProps) {
 
   const submitHandler: SubmitHandler<IFormInputs> = formData => {
     if (isSubmitting) return;
-    const {name, taskSymbol} = formData;
-
-    const req = api.todolist.create({name, taskSymbol}).then(res => {
+    const req = api.todolist.create(formData).then(res => {
       toast.show({type: 'success', title: 'Create List', content: ToastContents.SUCCESS});
       router.push(ROUTES.LIST + '/' + res.data.id);
-
-      setIsOpenModal('settings');
-      setSelectedTodolist(res.data);
     });
 
     req
@@ -61,5 +57,5 @@ export default function useModalCreateList({open, onClose, onSuccess}: IProps) {
     onClose();
   };
 
-  return {errors, isSubmitting, onSubmit: handleSubmit(submitHandler), ...rest};
+  return {errors, isSubmitting, onSubmit: handleSubmit(submitHandler), setValue, ...rest};
 }
