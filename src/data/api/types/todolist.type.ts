@@ -9,6 +9,8 @@ export interface ITodolistGetOne {
 export interface ITodolistCreate {
   name: string;
   taskSymbol?: string;
+  visibility?: keyof typeof Visibilities;
+  member?: {ids: string[]};
 }
 
 export interface ITodolistUpdate extends ITodolistGetOne {
