@@ -47,6 +47,7 @@ export interface IMember {
   id: string;
   name: string;
   email?: string;
+  isActive?: boolean;
 }
 
 export interface ITask {
