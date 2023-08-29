@@ -1,8 +1,8 @@
 import {useRouter} from 'next/router';
 import {useEffect} from 'react';
 
+import {ROUTES} from '@/configs/routes.config';
 import useToast from '@/core-ui/toast';
-import {ITodolistResponse} from '@/data/api/types/todolist.type';
 import {useModalTaskDetailState} from '@/hooks/useModalTaskDetail';
 import useTask from '@/states/task/use-task';
 import useTodolist from '@/states/todolist/use-todolist';
@@ -11,7 +11,7 @@ import {ToastContents} from '@/utils/toast-content';
 import {IProps} from '.';
 
 export default function useModalDelete({onClose, onSuccess, data}: IProps) {
-  const {todolist, setTodolist, getTodolist} = useTodolist();
+  const {getTodolist} = useTodolist();
   const {isDelecting, error, destroy, resetCrudState} = useTask();
   const modalTaskDetailState = useModalTaskDetailState();
   const router = useRouter();
@@ -28,16 +28,13 @@ export default function useModalDelete({onClose, onSuccess, data}: IProps) {
   useEffect(() => {
     if (isDelecting === false && !error) {
       if (router.asPath.includes(id)) {
-        const newTodolist: ITodolistResponse = JSON.parse(JSON.stringify(todolist));
-        newTodolist.tasks = newTodolist.tasks.filter(e => e.id !== id);
-        setTodolist(newTodolist);
-        router.back();
+        router.push(`${ROUTES.LIST}/${data.todolist.id}`);
       }
       toast.show({type: 'success', title: 'Delete ', content: ToastContents.SUCCESS});
       modalTaskDetailState.setState(null);
 
       onSuccess?.();
-      getTodolist(id);
+      getTodolist(data.todolist.id);
       resetCrudState();
     }
 
