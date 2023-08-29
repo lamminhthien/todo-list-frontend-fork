@@ -5,16 +5,25 @@ import {ITaskResponse, ITaskUpdate} from '@/data/api/types/task.type';
 
 export type IAction = PayloadAction<{id: string}>;
 
+export interface IInitialState {
+  task: {
+    loading: boolean;
+    error: null;
+    data?: ITaskResponse;
+    isDelecting?: boolean;
+  };
+}
+
+export const initialState: IInitialState = {
+  task: {
+    loading: false,
+    error: null
+  }
+};
+
 const taskSlice = createSlice({
   name: 'task',
-  initialState: {
-    task: {
-      loading: false,
-      isDelecting: undefined as unknown as boolean,
-      data: undefined as unknown as ITaskResponse,
-      error: null
-    }
-  },
+  initialState,
   reducers: {
     getTaskRequest: (state, {payload}: IAction) => {
       state.task.loading = true;
@@ -33,12 +42,16 @@ const taskSlice = createSlice({
     },
     destroySuccess: state => {
       state.task.isDelecting = false;
-      state.task.data = undefined as any;
+      state.task.data = undefined;
     },
     destroyFailure: (state, {payload}: PayloadAction<any>) => {
       state.task.isDelecting = false;
-      state.task.data = undefined as any;
+      state.task.data = undefined;
       state.task.error = payload;
+    },
+    // MISCS
+    resetCrudState: state => {
+      state.task.isDelecting = undefined;
     }
   }
 });
