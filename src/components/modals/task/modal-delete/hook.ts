@@ -12,7 +12,7 @@ import {IProps} from '.';
 
 export default function useModalDelete({onClose, onSuccess, data}: IProps) {
   const {todolist, setTodolist, getTodolist} = useTodolist();
-  const {isDelecting, error, destroy} = useTask();
+  const {isDelecting, error, destroy, resetCrudState} = useTask();
   const modalTaskDetailState = useModalTaskDetailState();
   const router = useRouter();
   const toast = useToast();
@@ -38,10 +38,12 @@ export default function useModalDelete({onClose, onSuccess, data}: IProps) {
 
       onSuccess?.();
       getTodolist(id);
+      resetCrudState();
     }
 
     if (isDelecting === false && error) {
       toast.show({type: 'danger', title: 'Error', content: ToastContents.ERROR});
+      resetCrudState();
     }
   }, [isDelecting]);
 
