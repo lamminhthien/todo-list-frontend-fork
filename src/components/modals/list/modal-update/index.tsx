@@ -1,4 +1,4 @@
-import {Autocomplete, MenuItem, Select, TextField} from '@mui/material';
+import {Autocomplete, Chip, MenuItem, Select, TextField} from '@mui/material';
 import cls from 'classnames';
 import {FC, useEffect, useState} from 'react';
 
@@ -19,8 +19,11 @@ const ModalUpdateList: FC<IProps> = props => {
   const {data, open, hiddenVisibility, onClose} = props;
   const {errors, onSubmit, register, setValue, owner, ownerKanban} = useModalUpdateList(props);
   const [options, setOptions] = useState<IUserResponse[]>([]);
+  const [members, setMembers] = useState<IUserResponse[]>([]);
+
   const defaultMemberIds = data?.members?.map((e: {id: any}) => e.id) || [];
-  const memberDefaultValue = options.filter(e => defaultMemberIds.includes(e.id));
+  const ownerOfList = options.find(x => x.id === data?.userId);
+
   const {setIsOpenModal} = useModals();
   const visibilityDefaultValue = hiddenVisibility
     ? undefined
@@ -33,7 +36,9 @@ const ModalUpdateList: FC<IProps> = props => {
   useEffect(() => {
     api.user.getIndentify().then(res => {
       if (res && res.status == 200) {
+        const memberDefaultValue = res.data.filter(e => defaultMemberIds.includes(e.id));
         setOptions(res.data);
+        setMembers(memberDefaultValue);
       }
     });
   }, []);
@@ -88,11 +93,26 @@ const ModalUpdateList: FC<IProps> = props => {
               <Autocomplete
                 multiple
                 className="input-members"
-                defaultValue={[...memberDefaultValue]}
-                onChange={(e, value) => setValue('member', {ids: value.map(u => u.id)})}
+                value={members}
+                onChange={(e, value) => {
+                  if (ownerOfList) {
+                    setMembers([ownerOfList, ...value.filter(({id}) => id !== data.userId)]);
+                    setValue('member', {ids: [data.userId, ...value.map(u => u.id)]});
+                  }
+                }}
                 options={options}
                 disableCloseOnSelect
                 getOptionLabel={option => `${option.name} (${option.email})`}
+                renderTags={(tagValue, getTagProps) => {
+                  return tagValue.map((option, index) => (
+                    <Chip
+                      {...getTagProps({index})}
+                      key={index}
+                      label={option.email}
+                      disabled={data.userId === option.id}
+                    />
+                  ));
+                }}
                 renderOption={(prop, option, state) => {
                   const {selected} = state;
                   if (!selected)
