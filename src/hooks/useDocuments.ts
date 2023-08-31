@@ -111,8 +111,8 @@ export const useDocumentsStore = create<State & Action>()(
       deleteDoument: async data => {
         try {
           set({isDeleting: true}, false, 'Documents/GetDocument');
-          const res = await api.documents.updateDocument(data);
-          set({currentDocument: res.data, isDeleting: false}, false, 'documents/updateDocument');
+          await api.documents.updateDocument(data);
+          set({currentDocument: undefined, isDeleting: false}, false, 'documents/updateDocument');
         } catch (error) {
           set({error: true, isDeleting: false}, false, 'documents/updateError');
         }
