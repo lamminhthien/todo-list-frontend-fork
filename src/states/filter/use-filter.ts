@@ -4,6 +4,7 @@ import {ITaskResponse} from '@/data/api/types/task.type';
 import {Priorities} from '@/utils/constant';
 
 import {RootState} from '../store';
+import useTodolist from '../todolist/use-todolist';
 import filterSlice from './slice';
 
 export default function useFilter() {
@@ -25,6 +26,7 @@ export default function useFilter() {
     nameFilter
   } = filterState;
   const {actions} = filterSlice;
+  const {statusList} = useTodolist();
   const dispatch = useDispatch();
   const setStatusFilterInList = (value: number) => dispatch(actions.setStatusFilterInList(value));
   const setCurrentStatus = (value: number) => dispatch(actions.setCurrentStatus(value));
@@ -44,6 +46,7 @@ export default function useFilter() {
   const getFilterdTasks = (filterList: ITaskResponse[], isKanban: boolean) => {
     const prioritiesList = Object.values(Priorities).reverse();
     const prioritieValue = prioritiesList.includes(priorityFilterInList) ? priorityFilterInList : '';
+    const doneStatus = statusList.find(x => x.name === 'Done');
 
     return filterList?.filter(task => {
       const checkType = task.type === currentType;
@@ -52,7 +55,7 @@ export default function useFilter() {
       const checkUnassigned = task.assignees.length == 0;
       const checkAssigned = task.assignees[0]?.userId == assigneeFilterInList;
 
-      const isNotDone = task.isDone !== true;
+      const isNotDone = !(task.statusId == doneStatus?.id);
 
       if (!isKanban) {
         // list
