@@ -17,6 +17,18 @@ export default function ProjectsPage() {
       <div className="mt-8 mb-4 flex items-center font-bold">
         <Clock size={20} className="mr-2" /> Recently viewed
       </div>
+      <div className="grid grid-cols-3 gap-[24px]">
+        {testData.map((task, index) => (
+          <TaskCard
+            key={index}
+            title={task.title}
+            dueDate={task.dueDate}
+            completedTaskCount={task.completedTaskCount}
+            totalTaskCount={task.totalTaskCount}
+          />
+        ))}
+      </div>
+
       <div className="flex justify-between">
         <div className="mt-8 mb-4 font-bold">My project</div>
         <button className="flex items-center text-sm font-semibold">
