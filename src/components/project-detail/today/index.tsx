@@ -1,32 +1,34 @@
 import React, {FC} from 'react';
 
-import {ITaskResponse} from '../../../../data/api/types/task.type';
-import {IMember} from '../../../../data/api/types/todolist.type';
+import {ITaskResponse} from '@/data/api/types/task.type';
+import {IMember} from '@/data/api/types/todolist.type';
 import Column from '../column';
 import TaskItem from '../column/task-item';
 
-interface IDoingColumnProps {
+interface ITodayColumnProps {
   className?: string | undefined;
-  doingTasks: ITaskResponse[];
+  todayTasks: ITaskResponse[];
   addTask: () => void;
-  title: string;
   symbol: string;
   members: IMember[];
 }
 
-const DoingColumn: FC<IDoingColumnProps> = ({className, doingTasks, title, symbol, members, addTask}) => {
+const TodayColumn: FC<ITodayColumnProps> = ({className, symbol, todayTasks, members, addTask}) => {
+  const today: Date = new Date();
+  const todayString = `${today.getDate()} ${today.toLocaleString('en-US', {month: 'short'})}`;
+
   return (
     <Column
       addTask={addTask}
       className={className}
-      title={`${title}`}
+      title={`${todayString} - Today`}
       symbol={symbol}
       borderBotColor={'border-blue-400'}
     >
-      {!doingTasks.length ? (
+      {!todayTasks.length ? (
         <div className="w-96 bg-gray-50 py-6 px-5">No Task!</div>
       ) : (
-        doingTasks.map((task, index) => (
+        todayTasks.map((task, index) => (
           <TaskItem
             key={index}
             // description={task.description}
@@ -43,4 +45,4 @@ const DoingColumn: FC<IDoingColumnProps> = ({className, doingTasks, title, symbo
   );
 };
 
-export default DoingColumn;
+export default TodayColumn;
