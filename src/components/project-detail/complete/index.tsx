@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
 
-import {ITaskResponse} from '../../../../data/api/types/task.type';
-import {IMember} from '../../../../data/api/types/todolist.type';
 import Column from '../column';
 import TaskItem from '../column/task-item';
+import {ITaskResponse} from '@/data/api/types/task.type';
+import {IMember} from '@/data/api/types/todolist.type';
 
 interface ICompleteColumnProps {
   className?: string | undefined;
